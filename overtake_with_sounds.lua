@@ -75,16 +75,24 @@ local lastUiMoveKeyState = false
 local muteToggle = false
 local lastMuteKeyState = false
 local messageState = false
-function script.update(dt)
 
-    mediaPlayer4:setSource(tedleo)
+local function playSongs(song1, song2)
+    mediaPlayer4:setSource(song1):setAutoPlay(false)
     mediaPlayer4:setVolume(1)
     mediaPlayer4:play()
-    if mediaPlayer4:ended() then
-        mediaPlayer4:setSource(splashWave)
-        mediaPlayer4:setVolume(1)
-        mediaPlayer4:play()
+    if mediaPlayer4:availableTime() < 1.0 then
+        mediaPlayer4:pause()
+        mediaPlayer5:setSource(song2):setAutoPlay(false)
+        mediaPlayer5:setVolume(1)
+        mediaPlayer5:play()
     end
+end
+
+
+
+function script.update(dt)
+
+    playSongs(tedleo, splashWave)
 
     countDown = countDown - dt
 
@@ -638,6 +646,8 @@ function script.drawUI()
         ui.text("Time")
         ui.pushFont(ui.Font.Huge)
         ui.text(math.floor(countDown).. " secs")
+        ui.pushFont(ui.Font.Huge)
+        ui.text(mediaPlayer4:availableTime().. " time remaining")
 
         ui.endTransparentWindow()
 
