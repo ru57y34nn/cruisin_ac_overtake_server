@@ -1,15 +1,18 @@
 
 -- Please do not share this script without permission from the author.
--- Author: JBoondock
+-- Author: JBoondock and Rusty
 -- Version: 1.0
 -- Patreon: www.patreon.com/JBoondock
 
 local requiredSpeed = 40
 
-local tedleo = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193724302571343943/11_Lui_Prima_Mobile.mp3'
+-- local tedleo = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193724302571343943/11_Lui_Prima_Mobile.mp3'
+-- local ween = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1195125566303633478/24_-_Old_Man_Thunder.mp3'
 
 local splashWave = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193677215276216584/Wolf_and_Raven_-_Tribute_to_OutRun_-_03_Splashwave.mp3'
-local magicShowerSound = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193696762121162812/Wolf_and_Raven_-_Tribute_to_OutRun_-_01_Magical_Sound_Shower.mp3'
+local magicalSoundShower = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193696762121162812/Wolf_and_Raven_-_Tribute_to_OutRun_-_01_Magical_Sound_Shower.mp3'
+local passingBreeze = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1195154796248838234/Wolf_and_Raven_-_Tribute_to_OutRun_-_02_Passing_Breeze.mp3'
+local lastWave = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1195154824417771690/Wolf_and_Raven_-_Tribute_to_OutRun_-_04_Last_Wave.mp3'
 
 local PBlink = 'http' .. 's://www.myinstants.com/media/sounds/holy-shit.mp3'
 
@@ -35,6 +38,8 @@ local mediaPlayer2 = ui.MediaPlayer()
 local mediaPlayer3 = ui.MediaPlayer()
 local mediaPlayer4 = ui.MediaPlayer()
 local mediaPlayer5 = ui.MediaPlayer()
+local mediaPlayer6 = ui.MediaPlayer()
+local mediaPlayer7 = ui.MediaPlayer()
 
 local hasPlayedSpree = false
 local hasPlayedFrenzy = false
@@ -48,10 +53,11 @@ local hasPlayedUnfriggenbelievable = false
 
 
 function script.prepare(dt)
-    return ac.getCarState(1).speedKmh > 60
+    ac.debug('speed', ac.getCarState(1).speedKmh)
+    return ac.getCarState(1).speedKmh > requiredSpeed
 end
 
-local countDown = 100
+local countDown = 90
 local timePassed = 0
 local speedMessageTimer = 0
 local mackMessageTimer = 0
@@ -62,9 +68,10 @@ local dangerouslySlowTimer = 0
 local carsState = {}
 local wheelsWarningTimeout = 0
 local personalBest = 0
-local MackMessages = { 'MAAAACK!!!!', 'M A C K S A U C E', 'You Hesitated....', 'bRUH', 'No Shot...',
+local MackMessages = { 'BRUTAL!!!!', 'OUCH!!!', 'Watch it!!!', 'WANKER!!!', 'Caution! Student Driver!',
     'Ain\'t no way you were makin that.' }
-local CloseMessages = { 'IN THAT!!!!! 3x', 'IN THERE. 3x', 'D I V E 3x', 'SKRRT!!! 3x' }
+local CloseMessages = { 'Way to Go! 3x', 'Close One! 3x', 'Near Miss! 3x', 'Wow! 3x' }
+local KindaCloseMessages = {'Pretty Close! 1x', 'Not bad! 1x', 'That was almost scary! 1x', 'I think you scared them! 1x'}
 
 local uiState = ac.getUI()
 local uiCustomPos = vec2(uiState.windowSize.x * 0.5 - 600, 100)
@@ -76,25 +83,98 @@ local muteToggle = false
 local lastMuteKeyState = false
 local messageState = false
 
-local function playSongs(song1, song2)
-    mediaPlayer4:setSource(song1):setAutoPlay(false)
-    mediaPlayer4:setVolume(1)
-    mediaPlayer4:play()
-    if mediaPlayer4:availableTime() < 1.0 then
-        mediaPlayer4:pause()
-        mediaPlayer5:setSource(song2):setAutoPlay(false)
-        mediaPlayer5:setVolume(1)
-        mediaPlayer5:play()
-    end
-end
+local musicVol = 0.25
+local stored = {}
 
+
+stored.playerscore = ac.storage('playerscore', personalBest) --default value
+personalBest = stored.playerscore:get()
+ac.sendChatMessage("has a highscore of " .. personalBest .. " pts.")
+ 
+local function sendhighscore(connectedCarIndex, connectedSessionID)
+    ac.sendChatMessage("has a highscore of " .. personalBest .. " pts.")
+end
+ 
+ac.onClientConnected(sendhighscore)
 
 
 function script.update(dt)
 
-    playSongs(tedleo, splashWave)
+    local player = ac.getCarState(1)
+    if player.engineLifeLeft < 1 then
+        if totalScore > personalBest then
+            personalBest = math.floor(totalScore)
+            stored.playerscore:set(personalBest)
+            ac.sendChatMessage("has a NEW highscore of " .. totalScore .. " pts.")
+        end
+        totalScore = 0
+        comboMeter = 1
+        return
+    end
 
-    countDown = countDown - dt
+    if timePassed == 0 then
+        addMessage('Let’s go!', 0)
+    end
+
+
+    if ac.isKeyDown(ac.KeyIndex.U) and musicVol < 1 then
+        musicVol = musicVol + 0.01
+    end
+
+    if ac.isKeyDown(ac.KeyIndex.D) and musicVol > 0 then
+        musicVol = musicVol - 0.01
+    end
+
+    mediaPlayer4:setSource(magicalSoundShower):setAutoPlay(false)
+    mediaPlayer4:setVolume(musicVol)
+
+    mediaPlayer5:setSource(passingBreeze):setAutoPlay(false)
+    mediaPlayer5:setVolume(musicVol)
+
+    mediaPlayer6:setSource(splashWave):setAutoPlay(false)
+    mediaPlayer6:setVolume(musicVol)
+
+    mediaPlayer7:setSource(lastWave):setAutoPlay(false)
+    mediaPlayer7:setVolume(musicVol)
+
+    if timePassed > 5 and timePassed < 6 then
+        mediaPlayer4:play()
+    end
+
+    if mediaPlayer4:currentTime() > math.round(mediaPlayer4:duration(), 2) then
+        mediaPlayer4:pause():setCurrentTime(0.00)
+        mediaPlayer5:play()
+    end
+
+    if mediaPlayer5:currentTime() > math.round(mediaPlayer5:duration(), 2) then
+        mediaPlayer5:pause():setCurrentTime(0.00)
+        mediaPlayer6:play()
+    end
+
+    if mediaPlayer6:currentTime() > math.round(mediaPlayer6:duration(), 2) then
+        mediaPlayer6:pause():setCurrentTime(0.00)
+        mediaPlayer7:play()
+    end
+
+    if mediaPlayer7:currentTime() > math.round(mediaPlayer7:duration(),2) then
+        mediaPlayer7:pause():setCurrentTime(0.00)
+        mediaPlayer4:play()
+    end
+
+
+    if countDown < 0 then
+        totalScore = 0
+        countDown = 90
+        addMessage('Out of Time!', -1)
+    end
+
+    if countDown > 90 then
+        countDown = 90
+    end
+
+    if timePassed > 15 then
+        countDown = countDown - dt
+    end
 
 
     local uiMoveKeyState = ac.isKeyDown(ac.KeyIndex.B)
@@ -120,9 +200,6 @@ function script.update(dt)
         end
     end
 
-
-
-
     local muteKeyState = ac.isKeyDown(ac.KeyIndex.M)
     if muteKeyState and lastMuteKeyState ~= muteKeyState then
         muteToggle = not muteToggle
@@ -143,10 +220,12 @@ function script.update(dt)
 
     if timePassed == 0 then
         addMessage(ac.getCarName(0), 0)
-        addMessage('Made by Boon', 2)
+        addMessage('Based on Overtake by Ilja, Modded by Boon and Rusty', 2)
         addMessage('CTRL + D to toggle UI', -1)
-        addMessage('M to toggle sounds', -1)
+        addMessage('M to toggle sound fx', -1)
         addMessage('Delete to re-orient car', -1)
+        -- addMessage('Press "U" to increase music volume', -1)
+        -- addMessage('Press "D" to decrease music volume', -1)
     end
 
 
@@ -171,7 +250,7 @@ function script.update(dt)
 
 
 
-    local comboFadingRate = 0.1 * math.lerp(1, 0.1, math.lerpInvSat(player.speedKmh, 80, 200)) + player.wheelsOutside / 4
+    local comboFadingRate = 0.1 * math.lerp(1, 0.1, math.lerpInvSat(player.speedKmh, 45, 160)) + player.wheelsOutside / 4
     comboMeter = math.max(1, comboMeter - dt * comboFadingRate)
 
     local sim = ac.getSim()
@@ -184,7 +263,7 @@ function script.update(dt)
     elseif player.wheelsOutside > 0 then
         if wheelsWarningTimeout == 0 then
         end
-        addMessage('Car is Out Of Zone', -1)
+        addMessage('Get back on the road!', -1)
         wheelsWarningTimeout = 60
     end
 
@@ -224,6 +303,9 @@ function script.update(dt)
         comboMeter = 1
         if totalScore > personalBest and dangerouslySlowTimer > 3 then
             personalBest = totalScore
+            stored.playerscore:set(personalBest)
+            -- ac.sendChatMessage("has a NEW highscore of " .. totalScore .. " pts.")
+
             if muteToggle then
                 mediaPlayer:setSource(PBlink)
                 mediaPlayer:setVolume(.25)
@@ -246,6 +328,8 @@ function script.update(dt)
 
         if totalScore >= personalBest then
             personalBest = totalScore
+            stored.playerscore:set(personalBest)
+            -- ac.sendChatMessage("has a NEW highscore of " .. totalScore .. " pts.")
             if muteToggle then
                 mediaPlayer:setSource(PBlink)
                 mediaPlayer:setVolume(1)
@@ -277,7 +361,7 @@ function script.update(dt)
     end
 
 
-    if comboMeter >= 25 then
+    if comboMeter >= 5 then
 
         if muteToggle then
             if not hasPlayedSpree then
@@ -292,7 +376,7 @@ function script.update(dt)
         end
     end
 
-    if comboMeter >= 50 and comboMeter <= 51 then
+    if comboMeter >= 10 and comboMeter <= 11 then
         if not hasPlayedFrenzy then
             if muteToggle then
                 mediaPlayer2:setSource(killingFrenzy)
@@ -306,7 +390,7 @@ function script.update(dt)
         end
     end
 
-    if comboMeter >= 75 and comboMeter <= 76 then
+    if comboMeter >= 15 and comboMeter <= 16 then
         if not hasPlayedRiot then
             if muteToggle then
                 mediaPlayer2:setSource(runningRiot)
@@ -320,7 +404,7 @@ function script.update(dt)
         end
     end
 
-    if comboMeter >= 100 and comboMeter <= 101 then
+    if comboMeter >= 20 and comboMeter <= 21 then
         if not hasPlayedRampage then
             if muteToggle then
                 mediaPlayer2:setSource(rampage)
@@ -334,7 +418,7 @@ function script.update(dt)
         end
     end
 
-    if comboMeter >= 150 and comboMeter <= 151 then
+    if comboMeter >= 25 and comboMeter <= 26 then
         if not hasPlayedUntouchable then
             if muteToggle then
                 mediaPlayer2:setSource(untouchable)
@@ -348,7 +432,7 @@ function script.update(dt)
         end
     end
 
-    if comboMeter >= 200 and comboMeter <= 201 then
+    if comboMeter >= 30 and comboMeter <= 31 then
         if not hasPlayedInvincible then
             if muteToggle then
                 mediaPlayer2:setSource(invincible)
@@ -362,7 +446,7 @@ function script.update(dt)
         end
     end
 
-    if comboMeter >= 250 and comboMeter <= 251 then
+    if comboMeter >= 35 and comboMeter <= 36 then
         if not hasPlayedInconcievable then
             if muteToggle then
                 mediaPlayer2:setSource(inconcievable)
@@ -376,7 +460,7 @@ function script.update(dt)
         end
     end
 
-    if comboMeter >= 300 and comboMeter <= 301 then
+    if comboMeter >= 40 and comboMeter <= 41 then
         if not hasPlayedUnfriggenbelievable then
             if muteToggle then
                 mediaPlayer2:setSource(unfriggenbelievable)
@@ -408,7 +492,7 @@ function script.update(dt)
 
         -- ac.debug(car.collidedWith .. " COLLISION")
 
-        if car.position:closerToThan(player.position, 7) then
+        if car.position:closerToThan(player.position, 10) then
             local drivingAlong = math.dot(car.look, player.look) > 0.2
             if not drivingAlong then
                 state.drivingAlong = false
@@ -416,7 +500,18 @@ function script.update(dt)
                 if not state.nearMiss and car.position:closerToThan(player.position, 3) then
                     state.nearMiss = true
 
+                    if car.position:closerToThan(player.position, 2.5) then
+                        comboMeter = comboMeter + 3
+                        comboColor = comboColor + math.random(1, 90)
+                        comboColor = comboColor + 90
+                        addMessage(CloseMessages[math.random(#CloseMessages)], 2)
+                    else
+                        comboMeter = comboMeter + 1
+                        comboColor = comboColor + math.random(1, 90)
+                        comboColor = comboColor + 90
+                        addMessage(KindaCloseMessages[math.random(#KindaCloseMessages)], 1)
 
+                    end
                 end
             end
 
@@ -432,8 +527,8 @@ function script.update(dt)
                 local posDot = math.dot(posDir, car.look)
                 state.maxPosDot = math.max(state.maxPosDot, posDot)
                 if posDot < -0.5 and state.maxPosDot > 0.5 then
-                    totalScore = totalScore + math.ceil(10 * comboMeter)
-                    countDown = countDown + 10 * math.lerp(1, 0.1, math.lerpInvSat(player.speedKmh, 80, 200))
+                    totalScore = totalScore + math.ceil(10 * comboMeter) * math.floor(countDown)
+                    countDown = countDown + 10 * math.lerp(0.1, 1, math.lerpInvSat(player.speedKmh, 45, 160))
                     comboMeter = comboMeter + 1
                     comboColor = comboColor + 90
                     if muteToggle then
@@ -446,13 +541,15 @@ function script.update(dt)
                         mediaPlayer3:pause()
                     end
 
-                    addMessage('Overtake 1x', comboMeter > 50 and 1 or 0)
+                    addMessage('Overtake 1x ' , comboMeter > 50 and 1 or 0)
+                    addMessage(math.ceil(10*comboMeter) .. 'x combo bonus',  comboMeter > 50 and 1 or 0)
+                    addMessage(math.floor(countDown) .. 'x time bonus', comboMeter > 50 and 1 or 0)
                     state.overtaken = true
 
-                    if car.position:closerToThan(player.position, 3) then
-                        comboMeter = comboMeter + 3
-                        comboColor = comboColor + math.random(1, 90)
-                        comboColor = comboColor + 90
+                    -- if car.position:closerToThan(player.position, 3) then
+                    --     comboMeter = comboMeter + 3
+                    --     comboColor = comboColor + math.random(1, 90)
+                    --     comboColor = comboColor + 90
                         if muteToggle then
                             mediaPlayer3:setSource(noti)
                             mediaPlayer3:setVolume(1)
@@ -463,8 +560,8 @@ function script.update(dt)
                             mediaPlayer3:pause()
                         end
 
-                        addMessage(CloseMessages[math.random(#CloseMessages)], 2)
-                    end
+                        
+                    -- end
 
                 end
             end
@@ -484,7 +581,7 @@ local glitter = {}
 local glitterCount = 0
 
 function addMessage(text, mood)
-    for i = math.min(#messages + 1, 4), 2, -1 do
+    for i = math.min(#messages + 1, 4), 6, -1 do
         messages[i] = messages[i - 1]
         messages[i].targetPos = i
     end
@@ -552,7 +649,7 @@ function script.drawUI()
 
 
     if UIToggle then
-        local uiState = ac.getUiState()
+        local uiState = ac.getUI()
         updateMessages(uiState.dt)
 
         local speedRelative = math.saturate(math.floor(ac.getCarState(1).speedKmh) / requiredSpeed)
@@ -582,15 +679,15 @@ function script.drawUI()
 
         ui.pushStyleVar(ui.StyleVar.Alpha, 1 - speedWarning)
         ui.pushFont(ui.Font.Title)
-        ui.text('Cruisin\' AC: Overtake Outrun')
+        ui.text('Cruisin\' AC: Outrun Overtake')
         -- ui.sameLine(0, 20)
         ui.pushFont(ui.Font.Huge)
-        ui.textColored('PB:' .. personalBest .. ' pts', colorCombo)
+        ui.text('PB:' .. personalBest .. ' pts')
         ui.popFont()
         ui.popStyleVar()
 
         ui.pushFont(ui.Font.Huge)
-        ui.text(totalScore .. ' pts')
+        ui.textColored(totalScore .. ' pts', colorCombo)
         ui.sameLine(0, 40)
         ui.beginRotation()
         ui.textColored(math.ceil(comboMeter * 10) / 10 .. 'x', colorCombo)
@@ -645,9 +742,9 @@ function script.drawUI()
         ui.pushFont(ui.Font.Huge)
         ui.text("Time")
         ui.pushFont(ui.Font.Huge)
-        ui.text(math.floor(countDown).. " secs")
-        ui.pushFont(ui.Font.Huge)
-        ui.text(mediaPlayer4:availableTime().. " time remaining")
+        ui.text(math.floor(countDown).. "")
+        -- ui.pushFont(ui.Font.Huge)
+        -- ui.text((mediaPlayer4:duration()).. " duration")
 
         ui.endTransparentWindow()
 
