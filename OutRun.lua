@@ -5,8 +5,8 @@ local passingBreeze = 'http' .. 's://cdn.discordapp.com/attachments/119334071312
 local lastWave = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1195154824417771690/Wolf_and_Raven_-_Tribute_to_OutRun_-_04_Last_Wave.mp3'
 local checkpoint = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1200650001995542548/checkpoint_-voice_sample.mp3'
 
-local noti = 'http' .. 's://cdn.discordapp.com/attachments/140183723348852736/1000988999877394512/pog_noti_sound.mp3'
-local wilhelmScream = 'http' .. 's://ia902801.us.archive.org/5/items/wilhelmscreamremastered/Wilhelm%20Scream%20Remastered.mp3'
+-- local noti = 'http' .. 's://cdn.discordapp.com/attachments/140183723348852736/1000988999877394512/pog_noti_sound.mp3'
+-- local wilhelmScream = 'http' .. 's://ia902801.us.archive.org/5/items/wilhelmscreamremastered/Wilhelm%20Scream%20Remastered.mp3'
 
 local musicTimer = 0
 
@@ -86,11 +86,63 @@ local checkpt2pos = 0.235
 local checkpt3pos = 0.33
 local checkpt4pos = 0.415
 local checkpt5pos = 0.51
-local checkpt6pos = 0.61
+local checkpt6pos = 0.605
 local checkpt7pos = 0.695
 local checkpt8pos = 0.775
 local checkpt9pos = 0.88
 local finishpos = 0.9901
+
+local lap1time = 0
+local lap1mins = 0
+local lap1secs = 0
+local lap1subsecs = 0
+
+local lap2time = 0
+local lap2mins = 0
+local lap2secs = 0
+local lap2subsecs = 0
+
+local lap3time = 0
+local lap3mins = 0
+local lap3secs = 0
+local lap3subsecs = 0
+
+local lap4time = 0
+local lap4mins = 0
+local lap4secs = 0
+local lap4subsecs = 0
+
+local lap5time = 0
+local lap5mins = 0
+local lap5secs = 0
+local lap5subsecs = 0
+
+local lap6time = 0
+local lap6mins = 0
+local lap6secs = 0
+local lap6subsecs = 0
+
+local lap7time = 0
+local lap7mins = 0
+local lap7secs = 0
+local lap7subsecs = 0
+
+local lap8time = 0
+local lap8mins = 0
+local lap8secs = 0
+local lap8subsecs = 0
+
+local lap9time = 0
+local lap9mins = 0
+local lap9secs = 0
+local lap9subsecs = 0
+
+local lap10time = 0
+local lap10mins = 0
+local lap10secs = 0
+local lap10subsecs = 0
+
+local prevLaptimes = 0
 
 local messages = {}
 local glitter = {}
@@ -168,7 +220,7 @@ end
 
 
 stored.playerscore = ac.storage('playerscore', personalBest) --default value
-personalBest = stored.playerscore:set(0.0)
+-- personalBest = stored.playerscore:set(0.0)
 personalBest = stored.playerscore:get()
 
 
@@ -181,16 +233,16 @@ if not connectedHighScoreMsgSent then
     connectedHighScoreMsgSent = true
 end
 
-ac.debug("connected car index", connectedCarIndex)
-ac.debug("connected session id", connectedSessionID)
-ac.debug("hi score msg sent", highScoreChatMsgSent)
-ac.debug("connected msg sent", connectedHighScoreMsgSent)
+-- ac.debug("connected car index", connectedCarIndex)
+-- ac.debug("connected session id", connectedSessionID)
+-- ac.debug("hi score msg sent", highScoreChatMsgSent)
+-- ac.debug("connected msg sent", connectedHighScoreMsgSent)
 
 function script.update(dt)
 
     local player = ac.getCarState(1)
     -- this line sets the rate at which the player's score rises, based on player speed
-    local scoreRisingRate = 10 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 260))) * math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 260))
+    local scoreRisingRate = 100 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 260))) * math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 260))
     ac.debug("player pos", player.position)
     ac.debug("spline pos", player.splinePosition)
 
@@ -209,10 +261,12 @@ function script.update(dt)
     mediaPlayer2:setVolume(1.0)
     -- functionalize this part and add checks for all previous checkpoints to prevent teleporting to checkpoints before previous ones have been crossed
     if player.splinePosition > checkpt1pos then
-        timeBonus = 1000 * math.floor(countDown)
-        if not checkpoint1 then
+        timeBonus = 10000 * math.floor(countDown)
+        if not checkpoint1 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
+            lap1time = totalTimer
+            prevLaptimes = lap1time
             addMessage(" 1000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 1 CLEAR! 9 to go!", 1)
             if muteToggle then
@@ -223,10 +277,12 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt2pos then
-        timeBonus = 2000 * math.floor(countDown)
-        if not checkpoint2 then
+        timeBonus = 20000 * math.floor(countDown)
+        if not checkpoint2 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
+            lap2time = totalTimer - prevLaptimes
+            prevLaptimes = prevLaptimes + lap2time
             addMessage("2000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 2 CLEAR! 8 to Go!", 1)
             if muteToggle then
@@ -237,10 +293,12 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt3pos then
-        timeBonus = 3000 * math.floor(countDown)
-        if not checkpoint3 then
+        timeBonus = 30000 * math.floor(countDown)
+        if not checkpoint3 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
+            lap3time = totalTimer - prevLaptimes
+            prevLaptimes = prevLaptimes + lap3time
             addMessage("3000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 3 CLEAR! 7 to Go!", 1)
             if muteToggle then
@@ -251,10 +309,12 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt4pos then
-        timeBonus = 4000 * math.floor(countDown)
-        if not checkpoint4 then
+        timeBonus = 40000 * math.floor(countDown)
+        if not checkpoint4 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
+            lap4time = totalTimer - prevLaptimes
+            prevLaptimes = prevLaptimes + lap4time
             addMessage("4000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 4 CLEAR! 6 to Go!", 1)
             if muteToggle then
@@ -265,10 +325,12 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt5pos then
-        timeBonus = 5000 * math.floor(countDown)
-        if not checkpoint5 then
+        timeBonus = 50000 * math.floor(countDown)
+        if not checkpoint5 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
+            lap5time = totalTimer - prevLaptimes
+            prevLaptimes = prevLaptimes + lap5time
             addMessage("5000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 5 CLEAR! 5 to Go!", 1)
             if muteToggle then
@@ -279,10 +341,12 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt6pos then
-        timeBonus = 6000 * math.floor(countDown)
-        if not checkpoint6 then
+        timeBonus = 60000 * math.floor(countDown)
+        if not checkpoint6 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
+            lap6time = totalTimer - prevLaptimes
+            prevLaptimes = prevLaptimes + lap6time
             addMessage("6000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 6 CLEAR! 4 to Go!", 1)
             if muteToggle then
@@ -293,10 +357,12 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt7pos then
-        timeBonus = 7000 * math.floor(countDown)
-        if not checkpoint7 then
+        timeBonus = 70000 * math.floor(countDown)
+        if not checkpoint7 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
+            lap7time = totalTimer - prevLaptimes
+            prevLaptimes = prevLaptimes + lap7time
             addMessage("7000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 7 CLEAR! 3 to Go!", 1)
             if muteToggle then
@@ -307,10 +373,12 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt8pos then
-        timeBonus = 8000 * math.floor(countDown)
-        if not checkpoint8 then
+        timeBonus = 80000 * math.floor(countDown)
+        if not checkpoint8 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
+            lap8time = totalTimer - prevLaptimes
+            prevLaptimes = prevLaptimes + lap8time
             addMessage("8000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 8 CLEAR! 2 to Go!", 1)
             if muteToggle then
@@ -321,10 +389,12 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt9pos then
-        timeBonus = 9000 * math.floor(countDown)
-        if not checkpoint9 then
+        timeBonus = 90000 * math.floor(countDown)
+        if not checkpoint9 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
+            lap9time = totalTimer - prevLaptimes
+            prevLaptimes = prevLaptimes + lap9time
             addMessage("9000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 9 CLEAR! 1 to Go!", 1)
             if muteToggle then
@@ -335,7 +405,7 @@ function script.update(dt)
     end
 
 
-
+    local sim = ac.getSim()
     if player.splinePosition > gameStartPos then
         raceBegin = true
         -- if player.splinePosition < finishpos then
@@ -348,10 +418,97 @@ function script.update(dt)
                 if player.wheelsOutside < 1 then
                     totalScore = totalScore + dt * scoreRisingRate
                 end
+
+                
+                while sim.carsCount > #carsState do
+                    carsState[#carsState + 1] = {}
+                end
+            
+                if wheelsWarningTimeout > 0 then
+                    wheelsWarningTimeout = wheelsWarningTimeout - dt
+                elseif player.wheelsOutside > 0 then
+                    -- if wheelsWarningTimeout == 0 then
+                    -- end
+                    addMessage(offRoadMessages[math.random(1, #offRoadMessages)], -1)
+                    wheelsWarningTimeout = 15
+                end
+                -- ac.debug(" player", player.collidedWith)
+                for i = 1, ac.getSim().carsCount do
+                    local car = ac.getCarState(i) --or error()
+                    local state = carsState[i]
+                    ac.debug(" player ", player.collidedWith)
+                    -- ac.debug(" collision timer ", collisionTimer)
+            
+                    if car.position:closerToThan(player.position, 10) then
+                        local drivingAlong = math.dot(car.look, player.look) > 0.2
+                        if not drivingAlong then
+                            state.drivingAlong = false
+            
+                            if not state.nearMiss and car.position:closerToThan(player.position, 3) then
+                                state.nearMiss = true
+                            end
+                        end
+            
+                        if player.collidedWith == 0 then
+                            if collisionMessageTimer > 5 then
+                                -- comboMeter = comboMeter / 2.0
+                                addMessage(CollisionMessages[math.random(1, #CollisionMessages)], -1)
+                                collisionMessageTimer = 0
+                                collisionTimer = 2
+                            end
+                        end
+            
+                        if not state.overtaken and not state.collided and state.drivingAlong then
+                            local posDir = (car.position - player.position):normalize()
+                            local posDot = math.dot(posDir, car.look)
+                            state.maxPosDot = math.max(state.maxPosDot, posDot)
+                            if posDot < -0.5 and state.maxPosDot > 0.5 then
+                                -- add_amt = math.ceil(10 * comboMeter)
+                                -- if player.collidedWith == 0 then
+                                if collisionTimer > 0 then
+                                    totalScore = totalScore + collisionOvertakePts
+                                    addMessage('OVERTAKE 0.25x: + ' .. collisionOvertakePts .. ' pts', 2)
+                                    -- collisionTimer = 0
+                                -- end  
+                                elseif car.position:closerToThan(player.position, 3) then
+                                    totalScore = totalScore + closeOvertakePts
+                                    addMessage(CloseMessages[math.random(#CloseMessages)], 1)
+                                else
+                                    totalScore = totalScore + overtakePts
+                                    addMessage('OVERTAKE 1x: + ' .. overtakePts .. ' pts', 0)
+                                end
+                                -- totalScore = totalScore + overtakePts
+                                -- comboMeter = comboMeter + 1
+                                -- comboColor = comboColor + 90
+
+                                -- if muteToggle then
+                                --     mediaPlayer3:setSource(noti)
+                                --     mediaPlayer3:setVolume(1)
+                                --     mediaPlayer3:play()
+                                -- else
+                                --     mediaPlayer3:setSource(noti)
+                                --     mediaPlayer3:setVolume(0)
+                                --     mediaPlayer3:pause()
+                                -- end
+            
+                                state.overtaken = true
+                            end
+                        end
+                    else
+                        state.maxPosDot = -1
+                        state.overtaken = false
+                        state.collided = false
+                        state.drivingAlong = true
+                        state.nearMiss = false
+                    end
+                end
+
+                
             else
                 if not checkpoint10 then
+                    lap10time = totalTimer - prevLaptimes
                     -- raceEnd = true
-                    timeBonus = 10000 * math.floor(countDown)
+                    timeBonus = 1000000 * math.floor(countDown)
                     countDown = countDown
                     totalTimer = totalTimer
                     totalScore = totalScore
@@ -372,7 +529,7 @@ function script.update(dt)
         else
             -- raceStarted = false
             -- endReached = false
-            mediaPlayer8:setSource(wilhelmScream):setAutoPlay(false)
+            -- mediaPlayer8:setSource(wilhelmScream):setAutoPlay(false)
             mediaPlayer8:setVolume(1.0)
             gameOverMessage = 1
             checkpoint1 = true
@@ -422,9 +579,111 @@ function script.update(dt)
     end
 
 
+
+    if lap1time > 60 then
+        lap1mins = 1
+        lap1secs = math.floor(lap1time - 60)
+        lap1subsecs =  lap1time - math.floor(lap1time)
+    else
+        lap1mins = 0
+        lap1secs = math.floor(lap1time)
+        lap1subsecs = lap1time - lap1secs
+    end
+
+    if lap2time > 60 then
+        lap2mins = 1
+        lap2secs = math.floor(lap2time - 60)
+        lap2subsecs =  lap2time - math.floor(lap2time)
+    else
+        lap2mins = 0
+        lap2secs = math.floor(lap2time)
+        lap2subsecs = lap2time - lap2secs
+    end
+
+    if lap3time > 60 then
+        lap3mins = 1
+        lap3secs = math.floor(lap3time - 60)
+        lap3subsecs =  lap3time - math.floor(lap3time)
+    else
+        lap3mins = 0
+        lap3secs = math.floor(lap3time)
+        lap3subsecs = lap3time - lap3secs
+    end
+
+    if lap4time > 60 then
+        lap4mins = 1
+        lap4secs = math.floor(lap4time - 60)
+        lap4subsecs =  lap4time - math.floor(lap4time)
+    else
+        lap4mins = 0
+        lap4secs = math.floor(lap4time)
+        lap4subsecs = lap2time - lap4secs
+    end
+
+    if lap5time > 60 then
+        lap5mins = 1
+        lap5secs = math.floor(lap5time - 60)
+        lap5subsecs =  lap5time - math.floor(lap5time)
+    else
+        lap5mins = 0
+        lap5secs = math.floor(lap5time)
+        lap5subsecs = lap5time - lap5secs
+    end
+
+    if lap6time > 60 then
+        lap6mins = 1
+        lap6secs = math.floor(lap6time - 60)
+        lap6subsecs =  lap6time - math.floor(lap6time)
+    else
+        lap6mins = 0
+        lap6secs = math.floor(lap6time)
+        lap6subsecs = lap6time - lap6secs
+    end
+
+    if lap7time > 60 then
+        lap7mins = 1
+        lap7secs = math.floor(lap7time - 60)
+        lap7subsecs =  lap7time - math.floor(lap7time)
+    else
+        lap7mins = 0
+        lap7secs = math.floor(lap7time)
+        lap7subsecs = lap7time - lap7secs
+    end
+
+    if lap8time > 60 then
+        lap8mins = 1
+        lap8secs = math.floor(lap8time - 60)
+        lap8subsecs =  lap8time - math.floor(lap8time)
+    else
+        lap8mins = 0
+        lap8secs = math.floor(lap8time)
+        lap8subsecs = lap8time - lap8secs
+    end
+
+    if lap9time > 60 then
+        lap9mins = 1
+        lap9secs = math.floor(lap9time - 60)
+        lap9subsecs =  lap9time - math.floor(lap9time)
+    else
+        lap9mins = 0
+        lap9secs = math.floor(lap9time)
+        lap9subsecs = lap9time - lap9secs
+    end
+
+    if lap10time > 60 then
+        lap10mins = 1
+        lap10secs = math.floor(lap10time - 60)
+        lap10subsecs =  lap10time - math.floor(lap10time)
+    else
+        lap10mins = 0
+        lap10secs = math.floor(lap10time)
+        lap10subsecs = lap10time - lap10secs
+    end
+
+
     -- ac.debug("total timer", totalTimer)
     -- ac.debug("rounded timer", math.round(totalTimer, 3))
-    ac.debug("subseconds", string.sub(string.format("%.2f", subSeconds), -2, -1))
+    -- ac.debug("subseconds", string.sub(string.format("%.2f", subSeconds), -2, -1))
 
     secondsTime = totalTimer/60
     if secondsTime > 1 then
@@ -600,94 +859,19 @@ function script.update(dt)
     collisionMessageTimer = collisionMessageTimer + dt
     collisionTimer = collisionTimer - dt
 
+    ac.debug("lap1 timer", lap1time)
+    ac.debug("lap2 timer", lap2time)
+    ac.debug("lap3 timer", lap3time)
+    ac.debug("lap4 timer", lap4time)
+    ac.debug("lap5 timer", lap5time)
+    ac.debug("lap6 timer", lap6time)
+    ac.debug("lap7 timer", lap7time)
+    ac.debug("lap8 timer", lap8time)
+    ac.debug("lap9 timer", lap9time)
+    ac.debug("lap10timer", lap10time)
+
     -- local comboFadingRate = 0.1 * math.lerp(1, 0.1, math.lerpInvSat(player.speedKmh, 45, 160)) + player.wheelsOutside / 4
-    -- comboMeter = math.max(1, comboMeter - dt * comboFadingRate)
-
-    local sim = ac.getSim()
-    while sim.carsCount > #carsState do
-        carsState[#carsState + 1] = {}
-    end
-
-    if wheelsWarningTimeout > 0 then
-        wheelsWarningTimeout = wheelsWarningTimeout - dt
-    elseif player.wheelsOutside > 0 then
-        if wheelsWarningTimeout == 0 then
-        end
-        addMessage(offRoadMessages[math.random(1, #offRoadMessages)], -1)
-        wheelsWarningTimeout = 15
-    end
-
-
-
-    -- ac.debug(" player", player.collidedWith)
-    for i = 1, ac.getSim().carsCount do
-        local car = ac.getCarState(i) --or error()
-        local state = carsState[i]
-        ac.debug(" player ", player.collidedWith)
-        ac.debug(" collision timer ", collisionTimer)
-
-        if car.position:closerToThan(player.position, 10) then
-            local drivingAlong = math.dot(car.look, player.look) > 0.2
-            if not drivingAlong then
-                state.drivingAlong = false
-
-                if not state.nearMiss and car.position:closerToThan(player.position, 3) then
-                    state.nearMiss = true
-                end
-            end
-
-            if player.collidedWith == 0 then
-                if collisionMessageTimer > 5 then
-                    -- comboMeter = comboMeter / 2.0
-                    addMessage(CollisionMessages[math.random(1, #CollisionMessages)], -1)
-                    collisionMessageTimer = 0
-                    collisionTimer = 2
-                end
-            end
-
-            if not state.overtaken and not state.collided and state.drivingAlong then
-                local posDir = (car.position - player.position):normalize()
-                local posDot = math.dot(posDir, car.look)
-                state.maxPosDot = math.max(state.maxPosDot, posDot)
-                if posDot < -0.5 and state.maxPosDot > 0.5 then
-                    -- add_amt = math.ceil(10 * comboMeter)
-                    -- if player.collidedWith == 0 then
-                    if collisionTimer > 0 then
-                        totalScore = totalScore + collisionOvertakePts
-                        addMessage('OVERTAKE 0.25x: + ' .. collisionOvertakePts .. ' pts', 2)
-                        -- collisionTimer = 0
-                    -- end  
-                    elseif car.position:closerToThan(player.position, 3) then
-                        totalScore = totalScore + closeOvertakePts
-                        addMessage(CloseMessages[math.random(#CloseMessages)], 1)
-                    else
-                        totalScore = totalScore + overtakePts
-                        addMessage('OVERTAKE 1x: + ' .. overtakePts .. ' pts', 0)
-                    end
-                    -- totalScore = totalScore + overtakePts
-                    -- comboMeter = comboMeter + 1
-                    -- comboColor = comboColor + 90
-                    if muteToggle then
-                        mediaPlayer3:setSource(noti)
-                        mediaPlayer3:setVolume(1)
-                        mediaPlayer3:play()
-                    else
-                        mediaPlayer3:setSource(noti)
-                        mediaPlayer3:setVolume(0)
-                        mediaPlayer3:pause()
-                    end
-
-                    state.overtaken = true
-                end
-            end
-        else
-            state.maxPosDot = -1
-            state.overtaken = false
-            state.collided = false
-            state.drivingAlong = true
-            state.nearMiss = false
-        end
-    end
+    -- comboMeter = math.max(1, comboMeter - dt * comboFadingRate) 
 end
 
 
@@ -728,9 +912,9 @@ local seconds_xpos = seconds10s_xpos + font_sizex
 local subseconds_xpos = seconds_xpos + 2*font_sizex
 
 
-ac.debug("font size", basic_fontsize)
-ac.debug("x_dim", uiState.windowSize.x)
-ac.debug("font size x_dim", font_sizex)
+-- ac.debug("font size", basic_fontsize)
+-- ac.debug("x_dim", uiState.windowSize.x)
+-- ac.debug("font size x_dim", font_sizex)
 
 function script.drawUI()
     local keyState = ac.isKeyDown(ac.KeyIndex.Control) and ac.isKeyDown(ac.KeyIndex.D)
@@ -921,24 +1105,28 @@ function script.drawUI()
 
         local checkptflagdist = 0.005
         local player = ac.getCarState(1)
-        local beginraceflag = math.applyLag(beginraceflag, player.splinePosition > gameStartPos and player.splinePosition < gameStartPos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
-        local checkpt1flag = math.applyLag(checkpt1flag, player.splinePosition > checkpt1pos and player.splinePosition < checkpt1pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
-        local checkpt2flag = math.applyLag(checkpt2flag, player.splinePosition > checkpt2pos and player.splinePosition < checkpt2pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
-        local checkpt3flag = math.applyLag(checkpt3flag, player.splinePosition > checkpt3pos and player.splinePosition < checkpt3pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
-        local checkpt4flag = math.applyLag(checkpt4flag, player.splinePosition > checkpt4pos and player.splinePosition < checkpt4pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
-        local checkpt5flag = math.applyLag(checkpt5flag, player.splinePosition > checkpt5pos and player.splinePosition < checkpt5pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
-        local checkpt6flag = math.applyLag(checkpt6flag, player.splinePosition > checkpt6pos and player.splinePosition < checkpt6pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
-        local checkpt7flag = math.applyLag(checkpt7flag, player.splinePosition > checkpt7pos and player.splinePosition < checkpt7pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
-        local checkpt8flag = math.applyLag(checkpt8flag, player.splinePosition > checkpt8pos and player.splinePosition < checkpt8pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
-        local checkpt9flag = math.applyLag(checkpt9flag, player.splinePosition > checkpt9pos and player.splinePosition < checkpt9pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
-        local finishflag = math.applyLag(finishflag, player.splinePosition > finishpos and player.splinePosition < finishpos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        beginraceflag = math.applyLag(beginraceflag, player.splinePosition > gameStartPos and player.splinePosition < gameStartPos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        checkpt1flag = math.applyLag(checkpt1flag, player.splinePosition > checkpt1pos and player.splinePosition < checkpt1pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        checkpt2flag = math.applyLag(checkpt2flag, player.splinePosition > checkpt2pos and player.splinePosition < checkpt2pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        checkpt3flag = math.applyLag(checkpt3flag, player.splinePosition > checkpt3pos and player.splinePosition < checkpt3pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        checkpt4flag = math.applyLag(checkpt4flag, player.splinePosition > checkpt4pos and player.splinePosition < checkpt4pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        checkpt5flag = math.applyLag(checkpt5flag, player.splinePosition > checkpt5pos and player.splinePosition < checkpt5pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        checkpt6flag = math.applyLag(checkpt6flag, player.splinePosition > checkpt6pos and player.splinePosition < checkpt6pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        checkpt7flag = math.applyLag(checkpt7flag, player.splinePosition > checkpt7pos and player.splinePosition < checkpt7pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        checkpt8flag = math.applyLag(checkpt8flag, player.splinePosition > checkpt8pos and player.splinePosition < checkpt8pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        checkpt9flag = math.applyLag(checkpt9flag, player.splinePosition > checkpt9pos and player.splinePosition < checkpt9pos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        finishflag = math.applyLag(finishflag, player.splinePosition > finishpos and player.splinePosition < finishpos + checkptflagdist and 1 or 0, 0.1, uiState.dt)
 
-        local checkpointcolor = rgbm(0.8, 0.2, 0.8, 1)
+        -- local checkpointcolor = rgbm(0.8, 0.2, 0.8, 1)
+        local checkpointcolor = rgbm(1.0, 0.0, 0.0, 1)
+        local extendplaycolor = rgbm(1.0, 0, 0, 1)
 
        local checkpt_windowx_scale = 6*bigfont_sizex
        local checkpt_windowy_scale = 6*bigfont_sizey
        local extendplay_windowx_scale = 6.5*bigfont_sizex
-       local extendplay_windowy_scale = 5*bigfont_sizey
+       local extendplay_windowy_scale = 5.5*bigfont_sizey
+       local laptime_windowx_scale = 4.5*bigfont_sizex
+       local laptime_windowy_scale = 4*bigfont_sizey
 
 
         ui.beginTransparentWindow("beginRaceWindow", vec2(uiState.windowSize.x * 0.5 - 5*bigfont_sizex, uiState.windowSize.y * 0.5 - 5*bigfont_sizey), vec2(2000, 2000), false)
@@ -949,155 +1137,266 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("checkpoint1Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5-checkpt_windowy_scale), vec2(2000, 2000), false)
-        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt1flag)
-        ui.pushACFont("650S_big")
-        ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
-        ui.popACFont()
-        ui.popStyleVar()
-        ui.endTransparentWindow()
+        -- ui.beginTransparentWindow("checkpoint1Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5-checkpt_windowy_scale), vec2(2000, 2000), false)
+        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt1flag)
+        -- ui.pushACFont("650S_big")
+        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        -- ui.popACFont()
+        -- ui.popStyleVar()
+        -- ui.endTransparentWindow()
   
         ui.beginTransparentWindow("extendPlay1Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, checkpt1flag)
         ui.pushACFont("650S_big")
-        ui.acText('EXTEND PLAY!', big_fontsize, 0, checkpointcolor)
+        ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("checkpoint2Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt2flag)
-        ui.pushACFont("650S_big")
-        ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        ui.beginTransparentWindow("lap1Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.5-laptime_windowy_scale), vec2(2000, 2000), false)
+        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt1flag)
+        ui.pushACFont("ddm_digital_odo")
+        ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
+        ui.acText(string.format("%02d", lap1mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.format("%02d", lap1secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.sub(string.format("%.02f", lap1subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
+
+        -- ui.beginTransparentWindow("checkpoint2Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
+        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt2flag)
+        -- ui.pushACFont("650S_big")
+        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        -- ui.popACFont()
+        -- ui.popStyleVar()
+        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("extendPlay2Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, checkpt2flag)
         ui.pushACFont("650S_big")
-        ui.acText('EXTEND PLAY!', big_fontsize, 0, checkpointcolor)
+        ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("checkpoint3Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt3flag)
-        ui.pushACFont("650S_big")
-        ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        ui.beginTransparentWindow("lap2Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.5-laptime_windowy_scale), vec2(2000, 2000), false)
+        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt2flag)
+        ui.pushACFont("ddm_digital_odo")
+        ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
+        ui.acText(string.format("%02d", lap2mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.format("%02d", lap2secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.sub(string.format("%.02f", lap2subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
+
+        -- ui.beginTransparentWindow("checkpoint3Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
+        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt3flag)
+        -- ui.pushACFont("650S_big")
+        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        -- ui.popACFont()
+        -- ui.popStyleVar()
+        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("extendPlay3Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, checkpt3flag)
         ui.pushACFont("650S_big")
-        ui.acText('EXTEND PLAY!', big_fontsize, 0, checkpointcolor)
+        ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("checkpoint4Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt4flag)
-        ui.pushACFont("650S_big")
-        ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        ui.beginTransparentWindow("lap3Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.5-laptime_windowy_scale), vec2(2000, 2000), false)
+        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt3flag)
+        ui.pushACFont("ddm_digital_odo")
+        ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
+        ui.acText(string.format("%02d", lap3mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.format("%02d", lap3secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.sub(string.format("%.02f", lap3subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
+
+        -- ui.beginTransparentWindow("checkpoint4Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
+        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt4flag)
+        -- ui.pushACFont("650S_big")
+        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        -- ui.popACFont()
+        -- ui.popStyleVar()
+        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("extendPlay4Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, checkpt4flag)
         ui.pushACFont("650S_big")
-        ui.acText('EXTEND PLAY!', big_fontsize, 0, checkpointcolor)
+        ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("checkpoint5Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt5flag)
-        ui.pushACFont("650S_big")
-        ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        ui.beginTransparentWindow("lap4Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.5-laptime_windowy_scale), vec2(2000, 2000), false)
+        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt4flag)
+        ui.pushACFont("ddm_digital_odo")
+        ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
+        ui.acText(string.format("%02d", lap4mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.format("%02d", lap4secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.sub(string.format("%.02f", lap4subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
+
+        -- ui.beginTransparentWindow("checkpoint5Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
+        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt5flag)
+        -- ui.pushACFont("650S_big")
+        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        -- ui.popACFont()
+        -- ui.popStyleVar()
+        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("extendPlay5Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, checkpt5flag)
         ui.pushACFont("650S_big")
-        ui.acText('EXTEND PLAY!', big_fontsize, 0, checkpointcolor)
+        ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("checkpoint6Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt6flag)
-        ui.pushACFont("650S_big")
-        ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        ui.beginTransparentWindow("lap5Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.5-laptime_windowy_scale), vec2(2000, 2000), false)
+        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt5flag)
+        ui.pushACFont("ddm_digital_odo")
+        ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
+        ui.acText(string.format("%02d", lap5mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.format("%02d", lap5secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.sub(string.format("%.02f", lap5subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
+
+        -- ui.beginTransparentWindow("checkpoint6Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
+        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt6flag)
+        -- ui.pushACFont("650S_big")
+        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        -- ui.popACFont()
+        -- ui.popStyleVar()
+        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("extendPlay6Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, checkpt6flag)
         ui.pushACFont("650S_big")
-        ui.acText('EXTEND PLAY!', big_fontsize, 0, checkpointcolor)
+        ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("checkpoint7Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt7flag)
-        ui.pushACFont("650S_big")
-        ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        ui.beginTransparentWindow("lap6Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.5-laptime_windowy_scale), vec2(2000, 2000), false)
+        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt6flag)
+        ui.pushACFont("ddm_digital_odo")
+        ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
+        ui.acText(string.format("%02d", lap6mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.format("%02d", lap6secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.sub(string.format("%.02f", lap6subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
+
+        -- ui.beginTransparentWindow("checkpoint7Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
+        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt7flag)
+        -- ui.pushACFont("650S_big")
+        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        -- ui.popACFont()
+        -- ui.popStyleVar()
+        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("extendPlay7Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, checkpt7flag)
         ui.pushACFont("650S_big")
-        ui.acText('EXTEND PLAY!', big_fontsize, 0, checkpointcolor)
+        ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("checkpoint8Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt8flag)
-        ui.pushACFont("650S_big")
-        ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        ui.beginTransparentWindow("lap7Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.5-laptime_windowy_scale), vec2(2000, 2000), false)
+        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt7flag)
+        ui.pushACFont("ddm_digital_odo")
+        ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
+        ui.acText(string.format("%02d", lap7mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.format("%02d", lap7secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.sub(string.format("%.02f", lap7subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
+
+        -- ui.beginTransparentWindow("checkpoint8Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
+        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt8flag)
+        -- ui.pushACFont("650S_big")
+        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        -- ui.popACFont()
+        -- ui.popStyleVar()
+        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("extendPlay8Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, checkpt8flag)
         ui.pushACFont("650S_big")
-        ui.acText('EXTEND PLAY!', big_fontsize, 0, checkpointcolor)
+        ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("checkpoint9Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt9flag)
-        ui.pushACFont("650S_big")
-        ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        ui.beginTransparentWindow("lap8Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.5-laptime_windowy_scale), vec2(2000, 2000), false)
+        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt8flag)
+        ui.pushACFont("ddm_digital_odo")
+        ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
+        ui.acText(string.format("%02d", lap8mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.format("%02d", lap8secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.sub(string.format("%.02f", lap8subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
+
+        -- ui.beginTransparentWindow("checkpoint9Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
+        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt9flag)
+        -- ui.pushACFont("650S_big")
+        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
+        -- ui.popACFont()
+        -- ui.popStyleVar()
+        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("extendPlay9Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, checkpt9flag)
         ui.pushACFont("650S_big")
-        ui.acText('EXTEND PLAY!', big_fontsize, 0, checkpointcolor)
+        ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("finishRaceWindow", vec2(uiState.windowSize.x * 0.5 - 10*bigfont_sizex, uiState.windowSize.y * 0.5 - 4*bigfont_sizey), vec2(2000, 2000), false)
+        ui.beginTransparentWindow("lap9Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.5-laptime_windowy_scale), vec2(2000, 2000), false)
+        ui.pushStyleVar(ui.StyleVar.Alpha, checkpt9flag)
+        ui.pushACFont("ddm_digital_odo")
+        ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
+        ui.acText(string.format("%02d", lap9mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.format("%02d", lap9secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.sub(string.format("%.02f", lap9subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.popACFont()
+        ui.popStyleVar()
+        ui.endTransparentWindow()
+
+        -- ui.beginTransparentWindow("finishRaceWindow", vec2(uiState.windowSize.x * 0.5 - 10*bigfont_sizex, uiState.windowSize.y * 0.5 - 4*bigfont_sizey), vec2(2000, 2000), false)
+        ui.beginTransparentWindow("finishRaceWindow", vec2(uiState.windowSize.x * 0.5 - 10*bigfont_sizex, uiState.windowSize.y * 0.5 - 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         -- ui.beginOutline()
         ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
         ui.pushACFont("650S_big")
         ui.acText('FINISH! YOU MADE IT!', big_fontsize, 0, checkpointcolor)
+        ui.popACFont()
+        ui.popStyleVar()
+        ui.endTransparentWindow()
+
+        ui.beginTransparentWindow("lap10Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.5-laptime_windowy_scale), vec2(2000, 2000), false)
+        ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
+        ui.pushACFont("ddm_digital_odo")
+        ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
+        ui.acText(string.format("%02d", lap10mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.format("%02d", lap10secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
+        ui.acText(string.sub(string.format("%.02f", lap10subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
