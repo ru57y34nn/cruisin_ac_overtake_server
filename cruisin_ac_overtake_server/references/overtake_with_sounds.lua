@@ -57,7 +57,7 @@ function script.prepare(dt)
     return ac.getCarState(1).speedKmh > requiredSpeed
 end
 
-local countDown = 90
+local countDown = 100
 local timePassed = 0
 local speedMessageTimer = 0
 local mackMessageTimer = 0
@@ -74,7 +74,7 @@ local CloseMessages = { 'Way to Go! 3x', 'Close One! 3x', 'Near Miss! 3x', 'Wow!
 local KindaCloseMessages = {'Pretty Close! 1x', 'Not bad! 1x', 'That was almost scary! 1x', 'I think you scared them! 1x'}
 
 local uiState = ac.getUI()
-local uiCustomPos = vec2(uiState.windowSize.x * 0.5 - 600, 100)
+local uiCustomPos = vec2(uiState.windowSize.x * 0.5 - 1000, 100)
 local uiMoveMode = false
 local lastUiMoveKeyState = false
 
@@ -86,10 +86,14 @@ local messageState = false
 local musicVol = 0.25
 local stored = {}
 
+local checkpoint1 = false
+
 
 stored.playerscore = ac.storage('playerscore', personalBest) --default value
+personalBest = stored.playerscore:set(0.0)
 personalBest = stored.playerscore:get()
-ac.sendChatMessage("has a highscore of " .. personalBest .. " pts.")
+
+-- ac.sendChatMessage("has a highscore of " .. personalBest .. " pts.")
  
 local function sendhighscore(connectedCarIndex, connectedSessionID)
     ac.sendChatMessage("has a highscore of " .. personalBest .. " pts.")
@@ -100,7 +104,10 @@ ac.onClientConnected(sendhighscore)
 
 function script.update(dt)
 
-    local player = ac.getCarState(1)
+    local player = ac.getCar(0)
+    ac.debug("player pos", player.position)
+    ac.debug("spline pos", player.splinePosition)
+
     if player.engineLifeLeft < 1 then
         if totalScore > personalBest then
             personalBest = math.floor(totalScore)
@@ -109,11 +116,30 @@ function script.update(dt)
         end
         totalScore = 0
         comboMeter = 1
+        -- countDown = 0
         return
+    end
+
+    local playerPos = player.position
+    local playerDir = ac.getCameraForward()
+    if ac.isKeyDown(ac.KeyIndex.Delete) and player.speedKmh < 15 then
+        physics.setCarPosition(0, playerPos, playerDir)
     end
 
     if timePassed == 0 then
         addMessage('Let’s go!', 0)
+    end
+
+    if player.splinePosition > 0.016 and countDown > 0 then
+        countDown = countDown - dt
+    end
+
+    if player.splinePosition > 0.10 then
+        if checkpoint1 == false then
+            countDown = 99
+            addMessage("CHECKPOINT!!!", 1)
+            checkpoint1 = true
+        end
     end
 
 
@@ -164,17 +190,20 @@ function script.update(dt)
 
     if countDown < 0 then
         totalScore = 0
-        countDown = 90
+        comboMeter = 1
+        countDown = 0
         addMessage('Out of Time!', -1)
     end
 
-    if countDown > 90 then
-        countDown = 90
+    if countDown > 100 then
+        countDown = 100
     end
 
-    if timePassed > 15 then
-        countDown = countDown - dt
-    end
+    -- if timePassed > 15 then
+    -- if countDown > 0 then
+    --     countDown = countDown - dt
+    -- end
+    -- end
 
 
     local uiMoveKeyState = ac.isKeyDown(ac.KeyIndex.B)
@@ -220,29 +249,28 @@ function script.update(dt)
 
     if timePassed == 0 then
         addMessage(ac.getCarName(0), 0)
-        addMessage('Based on Overtake by Ilja, Modded by Boon and Rusty', 2)
         addMessage('CTRL + D to toggle UI', -1)
         addMessage('M to toggle sound fx', -1)
         addMessage('Delete to re-orient car', -1)
-        -- addMessage('Press "U" to increase music volume', -1)
-        -- addMessage('Press "D" to decrease music volume', -1)
+        addMessage('B to toggle UI move mode', -1)
+        addMessage('U and D to increase/decrease music volume', -1)
+        addMessage('Based on Overtake by Ilja, Modded by Boon and Rusty', 2)
     end
 
 
 
 
-    local player = ac.getCarState(1)
-    if player.engineLifeLeft < 1 then
-        ac.console('Overtake score: ' .. totalScore)
-        return
-    end
+    -- local player = ac.getCar(0)
+    -- if player.engineLifeLeft < 1 then
+    --     ac.console('Overtake score: ' .. totalScore)
+    --     return
+    -- end
 
-    local playerPos = player.position
-    local playerDir = ac.getCameraForward()
-    if ac.isKeyDown(ac.KeyIndex.Delete) and player.speedKmh < 15 then
-        physics.setCarPosition(0, playerPos, playerDir)
-
-    end
+    -- local playerPos = player.position
+    -- local playerDir = ac.getCameraForward()
+    -- if ac.isKeyDown(ac.KeyIndex.Delete) and player.speedKmh < 15 then
+    --     physics.setCarPosition(0, playerPos, playerDir)
+    -- end
 
     timePassed = timePassed + dt
     speedMessageTimer = speedMessageTimer + dt
@@ -264,7 +292,7 @@ function script.update(dt)
         if wheelsWarningTimeout == 0 then
         end
         addMessage('Get back on the road!', -1)
-        wheelsWarningTimeout = 60
+        wheelsWarningTimeout = 30
     end
 
     if player.speedKmh < requiredSpeed then
@@ -273,6 +301,7 @@ function script.update(dt)
             ac.console('Overtake score: ' .. totalScore)
             comboMeter = 1
             totalScore = 0
+            -- countDown = 0
 
             hasPlayedSpree = false
             hasPlayedFrenzy = false
@@ -282,10 +311,10 @@ function script.update(dt)
             hasPlayedInvincible = false
             hasPlayedInconcievable = false
             hasPlayedUnfriggenbelievable = false
-            -- if totalScore > personalBest then
-            --     personalBest = totalScore
-            --     ac.sendChatMessage('just scored a ' .. personalBest)
-            -- end
+            if totalScore > personalBest then
+                personalBest = totalScore
+                ac.sendChatMessage('just scored a ' .. personalBest)
+            end
         else
             if dangerouslySlowTimer < 3 then
                 if speedMessageTimer > 5 and not timePassed == 0 then
@@ -300,7 +329,7 @@ function script.update(dt)
 
         end
         dangerouslySlowTimer = dangerouslySlowTimer + dt
-        comboMeter = 1
+        -- comboMeter = 1
         if totalScore > personalBest and dangerouslySlowTimer > 3 then
             personalBest = totalScore
             stored.playerscore:set(personalBest)
@@ -329,7 +358,7 @@ function script.update(dt)
         if totalScore >= personalBest then
             personalBest = totalScore
             stored.playerscore:set(personalBest)
-            -- ac.sendChatMessage("has a NEW highscore of " .. totalScore .. " pts.")
+            ac.sendChatMessage("has a NEW highscore of " .. totalScore .. " pts.")
             if muteToggle then
                 mediaPlayer:setSource(PBlink)
                 mediaPlayer:setVolume(1)
@@ -343,6 +372,7 @@ function script.update(dt)
         end
         comboMeter = 1
         totalScore = 0
+        -- countDown = 0
 
         hasPlayedSpree = false
         hasPlayedFrenzy = false
@@ -475,60 +505,105 @@ function script.update(dt)
     end
 
 
-
-
-
-
-
     -- local car = ac.getCarState(1)
     -- if car.pos:closerToThan(player.pos,2.5) then
 
     -- end
-
+    ac.debug(" player", player.collidedWith)
     for i = 2, ac.getSim().carsCount do
-        local car = ac.getCarState(i)
+        local car = ac.getCar(i-1) --or error()
         local state = carsState[i]
+        ac.debug(" car " .. i-1, car.collidedWith)
 
 
-        -- ac.debug(car.collidedWith .. " COLLISION")
-
-        if car.position:closerToThan(player.position, 10) then
+        if car.position:closerToThan(player.position, 7) then
             local drivingAlong = math.dot(car.look, player.look) > 0.2
             if not drivingAlong then
                 state.drivingAlong = false
 
                 if not state.nearMiss and car.position:closerToThan(player.position, 3) then
                     state.nearMiss = true
+                    comboMeter = comboMeter + 3
+                    comboColor = comboColor + math.random(1, 90)
+                    comboColor = comboColor + 90
+                    addMessage(CloseMessages[math.random(#CloseMessages)], 2)
 
-                    if car.position:closerToThan(player.position, 2.5) then
-                        comboMeter = comboMeter + 3
-                        comboColor = comboColor + math.random(1, 90)
-                        comboColor = comboColor + 90
-                        addMessage(CloseMessages[math.random(#CloseMessages)], 2)
-                    else
-                        comboMeter = comboMeter + 1
-                        comboColor = comboColor + math.random(1, 90)
-                        comboColor = comboColor + 90
-                        addMessage(KindaCloseMessages[math.random(#KindaCloseMessages)], 1)
+                    -- if car.position:closerToThan(player.position, 2.5) then
+                    --     comboMeter = comboMeter + 3
+                    --     comboColor = comboColor + math.random(1, 90)
+                    --     comboColor = comboColor + 90
+                    --     addMessage(CloseMessages[math.random(#CloseMessages)], 2)
+                    -- else
+                    --     comboMeter = comboMeter + 1
+                    --     comboColor = comboColor + math.random(1, 90)
+                    --     comboColor = comboColor + 90
+                    --     addMessage(KindaCloseMessages[math.random(#KindaCloseMessages)], 1)
 
-                    end
+                    -- end
                 end
             end
 
-            -- if car.collidedWith == 0 and not state.collided then
+            -- if car.collidedWith == 0 then --and not state.collided then
             --     comboMeter = 1
             --     totalScore = 0
-            --     addMessage('WEINER!!!', 1)
+            --     countDown = 0
+            --     addMessage('WEINER!!!', -1)
             --     state.collided = true
+            --     -- if mackMessageTimer > 1 then
+            --     --     addMessage(MackMessages[math.random(1, #MackMessages)], -1)
+            --     --     mackMessageTimer = 0
+            --     -- end
             -- end
+    
+            -- if car.collidedWith == 1 and not state.collided then
+
+            --     if totalScore >= personalBest then
+            --         personalBest = totalScore
+            --         stored.playerscore:set(personalBest)
+            --         -- ac.sendChatMessage("has a NEW highscore of " .. totalScore .. " pts.")
+            --         if muteToggle then
+            --             mediaPlayer:setSource(PBlink)
+            --             mediaPlayer:setVolume(1)
+            --             mediaPlayer:play()
+            --         else
+            --             mediaPlayer:setSource(PBlink)
+            --             mediaPlayer:setVolume(0)
+            --             mediaPlayer:pause()
+            --         end
+            --         ac.sendChatMessage('just scored a ' .. personalBest)
+            --     end
+            --     comboMeter = 1
+            --     totalScore = 0
+            --     countDown = 0
+            --     state.collided = true
+        
+            --     hasPlayedSpree = false
+            --     hasPlayedFrenzy = false
+            --     hasPlayedRiot = false
+            --     hasPlayedRampage = false
+            --     hasPlayedUntouchable = false
+            --     hasPlayedInvincible = false
+            --     hasPlayedInconcievable = false
+            --     hasPlayedUnfriggenbelievable = false
+        
+            --     if mackMessageTimer > 1 then
+            --         addMessage(MackMessages[math.random(1, #MackMessages)], -1)
+            --         mackMessageTimer = 0
+        
+            --     end
+            -- end
+
 
             if not state.overtaken and not state.collided and state.drivingAlong then
                 local posDir = (car.position - player.position):normalize()
                 local posDot = math.dot(posDir, car.look)
                 state.maxPosDot = math.max(state.maxPosDot, posDot)
                 if posDot < -0.5 and state.maxPosDot > 0.5 then
-                    totalScore = totalScore + math.ceil(10 * comboMeter) * math.floor(countDown)
-                    countDown = countDown + 10 * math.lerp(0.1, 1, math.lerpInvSat(player.speedKmh, 45, 160))
+                    -- countDown = countDown + 5 * math.lerp(0.2, 1, math.lerpInvSat(player.speedKmh, 45, 160))
+                    totalScore = totalScore + math.ceil(10 * comboMeter) --* math.floor(countDown)
+                    addMessage('Overtake 1x ' , comboMeter > 50 and 1 or 0)
+                    addMessage(math.ceil(10*comboMeter) .. 'x combo bonus',  comboMeter > 50 and 1 or 0)
+                    -- addMessage(math.floor(countDown) .. 'x time bonus', comboMeter > 50 and 1 or 0)
                     comboMeter = comboMeter + 1
                     comboColor = comboColor + 90
                     if muteToggle then
@@ -540,32 +615,28 @@ function script.update(dt)
                         mediaPlayer3:setVolume(0)
                         mediaPlayer3:pause()
                     end
-
-                    addMessage('Overtake 1x ' , comboMeter > 50 and 1 or 0)
-                    addMessage(math.ceil(10*comboMeter) .. 'x combo bonus',  comboMeter > 50 and 1 or 0)
-                    addMessage(math.floor(countDown) .. 'x time bonus', comboMeter > 50 and 1 or 0)
                     state.overtaken = true
 
                     -- if car.position:closerToThan(player.position, 3) then
                     --     comboMeter = comboMeter + 3
                     --     comboColor = comboColor + math.random(1, 90)
                     --     comboColor = comboColor + 90
-                        if muteToggle then
-                            mediaPlayer3:setSource(noti)
-                            mediaPlayer3:setVolume(1)
-                            mediaPlayer3:play()
-                        else
-                            mediaPlayer3:setSource(noti)
-                            mediaPlayer3:setVolume(0)
-                            mediaPlayer3:pause()
-                        end
+                    -- if muteToggle then
+                    --     mediaPlayer3:setSource(noti)
+                    --     mediaPlayer3:setVolume(1)
+                    --     mediaPlayer3:play()
+                    -- else
+                    --     mediaPlayer3:setSource(noti)
+                    --     mediaPlayer3:setVolume(0)
+                    --     mediaPlayer3:pause()
+                    -- end
 
                         
                     -- end
 
                 end
             end
-
+            
         else
             state.maxPosDot = -1
             state.overtaken = false
@@ -579,9 +650,10 @@ end
 local messages = {}
 local glitter = {}
 local glitterCount = 0
+local numMssgs = 8
 
 function addMessage(text, mood)
-    for i = math.min(#messages + 1, 4), 6, -1 do
+    for i = math.min(#messages + 1, numMssgs), 2, -1 do
         messages[i] = messages[i - 1]
         messages[i].targetPos = i
     end
@@ -635,6 +707,8 @@ local function updateMessages(dt)
     end
 end
 
+local player = ac.getCar(0)
+-- local playerPos = player.position
 local speedWarning = 0
 local UIToggle = true
 local LastKeyState = false
@@ -682,7 +756,7 @@ function script.drawUI()
         ui.text('Cruisin\' AC: Outrun Overtake')
         -- ui.sameLine(0, 20)
         ui.pushFont(ui.Font.Huge)
-        ui.text('PB:' .. personalBest .. ' pts')
+        ui.text('High Score: ' .. personalBest .. ' pts')
         ui.popFont()
         ui.popStyleVar()
 
@@ -691,16 +765,20 @@ function script.drawUI()
         ui.sameLine(0, 40)
         ui.beginRotation()
         ui.textColored(math.ceil(comboMeter * 10) / 10 .. 'x', colorCombo)
-        if comboMeter > 20 then
+        -- if comboMeter > 20 then
+        if comboMeter > 10 then
             ui.endRotation(math.sin(comboMeter / 180 * 3141.5) * 3 * math.lerpInvSat(comboMeter, 20, 30) + 90)
         end
-        if comboMeter > 50 then
+        -- if comboMeter > 50 then
+        if comboMeter > 20 then
             ui.endRotation(math.sin(comboMeter / 220 * 3141.5) * 3 * math.lerpInvSat(comboMeter, 20, 30) + 90)
         end
-        if comboMeter > 100 then
+        -- if comboMeter > 100 then
+        if comboMeter > 30 then
             ui.endRotation(math.sin(comboMeter / 260 * 3141.5) * 3 * math.lerpInvSat(comboMeter, 20, 30) + 90)
         end
-        if comboMeter > 250 then
+        -- if comboMeter > 250 then
+        if comboMeter > 40 then
             ui.endRotation(math.sin(comboMeter / 360 * 3141.5) * 3 * math.lerpInvSat(comboMeter, 20, 30) + 90)
         end
 
@@ -712,7 +790,7 @@ function script.drawUI()
         local startPos = ui.getCursor()
         for i = 1, #messages do
             local m = messages[i]
-            local f = math.saturate(4 - m.currentPos) * math.saturate(8 - m.age)
+            local f = math.saturate(numMssgs - m.currentPos) * math.saturate(8 - m.age)
             ui.setCursor(startPos + vec2(20 + math.saturate(1 - m.age * 10) ^ 2 * 100, (m.currentPos - 1) * 30))
             ui.textColored(m.text, m.mood == 1 and rgbm(0, 1, 0, f)
                 or m.mood == -1 and rgbm(1, 0, 0, f) or m.mood == 2 and rgbm(100, 84, 0, f) or rgbm(1, 1, 1, f))
@@ -736,11 +814,12 @@ function script.drawUI()
 
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("overtakeScore", vec2(uiState.windowSize.x * 0.5, 100), vec2(400, 400), false)
+        ui.beginTransparentWindow("countDownTimer", vec2(uiState.windowSize.x * 0.5, 100), vec2(1400, 1400), false)
         ui.beginOutline()
-        ui.pushStyleVar(ui.StyleVar.Alpha, 1 - speedWarning)
+        -- ui.pushStyleVar(ui.StyleVar.Alpha, 1 - speedWarning)
         ui.pushFont(ui.Font.Huge)
-        ui.text("Time")
+        ui.text("Time") 
+        -- ui.text(player.splinePosition)
         ui.pushFont(ui.Font.Huge)
         ui.text(math.floor(countDown).. "")
         -- ui.pushFont(ui.Font.Huge)

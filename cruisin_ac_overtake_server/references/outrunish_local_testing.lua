@@ -6,6 +6,11 @@
 local requiredSpeed = 40
 local countDown = 90
 
+local splashWave = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193677215276216584/Wolf_and_Raven_-_Tribute_to_OutRun_-_03_Splashwave.mp3'
+local tedleo = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193724302571343943/11_Lui_Prima_Mobile.mp3'
+local mediaPlayer4 = ui.MediaPlayer()
+local mediaPlayer5 = ui.MediaPlayer()
+
 function kmhtomph(kmh)
   return math.ceil(kmh * 0.621)
 end
@@ -56,9 +61,30 @@ local function addMessage(text, mood)
   end
 end
 
+
+local hasPlayedTedleo = false
+
 function script.update(dt)
   if timePassed == 0 then
     addMessage('Let’s go!', 0)
+  end
+
+  if not hasPlayedTedleo then
+    mediaPlayer4:setSource(tedleo):setAutoPlay(false)
+    mediaPlayer4:setVolume(1)
+    mediaPlayer4:play()
+    if mediaPlayer4:availableTime() < 2 then
+      mediaPlayer4:pause()
+    end
+  --   while mediaPlayer4:palying() then
+  --   mediaPlayer4:ended()
+  --   hasPlayedTedleo = true
+  --   hasPlayedSplashWave = false
+
+  -- elseif not hasPlayedSplashWave then
+  --   mediaPlayer5:setSource(splashWave):setAutoPlay(false)
+  --   mediaPlayer5:setVolume(1)
+  --   mediaPlayer5:play()
   end
 
   local player = ac.getCar(0)

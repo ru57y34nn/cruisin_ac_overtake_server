@@ -13,7 +13,7 @@ end
 local displaySpeed = kmhtomph(requiredSpeed)
 
 -- Event doesn’t start right away, instead, here’s a message to show before the start:
-ac.setStartMessage('Get to '..displaySpeed..' mph to begin the Overtake Run')
+-- ac.setStartMessage('Get to '..displaySpeed..' mph to begin the Overtake Run')
  
 -- This function is called before event activates. Once it returns true, it’ll run:
 function script.prepare(dt)
@@ -67,11 +67,12 @@ function script.update(dt)
   end
   
   if player.engineLifeLeft < 1 then
-    ac.endSession('Overtake score: ' .. totalScore, true, {
-      summary = 'Score: ' .. totalScore,
-      message = '• Final score: '..totalScore
-    })
-    return
+    totalScore = 0
+    -- ac.endSession('Overtake score: ' .. totalScore, true, {
+    --   summary = 'Score: ' .. totalScore,
+    --   message = '• Final score: '..totalScore
+    -- })
+    -- return
   end
 
   timePassed = timePassed + dt
@@ -111,9 +112,11 @@ function script.update(dt)
     dangerouslySlowTimer = 0
   end
 
+  ac.debug(player.collidedWith .. " player")
   for i = 2, ac.getSim().carsCount do 
     local car = ac.getCar(i - 1) or error()
     local state = carsState[i]
+    ac.debug(car.collidedWith .. " car " .. i)
 
     if car.position:closerToThan(player.position, 10) then
       local drivingAlong = math.dot(car.look, player.look) > 0.2
@@ -134,7 +137,7 @@ function script.update(dt)
       end
 
       if car.collidedWith == 1 and not state.collided then
-        totalScore = totalScore - 100
+        totalScore = 0 --totalScore - 100
         comboMeter = 1
         addMessage('Collision! -100 pts', -1)
         state.collided = true
@@ -274,15 +277,15 @@ function script.drawUI()
 
   ui.endTransparentWindow()
 
-  ui.beginTransparentWindow("overtakeScore", vec2(uiState.windowSize.x * 0.5, 100), vec2(400, 400), false)
-  ui.beginOutline()
-  ui.pushStyleVar(ui.StyleVar.Alpha, 1 - speedWarning)
-  ui.pushFont(ui.Font.Huge)
-  ui.text("Time")
-  ui.pushFont(ui.Font.Huge)
-  ui.text(math.floor(countDown).. " secs")
-  ui.pushFont(ui.Font.Huge)
+  -- ui.beginTransparentWindow("overtakeScore", vec2(uiState.windowSize.x * 0.5, 100), vec2(400, 400), false)
+  -- ui.beginOutline()
+  -- ui.pushStyleVar(ui.StyleVar.Alpha, 1 - speedWarning)
+  -- ui.pushFont(ui.Font.Huge)
+  -- ui.text("Time")
+  -- ui.pushFont(ui.Font.Huge)
+  -- ui.text(math.floor(countDown).. " secs")
+  -- ui.pushFont(ui.Font.Huge)
 
-  ui.endTransparentWindow()
+  -- ui.endTransparentWindow()
 
 end

@@ -1,22 +1,25 @@
 
-local splashWave = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193677215276216584/Wolf_and_Raven_-_Tribute_to_OutRun_-_03_Splashwave.mp3'
-local magicalSoundShower = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193696762121162812/Wolf_and_Raven_-_Tribute_to_OutRun_-_01_Magical_Sound_Shower.mp3'
-local passingBreeze = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1195154796248838234/Wolf_and_Raven_-_Tribute_to_OutRun_-_02_Passing_Breeze.mp3'
-local lastWave = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1195154824417771690/Wolf_and_Raven_-_Tribute_to_OutRun_-_04_Last_Wave.mp3'
-local checkpoint = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1200650001995542548/checkpoint_-voice_sample.mp3'
+-- local splashWave = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193677215276216584/Wolf_and_Raven_-_Tribute_to_OutRun_-_03_Splashwave.mp3'
+local splashWave = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tribute to OutRun - 03 Splashwave.mp3'
+-- local magicalSoundShower = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1193696762121162812/Wolf_and_Raven_-_Tribute_to_OutRun_-_01_Magical_Sound_Shower.mp3'
+local magicalSoundShower = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tribute to OutRun - 01 Magical Sound Shower.mp3'
+-- local passingBreeze = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1195154796248838234/Wolf_and_Raven_-_Tribute_to_OutRun_-_02_Passing_Breeze.mp3'
+local passingBreeze = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tribute to OutRun - 02 Passing Breeze.mp3'
+-- local lastWave = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1195154824417771690/Wolf_and_Raven_-_Tribute_to_OutRun_-_04_Last_Wave.mp3'
+local lastWave = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tribute to OutRun - 04 Last Wave.mp3'
+-- local checkpoint = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1200650001995542548/checkpoint_-voice_sample.mp3'
+local checkpoint = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/checkpoint_-voice_sample.mp3'
 
--- local noti = 'http' .. 's://cdn.discordapp.com/attachments/140183723348852736/1000988999877394512/pog_noti_sound.mp3'
--- local wilhelmScream = 'http' .. 's://ia902801.us.archive.org/5/items/wilhelmscreamremastered/Wilhelm%20Scream%20Remastered.mp3'
 
 local musicTimer = 0
 
-local song1name = "Splash Wave"
-local song2name = "Magical Sound Shower"
-local song3name = "Passing Breeze"
+local song1name = "Magical Sound Shower"
+local song2name = "Passing Breeze"
+local song3name = "Splash Wave"
 local song4name = "Last Wave"
 
 local mediaPlayer2 = ui.MediaPlayer()
-local mediaPlayer3 = ui.MediaPlayer()
+-- local mediaPlayer3 = ui.MediaPlayer()
 local mediaPlayer4 = ui.MediaPlayer()
 local mediaPlayer5 = ui.MediaPlayer()
 local mediaPlayer6 = ui.MediaPlayer()
@@ -43,9 +46,53 @@ local finalScore = 0
 local comboMeter = 1
 -- local comboColor = 0
 
+
+
 local carsState = {}
 local wheelsWarningTimeout = 0
-local personalBest = 0
+-- local personalBest = 0
+local carName = ac.getCarName(0)
+-- local pbcarName = ac.getCarName(0)
+
+local carNames = {}
+carNames[1] = 'Ferrari 512 TR Canyon Spec'
+carNames[2] = 'Chevrolet Corvette C4 ZR-1 Canyon Spec'
+carNames[3] = 'Lamborghini Countach'
+carNames[4] = 'Lamborghini Diablo SE30 Jota'
+carNames[5] = 'Ferrari F40 Stage 3'
+carNames[6] = 'Dodge Viper RT/10'
+carNames[7] = 'Ferrari GTO'
+carNames[8] = 'Porsche 911 (993) Carrera 4'
+
+
+-- local testarosaName = 'Ferrari 512 TR Canyon Spec'
+-- local corvetteName = 'Chevrolet Corvette C4 ZR-1 Canyon Spec'
+-- local countachName = 'Lamborghini Countach'
+-- local diabloName = 'Lamborghini Diablo SE30 Jota'
+-- local f40Name = 'Ferrari F40 Stage 3'
+-- local viperName = 'Dodge Viper RT/10'
+-- local gtoName = 'Ferrari GTO'
+-- local porscheName = 'Porsche 911 (993) Carrera 4'
+
+local carPBs = {}
+carPBs[1] = 0.0
+carPBs[2] = 0.0
+carPBs[3] = 0.0
+carPBs[4] = 0.0
+carPBs[5] = 0.0
+carPBs[6] = 0.0
+carPBs[7] = 0.0
+carPBs[8] = 0.0
+
+
+-- local testarosaPB = 0.0
+-- local corvettePB = 0.0
+-- local countachPB = 0.0
+-- local diabloPB = 0.0
+-- local f40PB = 0.0
+-- local viperPB = 0.0
+-- local gtoPB = 0.0
+-- local porschePB = 0.0
 
 local offRoadMessages = { 'KEEP IT BETWEEN THE LINES, BUDDY!', 'GET BACK ON THE ROAD!', 'HEY, YOU ARE BREAKING THE CAR!' }
 local CollisionMessages = { 'D\'Oh!', 'BRUTAL!!!!', 'OUCH!!!', 'WATCH IT!!!', 'WANKER!!!', 'OOF!!!', 'CAUTION! STUDENT DRIVER!','NOPE!' }
@@ -53,8 +100,8 @@ local CloseMessages = { 'CLOSE ONE! 5x: + 50000 pts!', 'NEAR MISS! 5x: + 50000 p
 
 local uiState = ac.getUI()
 -- local uiCustomPos = vec2(uiState.windowSize.x * 0.5 - 1000, 100)
-local uiMoveMode = false
-local lastUiMoveKeyState = false
+-- local uiMoveMode = false
+-- local lastUiMoveKeyState = false
 
 
 local muteToggle = true
@@ -155,7 +202,7 @@ local closeOvertakePts = 50000
 local collisionOvertakePts = 2500
 
 local highScoreChatMsgSent = false
-local connectedHighScoreMsgSent = false
+-- local connectedHighScoreMsgSent = false
 
 local screen_ratio = uiState.windowSize.x / uiState.windowSize.y
 
@@ -175,7 +222,7 @@ function addMessage(text, mood)
             glitterCount = glitterCount + 1
             glitter[glitterCount] = {
                 color = rgbm.new(hsv(math.random() * 360, 1, 1):rgb(), 1),
-                pos = vec2(80, 140) + dir * vec2(40, 20),
+                pos = vec2(50, 50) + dir * vec2(40, 20),
                 velocity = dir:normalize():scale(0.2 + math.random()),
                 life = 0.5 + 0.5 * math.random()
             }
@@ -204,34 +251,64 @@ local function updateMessages(dt)
             glitterCount = glitterCount - 1
         end
     end
-    if comboMeter > 10 and math.random() > 0.98 then
-        for i = 1, math.floor(comboMeter) do
-            local dir = vec2(math.random() - 0.5, math.random() - 0.5)
-            glitterCount = glitterCount + 1
-            glitter[glitterCount] = {
-                color = rgbm.new(hsv(math.random() * 360, 1, 1):rgb(), 1),
-                pos = vec2(195, 75) + dir * vec2(40, 20),
-                velocity = dir:normalize():scale(0.2 + math.random()),
-                life = 0.5 + 0.5 * math.random()
-            }
-        end
-    end
+    -- if comboMeter > 10 and math.random() > 0.98 then
+    --     for i = 1, math.floor(comboMeter) do
+    --         local dir = vec2(math.random() - 0.5, math.random() - 0.5)
+    --         glitterCount = glitterCount + 1
+    --         glitter[glitterCount] = {
+    --             color = rgbm.new(hsv(math.random() * 360, 1, 1):rgb(), 1),
+    --             pos = vec2(195, 75) + dir * vec2(40, 20),
+    --             velocity = dir:normalize():scale(0.2 + math.random()),
+    --             life = 0.5 + 0.5 * math.random()
+    --         }
+    --     end
+    -- end
 end
 
+if carName == carNames[1] then
+    stored.testarosaScore = ac.storage('testarosaScore', carPBs[1])
+    carPBs[1] = stored.testarosaScore:get()
+elseif carName == carNames[2] then
+    stored.corvetteScore = ac.storage('corvetteScore', carPBs[2])
+    carPBs[2] = stored.corvetteScore:get()
+elseif carName == carNames[3] then
+    stored.countachScore = ac.storage('countachScore', carPBs[3])
+    carPBs[3] = stored.countachScore:get()
+elseif carName == carNames[4] then
+    stored.diabloScore = ac.storage('diabloScore', carPBs[4])
+    carPBs[4] = stored.diabloScore:get()
+elseif carName == carNames[5] then
+    stored.f40Score = ac.storage('f40Score', carPBs[5])
+    carPBs[5] = stored.f40Score:get()
+elseif carName == carNames[6] then
+    stored.viperScore = ac.storage('viperScore', carPBs[6])
+    carPBs[6] = stored.viperScore:get()
+elseif carName == carNames[7] then
+    stored.gtoScore = ac.storage('gtoScore', carPBs[7])
+    carPBs[7] = stored.gtoScore:get()
+elseif carName == carNames[8] then
+    stored.porscheScore = ac.storage('porscheScore', carPBs[8])
+    carPBs[8] = stored.porscheScore:get()
+end    -- corvetteName = stored.corvetteName:get()
+-- elseif carName == corvette then
+-- stored.carName = ac.storage('corvette', corvette)
 
-stored.playerscore = ac.storage('playerscore', personalBest) --default value
--- personalBest = stored.playerscore:set(0.0)
-personalBest = stored.playerscore:get()
+-- end
 
+-- stored.playerscore = ac.storage('playerscore', personalBest) --default value
+-- stored.carName = ac.storage('carName', pbcarName)
+-- -- personalBest = stored.playerscore:set(0.0)
+-- personalBest = stored.playerscore:get()
+-- pbcarName = stored.carName:get()
 
-local function sendhighscore(connectedCarIndex, connectedSessionID)
-    ac.sendChatMessage("has a current highscore of " .. personalBest .. " pts.")
-end
+-- local function sendhighscore(connectedCarIndex, connectedSessionID)
+--     ac.sendChatMessage("has a current highscore of " .. personalBest .. " pts in the " .. pbcarName)
+-- end
 
-if not connectedHighScoreMsgSent then
-    ac.onClientConnected(sendhighscore)
-    connectedHighScoreMsgSent = true
-end
+-- if not connectedHighScoreMsgSent then
+--     ac.onClientConnected(sendhighscore)
+--     connectedHighScoreMsgSent = true
+-- end
 
 -- ac.debug("connected car index", connectedCarIndex)
 -- ac.debug("connected session id", connectedSessionID)
@@ -240,11 +317,23 @@ end
 
 function script.update(dt)
 
+    ac.debug("car name", carName)
+    ac.debug("testarosa high score", carPBs[1])
+    ac.debug("corvette high score", carPBs[2])
+    ac.debug("countach high score", carPBs[3])
+    ac.debug("diablo high score", carPBs[4])
+    ac.debug("F40 high score", carPBs[5])
+    ac.debug("viper high score", carPBs[6])
+    ac.debug("gto high score", carPBs[7])
+    ac.debug("porsche high score", carPBs[8])
+
     local player = ac.getCarState(1)
     -- this line sets the rate at which the player's score rises, based on player speed
     local scoreRisingRate = 100 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 260))) * math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 260))
     ac.debug("player pos", player.position)
     ac.debug("spline pos", player.splinePosition)
+    ac.debug("collided with", player.collidedWith)
+    
 
     -- this will flip your car 180 degrees in case you are stuck if you press delete
     local playerPos = player.position
@@ -253,6 +342,9 @@ function script.update(dt)
         physics.setCarPosition(0, playerPos, playerDir)
     end
 
+
+
+    
     -- if timePassed == 0 then
     --     addMessage('Let’s go!', 0)
     -- end
@@ -261,13 +353,13 @@ function script.update(dt)
     mediaPlayer2:setVolume(1.0)
     -- functionalize this part and add checks for all previous checkpoints to prevent teleporting to checkpoints before previous ones have been crossed
     if player.splinePosition > checkpt1pos then
-        timeBonus = 10000 * math.floor(countDown)
+        timeBonus = 10000 * math.ceil(countDown)
         if not checkpoint1 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
             lap1time = totalTimer
             prevLaptimes = lap1time
-            addMessage(" 1000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
+            addMessage("10000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 1 CLEAR! 9 to go!", 1)
             if muteToggle then
                 mediaPlayer2:play()
@@ -277,13 +369,13 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt2pos then
-        timeBonus = 20000 * math.floor(countDown)
+        timeBonus = 20000 * math.ceil(countDown)
         if not checkpoint2 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
             lap2time = totalTimer - prevLaptimes
             prevLaptimes = prevLaptimes + lap2time
-            addMessage("2000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
+            addMessage("20000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 2 CLEAR! 8 to Go!", 1)
             if muteToggle then
                 mediaPlayer2:play() 
@@ -293,13 +385,13 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt3pos then
-        timeBonus = 30000 * math.floor(countDown)
+        timeBonus = 30000 * math.ceil(countDown)
         if not checkpoint3 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
             lap3time = totalTimer - prevLaptimes
             prevLaptimes = prevLaptimes + lap3time
-            addMessage("3000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
+            addMessage("30000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 3 CLEAR! 7 to Go!", 1)
             if muteToggle then
                 mediaPlayer2:play()
@@ -309,13 +401,13 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt4pos then
-        timeBonus = 40000 * math.floor(countDown)
+        timeBonus = 40000 * math.ceil(countDown)
         if not checkpoint4 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
             lap4time = totalTimer - prevLaptimes
             prevLaptimes = prevLaptimes + lap4time
-            addMessage("4000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
+            addMessage("40000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 4 CLEAR! 6 to Go!", 1)
             if muteToggle then
                 mediaPlayer2:play()
@@ -325,13 +417,13 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt5pos then
-        timeBonus = 50000 * math.floor(countDown)
+        timeBonus = 50000 * math.ceil(countDown)
         if not checkpoint5 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
             lap5time = totalTimer - prevLaptimes
             prevLaptimes = prevLaptimes + lap5time
-            addMessage("5000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
+            addMessage("50000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 5 CLEAR! 5 to Go!", 1)
             if muteToggle then
                 mediaPlayer2:play()
@@ -341,13 +433,13 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt6pos then
-        timeBonus = 60000 * math.floor(countDown)
+        timeBonus = 60000 * math.ceil(countDown)
         if not checkpoint6 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
             lap6time = totalTimer - prevLaptimes
             prevLaptimes = prevLaptimes + lap6time
-            addMessage("6000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
+            addMessage("60000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 6 CLEAR! 4 to Go!", 1)
             if muteToggle then
                 mediaPlayer2:play()
@@ -357,13 +449,13 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt7pos then
-        timeBonus = 70000 * math.floor(countDown)
+        timeBonus = 70000 * math.ceil(countDown)
         if not checkpoint7 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
             lap7time = totalTimer - prevLaptimes
             prevLaptimes = prevLaptimes + lap7time
-            addMessage("7000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
+            addMessage("70000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 7 CLEAR! 3 to Go!", 1)
             if muteToggle then
                 mediaPlayer2:play()
@@ -373,13 +465,13 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt8pos then
-        timeBonus = 80000 * math.floor(countDown)
+        timeBonus = 80000 * math.ceil(countDown)
         if not checkpoint8 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
             lap8time = totalTimer - prevLaptimes
             prevLaptimes = prevLaptimes + lap8time
-            addMessage("8000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
+            addMessage("80000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 8 CLEAR! 2 to Go!", 1)
             if muteToggle then
                 mediaPlayer2:play()
@@ -389,13 +481,13 @@ function script.update(dt)
     end
 
     if player.splinePosition > checkpt9pos then
-        timeBonus = 90000 * math.floor(countDown)
+        timeBonus = 90000 * math.ceil(countDown)
         if not checkpoint9 and gameOverMessage == 0 then
             countDown = countDownTime
             totalScore = totalScore + timeBonus
             lap9time = totalTimer - prevLaptimes
             prevLaptimes = prevLaptimes + lap9time
-            addMessage("9000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
+            addMessage("90000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
             addMessage("STAGE 9 CLEAR! 1 to Go!", 1)
             if muteToggle then
                 mediaPlayer2:play()
@@ -436,7 +528,7 @@ function script.update(dt)
                 for i = 1, ac.getSim().carsCount do
                     local car = ac.getCarState(i) --or error()
                     local state = carsState[i]
-                    ac.debug(" player ", player.collidedWith)
+                    -- ac.debug(" player ", player.collidedWith)
                     -- ac.debug(" collision timer ", collisionTimer)
             
                     if car.position:closerToThan(player.position, 10) then
@@ -508,20 +600,93 @@ function script.update(dt)
                 if not checkpoint10 then
                     lap10time = totalTimer - prevLaptimes
                     -- raceEnd = true
-                    timeBonus = 1000000 * math.floor(countDown)
+                    timeBonus = 1000000 * math.ceil(countDown)
                     countDown = countDown
                     totalTimer = totalTimer
                     totalScore = totalScore
                     totalScore = totalScore + timeBonus
                     finalScore = totalScore
-                    if finalScore > personalBest then
-                        personalBest = math.ceil(finalScore)
-                        stored.playerscore:set(personalBest)
-                        if not highScoreChatMsgSent then
-                            ac.sendChatMessage('has a NEW Highscore of ' .. math.ceil(personalBest) .. ' pts')
-                            highScoreChatMsgSent = true
+                    addMessage("1000000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
+                    addMessage("FINAL STAGE CLEAR!", 1)
+                    if carName == carNames[1] then
+                        if finalScore > carPBs[1] then
+                            carPBs[1] = math.ceil(finalScore)
+                            stored.testarosaScore:set(carPBs[1])
+
+                            if not highScoreChatMsgSent then
+                                ac.sendChatMessage('Reached the Goal and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
+                                highScoreChatMsgSent = true
+                            end
+                        end
+                    elseif carName == carNames[2] then
+                        if finalScore > carPBs[2] then
+                            carPBs[2] = math.ceil(finalScore)
+                            stored.corvetteScore:set(carPBs[2])
+                            if not highScoreChatMsgSent then
+                                ac.sendChatMessage('Reached the Goal and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
+                                highScoreChatMsgSent = true
+                            end
+                        end
+                    elseif carName == carNames[3] then
+                        if finalScore > carPBs[3] then
+                            carPBs[3] = math.ceil(finalScore)
+                            stored.countachScore:set(carPBs[3])
+                            if not highScoreChatMsgSent then
+                                ac.sendChatMessage('Reached the Goal and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
+                                highScoreChatMsgSent = true
+                            end
+                        end
+                    elseif carName == carNames[4] then
+                        if finalScore > carPBs[4] then
+                            carPBs[4] = math.ceil(finalScore)
+                            stored.diabloScore:set(carPBs[4])
+                            if not highScoreChatMsgSent then
+                                ac.sendChatMessage('Reached the Goal and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
+                                highScoreChatMsgSent = true
+                            end
+                        end
+                    elseif carName == carNames[5] then
+                        if finalScore > carPBs[5] then
+                            carPBs[5] = math.ceil(finalScore)
+                            stored.f40Score:set(carPBs[5])
+                            if not highScoreChatMsgSent then
+                                ac.sendChatMessage('Reached the Goal and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
+                                highScoreChatMsgSent = true
+                            end
+                        end
+                    elseif carName == carNames[6] then
+                        if finalScore > carPBs[6] then
+                            carPBs[6] = math.ceil(finalScore)
+                            stored.viperScore:set(carPBs[6])
+                            if not highScoreChatMsgSent then
+                                ac.sendChatMessage('Reached the Goal and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
+                                highScoreChatMsgSent = true
+                            end
+                        end
+                    elseif carName == carNames[7] then
+                        if finalScore > carPBs[7] then
+                            carPBs[7] = math.ceil(finalScore)
+                            stored.gtoScore:set(carPBs[7])
+                            if not highScoreChatMsgSent then
+                                ac.sendChatMessage('Reached the Goal and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
+                                highScoreChatMsgSent = true
+                            end
+                        end
+                    elseif carName == carNames[8] then
+                        if finalScore > carPBs[8] then
+                             carPBs[8] = math.ceil(finalScore)
+                             stored.porscheScore:set(carPBs[8])
+                             if not highScoreChatMsgSent then
+                                ac.sendChatMessage('Reached the Goal and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
+                                highScoreChatMsgSent = true
+                             end
                         end
                     end
+                    -- if finalScore > personalBest then
+                    --     personalBest = math.ceil(finalScore)
+                    --     stored.playerscore:set(personalBest)
+                    --     stored.carName:set(carName)
+
                     checkpoint10 = true
                 end
             end
@@ -546,14 +711,88 @@ function script.update(dt)
             totalTimer = totalTimer
             totalScore = totalScore
             finalScore = totalScore
-            if finalScore > personalBest then
-                personalBest = math.ceil(finalScore)
-                stored.playerscore:set(personalBest)
-                if not highScoreChatMsgSent then
-                    ac.sendChatMessage('has a NEW Highscore of ' .. math.ceil(personalBest) .. ' pts')
-                    highScoreChatMsgSent = true
+
+            if carName == carNames[1] then
+                if finalScore > carPBs[1] then
+                    carPBs[1] = math.ceil(finalScore)
+                    stored.testarosaScore:set(carPBs[1])
+                    if not highScoreChatMsgSent then
+                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
+                        highScoreChatMsgSent = true
+                    end
+                end
+            elseif carName == carNames[2] then
+                if finalScore > carPBs[2] then
+                    carPBs[2] = math.ceil(finalScore)
+                    stored.corvetteScore:set(carPBs[2])
+                    if not highScoreChatMsgSent then
+                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
+                        highScoreChatMsgSent = true
+                    end
+                end
+            elseif carName == carNames[3] then
+                if finalScore > carPBs[3] then
+                    carPBs[3] = math.ceil(finalScore)
+                    stored.countachScore:set(carPBs[3])
+                    if not highScoreChatMsgSent then
+                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
+                        highScoreChatMsgSent = true
+                    end
+                end
+            elseif carName == carNames[4] then
+                if finalScore > carPBs[4] then
+                    carPBs[4] = math.ceil(finalScore)
+                    stored.diabloScore:set(carPBs[4])
+                    if not highScoreChatMsgSent then
+                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
+                        highScoreChatMsgSent = true
+                    end
+                end
+            elseif carName == carNames[5] then
+                if finalScore > carPBs[5] then
+                    carPBs[5] = math.ceil(finalScore)
+                    stored.f40Score:set(carPBs[5])
+                    if not highScoreChatMsgSent then
+                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
+                        highScoreChatMsgSent = true
+                    end
+                end
+            elseif carName == carNames[6] then
+                if finalScore > carPBs[6] then
+                    carPBs[6] = math.ceil(finalScore)
+                    stored.viperScore:set(carPBs[6])
+                    if not highScoreChatMsgSent then
+                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
+                        highScoreChatMsgSent = true
+                    end
+                end
+            elseif carName == carNames[7] then
+                if finalScore > carPBs[7] then
+                    carPBs[7] = math.ceil(finalScore)
+                    stored.gtoScore:set(carPBs[7])
+                    if not highScoreChatMsgSent then
+                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
+                        highScoreChatMsgSent = true
+                    end
+                end
+            elseif carName == carNames[8] then
+                if finalScore > carPBs[8] then
+                    carPBs[8] = math.ceil(finalScore)
+                    stored.porscheScore:set(carPBs[8])
+                    if not highScoreChatMsgSent then
+                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
+                        highScoreChatMsgSent = true
+                    end
                 end
             end
+            -- if finalScore > personalBest then
+            --     personalBest = math.ceil(finalScore)
+            --     stored.playerscore:set(personalBest)
+            --     stored.carName:set(carName)
+            -- if not highScoreChatMsgSent then
+            --     ac.sendChatMessage('has a NEW Highscore of ' .. math.ceil(personalBest) .. ' pts in the ' .. carName)
+            --     highScoreChatMsgSent = true
+            -- end
         end
     else
         countDown = countDownTime
@@ -741,7 +980,7 @@ function script.update(dt)
     musicTimer = musicTimer + dt
 
     if mediaPlayer4:currentTime() > math.round(mediaPlayer4:duration(), 2) or (mediaPlayer4:playing() == true and ac.isKeyDown(ac.KeyIndex.Back)) then
-        if musicTimer > 1 then
+        if musicTimer > 0.5 then
             mediaPlayer4:pause():setCurrentTime(0.00)
             mediaPlayer5:play()
             lastPlayedSong = 2
@@ -750,7 +989,7 @@ function script.update(dt)
     end
 
     if mediaPlayer5:currentTime() > math.round(mediaPlayer5:duration(), 2) or (mediaPlayer5:playing() == true and ac.isKeyDown(ac.KeyIndex.Back)) then
-        if musicTimer > 1 then
+        if musicTimer > 0.5 then
             mediaPlayer5:pause():setCurrentTime(0.00)
             mediaPlayer6:play()
             lastPlayedSong = 3
@@ -759,7 +998,7 @@ function script.update(dt)
     end
 
     if mediaPlayer6:currentTime() > math.round(mediaPlayer6:duration(), 2) or (mediaPlayer6:playing() == true and ac.isKeyDown(ac.KeyIndex.Back)) then
-        if musicTimer > 1 then
+        if musicTimer > 0.5 then
             mediaPlayer6:pause():setCurrentTime(0.00)
             mediaPlayer7:play()
             lastPlayedSong = 4
@@ -768,7 +1007,7 @@ function script.update(dt)
     end
 
     if mediaPlayer7:currentTime() > math.round(mediaPlayer7:duration(),2) or (mediaPlayer7:playing() == true and ac.isKeyDown(ac.KeyIndex.Back)) then
-        if musicTimer > 1 then
+        if musicTimer > 0.5 then
             mediaPlayer7:pause():setCurrentTime(0.00)
             mediaPlayer4:play()
             lastPlayedSong = 1
@@ -776,28 +1015,36 @@ function script.update(dt)
         end
     end
 
-    if mediaPlayer4:playing() == true and ac.isKeyDown(ac.KeyIndex.Space) then
+    if mediaPlayer4:playing() == true and ac.isKeyDown(ac.KeyIndex.Space) and musicTimer > 0.5 then
         mediaPlayer4:pause()
-    elseif mediaPlayer4:playing() == false and lastPlayedSong == 1 and ac.isKeyDown(ac.KeyIndex.Space) then
+        musicTimer = 0
+    elseif mediaPlayer4:playing() == false and lastPlayedSong == 1 and ac.isKeyDown(ac.KeyIndex.Space) and musicTimer > 0.5 then
         mediaPlayer4:play()
+        musicTimer = 0
     end
 
-    if mediaPlayer5:playing() == true and ac.isKeyDown(ac.KeyIndex.Space) then
+    if mediaPlayer5:playing() == true and ac.isKeyDown(ac.KeyIndex.Space) and musicTimer > 0.5 then
         mediaPlayer5:pause()
-    elseif mediaPlayer5:playing() == false and lastPlayedSong == 2 and ac.isKeyDown(ac.KeyIndex.Space) then
+        musicTimer = 0
+    elseif mediaPlayer5:playing() == false and lastPlayedSong == 2 and ac.isKeyDown(ac.KeyIndex.Space) and musicTimer > 0.5 then
         mediaPlayer5:play()
+        musicTimer = 0
     end
 
-    if mediaPlayer6:playing() == true and ac.isKeyDown(ac.KeyIndex.Space) then
+    if mediaPlayer6:playing() == true and ac.isKeyDown(ac.KeyIndex.Space) and musicTimer > 0.5 then
         mediaPlayer6:pause()
-    elseif mediaPlayer6:playing() == false and lastPlayedSong == 3 and ac.isKeyDown(ac.KeyIndex.Space) then
+        musicTimer = 0
+    elseif mediaPlayer6:playing() == false and lastPlayedSong == 3 and ac.isKeyDown(ac.KeyIndex.Space) and musicTimer > 0.5 then
         mediaPlayer6:play()
+        musicTimer = 0
     end
 
-    if mediaPlayer7:playing() == true and ac.isKeyDown(ac.KeyIndex.Space) then
+    if mediaPlayer7:playing() == true and ac.isKeyDown(ac.KeyIndex.Space) and musicTimer > 0.5 then
         mediaPlayer7:pause()
-    elseif mediaPlayer7:playing() == false and lastPlayedSong == 4 and ac.isKeyDown(ac.KeyIndex.Space) then
+        musicTimer = 0
+    elseif mediaPlayer7:playing() == false and lastPlayedSong == 4 and ac.isKeyDown(ac.KeyIndex.Space) and musicTimer > 0.5 then
         mediaPlayer7:play()
+        musicTimer = 0
     end
 
 
@@ -855,20 +1102,21 @@ function script.update(dt)
 
 
     timePassed = timePassed + dt
+    ac.debug('time passed', timePassed)
     -- speedMessageTimer = speedMessageTimer + dt
     collisionMessageTimer = collisionMessageTimer + dt
     collisionTimer = collisionTimer - dt
 
-    ac.debug("lap1 timer", lap1time)
-    ac.debug("lap2 timer", lap2time)
-    ac.debug("lap3 timer", lap3time)
-    ac.debug("lap4 timer", lap4time)
-    ac.debug("lap5 timer", lap5time)
-    ac.debug("lap6 timer", lap6time)
-    ac.debug("lap7 timer", lap7time)
-    ac.debug("lap8 timer", lap8time)
-    ac.debug("lap9 timer", lap9time)
-    ac.debug("lap10timer", lap10time)
+    -- ac.debug("lap1 timer", lap1time)
+    -- ac.debug("lap2 timer", lap2time)
+    -- ac.debug("lap3 timer", lap3time)
+    -- ac.debug("lap4 timer", lap4time)
+    -- ac.debug("lap5 timer", lap5time)
+    -- ac.debug("lap6 timer", lap6time)
+    -- ac.debug("lap7 timer", lap7time)
+    -- ac.debug("lap8 timer", lap8time)
+    -- ac.debug("lap9 timer", lap9time)
+    -- ac.debug("lap10timer", lap10time)
 
     -- local comboFadingRate = 0.1 * math.lerp(1, 0.1, math.lerpInvSat(player.speedKmh, 45, 160)) + player.wheelsOutside / 4
     -- comboMeter = math.max(1, comboMeter - dt * comboFadingRate) 
@@ -901,7 +1149,7 @@ local bigfont_sizey = bigfontscale*uiState.windowSize.y
 local big_fontsize = vec2(bigfont_sizex, bigfont_sizey)
 
 
-local totaltime_xpos = 0.77*uiState.windowSize.x
+local totaltime_xpos = 0.9*uiState.windowSize.x - 8*font_sizex
 
 local minutes10s_xpos = totaltime_xpos + 1*font_sizex
 local minutes_xpos = minutes10s_xpos + font_sizex
@@ -954,12 +1202,12 @@ function script.drawUI()
 
 
         
-        ac.debug('screen ratio', screen_ratio)
+        -- ac.debug('screen ratio', screen_ratio)
         -- ui.beginTransparentWindow('cruisinAcWindow', vec2(uiState.windowSize.x * 0.25, uiState.windowSize.y * 0.1), vec2(400, 400), false)
-        ui.drawImage('https://cdn.discordapp.com/attachments/1193340713123983500/1199189350429241497/cruisin-ac-logo.png', vec2(uiState.windowSize.x * 0.05, uiState.windowSize.y * 0.1), vec2(uiState.windowSize.x * 0.2, uiState.windowSize.y * 0.2), rgbm.colors.white, vec2(0,0), vec2(1,1), ui.ImageFit.Fit)
+        ui.drawImage('https://cdn.discordapp.com/attachments/1193340713123983500/1199189350429241497/cruisin-ac-logo.png', vec2(-0.05, font_sizey*2), vec2(uiState.windowSize.x * 0.15, font_sizey*5), rgbm.colors.white, vec2(0,0), vec2(1,1), ui.ImageFit.Fit)
 
 
-        ui.beginTransparentWindow('overtakeScore1', vec2(uiState.windowSize.x * 0.15, uiState.windowSize.y * 0.1), vec2(400, 400), false)
+        ui.beginTransparentWindow('overtakeScore1', vec2(uiState.windowSize.x * 0.1, font_sizey*2), vec2(400, 400), false)
         ui.pushACFont('ddm_digital_odo')
         ui.acText('SCORE', basic_fontsize, 0, rgbm(1.0, 0.0, 1.0, 1.0))
         ui.popACFont()
@@ -967,20 +1215,24 @@ function script.drawUI()
         -- ui.pushACFont('ddm_digital_odo')
         -- ui.acText("SCORE", vec2(50,50), 0, rgbm(0.5, 0.0, 1.0, 1))
         -- ui.popACFont()
-        ui.beginTransparentWindow('overtakeScore2', vec2(uiState.windowSize.x * 0.15, uiState.windowSize.y * 0.15), vec2(2000, 2000), false)
+        ui.beginTransparentWindow('overtakeScore2', vec2(uiState.windowSize.x * 0.1, font_sizey*3.5), vec2(2000, 2000), false)
         ui.beginOutline()
         ui.pushACFont('ddm_digital_odo')
         ui.acText(math.ceil(totalScore) .. ' pts', basic_fontsize, 0, rgbm(0.8, 0.8, 1.0, 1.0))
         ui.popACFont()
+        ui.endTransparentWindow()
         -- ui.pushACFont('ddm_digital_odo')
         -- ui.acText(math.ceil(totalScore) .. ' pts', vec2(50,50), 2, rgbm(0.75, 0.5, 0.0, 1))
         -- ui.popACFont()
 
         -- ui.endOutline(rgbm(0, 0, 0, 0.3))
 
-        ui.offsetCursorY(150)
-        ui.offsetCursorX(-200)
+        -- ui.offsetCursorY(150)
+        -- ui.offsetCursorX(-300)
+        ui.beginTransparentWindow('messageWindow', vec2(uiState.windowSize.x * 0.1, font_sizey * 8), vec2(2000, 2000), false)
         ui.pushFont(ui.Font.Title)
+        ui.offsetCursorY(50)
+        ui.offsetCursorX(50)
         local startPos = ui.getCursor()
         for i = 1, #messages do
             local m = messages[i]
@@ -999,6 +1251,7 @@ function script.drawUI()
         ui.endTransparentWindow()
 
         local progress_loc = vec2(-270, 60)
+        local final_prog_loc = vec2((-270)-4*font_sizex, 60)
         ui.beginTransparentWindow('progressWindow', vec2(uiState.windowSize.x * 0.78, uiState.windowSize.y * 0.8), vec2(1400, 1400), false)
         -- ui.beginOutline()
 
@@ -1075,7 +1328,7 @@ function script.drawUI()
             ui.pushACFont('ddm_digital_odo')
             ui.acText('FINAL STAGE: ', basic_fontsize, 0, rgbm(1.0, 1.0, 0.0, 1.0))
             ui.popACFont()
-            progressMeter(ui.getCursor() + progress_loc, checkpt9pos, finishpos)
+            progressMeter(ui.getCursor() + final_prog_loc, checkpt9pos, finishpos)
         end
 
         -- ui.popFont()
@@ -1083,21 +1336,21 @@ function script.drawUI()
         ui.endTransparentWindow()
 
 
-        ui.beginTransparentWindow("countDownTimer", vec2(uiState.windowSize.x * 0.47, uiState.windowSize.y * 0.1), vec2(400, 400), false)
+        ui.beginTransparentWindow("countDownTimer", vec2((uiState.windowSize.x*0.5)-(3*font_sizex), font_sizey*2), vec2(400, 400), false)
         -- ui.beginOutline()
         ui.pushACFont('ddm_digital_odo')
-        ui.acText("TIME", basic_fontsize, 0, rgbm(0.75, 0.5, 0.0, 1))
+        ui.acText("TIME", basic_fontsize, 0, rgbm(0.8, 0.5, 0.0, 1))
         ui.popACFont()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow('countDownTime', vec2(uiState.windowSize.x * 0.47, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+        ui.beginTransparentWindow('countDownTime', vec2((uiState.windowSize.x*0.5) - (2*font_sizex), font_sizey*3), vec2(400, 400), false)
         -- ui.beginOutline()
-        ui.pushACFont('ddm_digital_odo')
+        ui.pushACFont('giulia')
         -- local textsize = vec2(0,0)
         -- textsize = ui.calculateACTextSize(" " .. math.abs(math.ceil(countDown)).. "", vec2(10,10*screen_ratio), 0, 0, monospace)
         -- ac.debug("text size", textsize)
         -- ui.pushACFont('fd2_speedo')
-        ui.acText(" " .. math.abs(math.ceil(countDown)).. "", vec2(1.5*font_sizex, 1.5*font_sizey), 2, rgbm(1.0, 1.0, 0.0, 1))
+        ui.acText("" .. math.abs(math.ceil(countDown)).. "", vec2(2.0*font_sizex, 2.75*font_sizey), 2, rgbm(1.0, 1.0, 0.0, 1))
         ui.popACFont()
         ui.endTransparentWindow()
 
@@ -1124,12 +1377,12 @@ function script.drawUI()
        local checkpt_windowx_scale = 6*bigfont_sizex
        local checkpt_windowy_scale = 6*bigfont_sizey
        local extendplay_windowx_scale = 6.5*bigfont_sizex
-       local extendplay_windowy_scale = 5.5*bigfont_sizey
-       local laptime_windowx_scale = 4.5*bigfont_sizex
-       local laptime_windowy_scale = 4*bigfont_sizey
+       local extendplay_windowy_scale = 6.5*bigfont_sizey
+       local laptime_windowx_scale = 6.5*font_sizex
+       local laptime_windowy_scale = 5*bigfont_sizey
 
 
-        ui.beginTransparentWindow("beginRaceWindow", vec2(uiState.windowSize.x * 0.5 - 5*bigfont_sizex, uiState.windowSize.y * 0.5 - 5*bigfont_sizey), vec2(2000, 2000), false)
+        ui.beginTransparentWindow("beginRaceWindow", vec2(uiState.windowSize.x * 0.5 - 4.5*bigfont_sizex, uiState.windowSize.y * 0.5 - 5*bigfont_sizey), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, beginraceflag)
         ui.pushACFont("650S_big")
         ui.acText('Let\'s Go!', big_fontsize, 0, rgbm(1.0, 1.0, 0.0, 1.0))
@@ -1381,11 +1634,11 @@ function script.drawUI()
         ui.endTransparentWindow()
 
         -- ui.beginTransparentWindow("finishRaceWindow", vec2(uiState.windowSize.x * 0.5 - 10*bigfont_sizex, uiState.windowSize.y * 0.5 - 4*bigfont_sizey), vec2(2000, 2000), false)
-        ui.beginTransparentWindow("finishRaceWindow", vec2(uiState.windowSize.x * 0.5 - 10*bigfont_sizex, uiState.windowSize.y * 0.5 - 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
+        ui.beginTransparentWindow("finishRaceWindow", vec2(uiState.windowSize.x * 0.5 - 2.5*bigfont_sizex, uiState.windowSize.y * 0.5 - 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         -- ui.beginOutline()
         ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
         ui.pushACFont("650S_big")
-        ui.acText('FINISH! YOU MADE IT!', big_fontsize, 0, checkpointcolor)
+        ui.acText('GOAL!', big_fontsize, 0, checkpointcolor)
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
@@ -1401,18 +1654,18 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("gameOverWindow", vec2(uiState.windowSize.x * 0.5 - 13*bigfont_sizex, uiState.windowSize.y * 0.5 - 2*bigfont_sizey), vec2(2000, 2000), false)
+        ui.beginTransparentWindow("gameOverWindow", vec2(uiState.windowSize.x * 0.5 - 4.5*bigfont_sizex, uiState.windowSize.y * 0.5 - 2*bigfont_sizey), vec2(2000, 2000), false)
         -- ui.beginOutline()
         ui.pushStyleVar(ui.StyleVar.Alpha, gameOverMessage)
         ui.pushACFont("650S_big")
-        ui.acText('OUTTA TIME! GAME OVER MAN!', big_fontsize, 0, rgbm(1.0, 0, 0, 1))
+        ui.acText('GAME OVER!', big_fontsize, 0, rgbm(1.0, 0, 0, 1))
         ui.popACFont()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
 
 
-        ui.beginTransparentWindow("totalTimeWindow", vec2(totaltime_xpos, uiState.windowSize.y * 0.1), vec2(800, 400), false)
+        ui.beginTransparentWindow("totalTimeWindow", vec2(totaltime_xpos, font_sizey*2), vec2(800, 400), false)
         -- ui.beginOutline()
         ui.pushACFont('ddm_digital_odo')
         ui.acText("TOTAL TIME", basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
@@ -1420,7 +1673,7 @@ function script.drawUI()
         ui.endTransparentWindow()
 
 
-        ui.beginTransparentWindow("totalMinutesWindow1", vec2(minutes10s_xpos, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+        ui.beginTransparentWindow("totalMinutesWindow1", vec2(minutes10s_xpos, font_sizey*3.5), vec2(400, 400), false)
         -- ui.beginOutline()
         ui.pushACFont('ddm_digital_odo')
         ui.pushStyleVar(ui.StyleVar.Alpha, 1-min10)
@@ -1429,7 +1682,7 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("totalMinutesWindow2", vec2(minutes_xpos, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+        ui.beginTransparentWindow("totalMinutesWindow2", vec2(minutes_xpos, font_sizey*3.5), vec2(400, 400), false)
         -- ui.beginOutline()
         ui.pushACFont('ddm_digital_odo')
         ui.pushStyleVar(ui.StyleVar.Alpha, 1-min1)
@@ -1439,9 +1692,9 @@ function script.drawUI()
         ui.endTransparentWindow()
 
         if minutesTime > 10 then
-            ui.beginTransparentWindow("totalMinutesWindow3", vec2(minutes10s_xpos, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+            ui.beginTransparentWindow("totalMinutesWindow3", vec2(minutes10s_xpos, font_sizey*3.5), vec2(400, 400), false)
         else
-            ui.beginTransparentWindow("totalMinutesWindow3", vec2(minutes_xpos, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+            ui.beginTransparentWindow("totalMinutesWindow3", vec2(minutes_xpos, font_sizey*3.5), vec2(400, 400), false)
         end
         ui.pushStyleVar(ui.StyleVar.Alpha, min1)
         ui.pushACFont('ddm_digital_odo')
@@ -1454,7 +1707,7 @@ function script.drawUI()
         ui.endTransparentWindow()
 
 
-        ui.beginTransparentWindow("totalSecondsWindow1", vec2(seconds10s_xpos, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+        ui.beginTransparentWindow("totalSecondsWindow1", vec2(seconds10s_xpos, font_sizey*3.5), vec2(400, 400), false)
         -- ui.beginOutline()
         ui.pushACFont('ddm_digital_odo')
         ui.pushStyleVar(ui.StyleVar.Alpha, 1-sec10)
@@ -1463,7 +1716,7 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        ui.beginTransparentWindow("totalSecondsWindow2", vec2(seconds_xpos, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+        ui.beginTransparentWindow("totalSecondsWindow2", vec2(seconds_xpos, font_sizey*3.5), vec2(400, 400), false)
         -- ui.beginOutline()
         ui.pushACFont('ddm_digital_odo')
         ui.pushStyleVar(ui.StyleVar.Alpha, 1-startTimer)
@@ -1473,9 +1726,9 @@ function script.drawUI()
         ui.endTransparentWindow()
 
         if secondsTime > 10 then
-            ui.beginTransparentWindow("totalSecondsWindow3", vec2(seconds10s_xpos, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+            ui.beginTransparentWindow("totalSecondsWindow3", vec2(seconds10s_xpos, font_sizey*3.5), vec2(400, 400), false)
         else
-            ui.beginTransparentWindow("totalSecondsWindow3", vec2(seconds_xpos, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+            ui.beginTransparentWindow("totalSecondsWindow3", vec2(seconds_xpos, font_sizey*3.5), vec2(400, 400), false)
         end
         ui.pushStyleVar(ui.StyleVar.Alpha, startTimer)
         ui.pushACFont('ddm_digital_odo')
@@ -1489,7 +1742,7 @@ function script.drawUI()
 
 
 
-        ui.beginTransparentWindow("totalSubsecondsWindow1", vec2(subseconds_xpos, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+        ui.beginTransparentWindow("totalSubsecondsWindow1", vec2(subseconds_xpos, font_sizey*3.5), vec2(400, 400), false)
         -- ui.beginOutline()
         ui.pushACFont('ddm_digital_odo')
         ui.pushStyleVar(ui.StyleVar.Alpha, 1-startTimer)
@@ -1499,7 +1752,7 @@ function script.drawUI()
         ui.endTransparentWindow()
 
 
-        ui.beginTransparentWindow("totalSubsecondsWindow2", vec2(subseconds_xpos, uiState.windowSize.y * 0.15), vec2(400, 400), false)
+        ui.beginTransparentWindow("totalSubsecondsWindow2", vec2(subseconds_xpos, font_sizey*3.5), vec2(400, 400), false)
         -- ui.beginOutline()
         ui.pushACFont('ddm_digital_odo')
         ui.pushStyleVar(ui.StyleVar.Alpha, startTimer)
