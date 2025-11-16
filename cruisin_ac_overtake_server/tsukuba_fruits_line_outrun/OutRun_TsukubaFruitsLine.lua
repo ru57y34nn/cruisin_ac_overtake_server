@@ -22,36 +22,36 @@ local tougeDriver = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_musi
 
 local countdownNumbers = {}
 for i = 0, 9 do
-    countdownNumbers[i] = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/countdown_' .. i .. '.png'
+    countdownNumbers[i] = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/countdown_' .. i .. '.png'
 end
 
 local digitImages = {}
 for i = 0, 9 do
-    digitImages[i] = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/outrun_' .. i .. '.png'
+    digitImages[i] = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/outrun_' .. i .. '.png'
 end
 
-local extendPlayImg = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/extend_play4.png'
-local timeLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/time.png'
-local totalTimeLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/total_time.png'
-local scoreLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/score.png'
-local goalLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/goal_italic.png'
-local driftLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/drift.png'
-local stage1Label = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/stage_1.png'
-local stage2Label = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/stage_2.png'
-local stage3Label = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/stage_3.png'
-local stage4Label = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/stage_4.png'
-local finalStageLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/final_stage.png'
-local letsGoLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/lets_go.png'
-local gameOverLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/game_over.png'
-local singleQuoteImg = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/single_quote.png'
-local doubleQuoteImg = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/double_quote.png'
-local pbImg = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/pb.png'
-local totalTimeMetalLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/total_time_metal.png'
-local finalScoreMetalLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/final_score_metal.png'
-local newHighScoreLabel = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/new_high_score_metal.png'
-local drift10xImg = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/drift_10x.png'
-local drift100xImg = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/drift_100x.png'
-local drift1000xImg = 'https://github.com/ru57y34nn/cruisin_ac_overtake_server/blob/main/ingame_images/drift_1000x.png'
+local extendPlayImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/extend_play4.png'
+local timeLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/time.png'
+local totalTimeLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/total_time.png'
+local scoreLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/score.png'
+local goalLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/goal_italic.png'
+local driftLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/drift.png'
+local stage1Label = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/stage_1.png'
+local stage2Label = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/stage_2.png'
+local stage3Label = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/stage_3.png'
+local stage4Label = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/stage_4.png'
+local finalStageLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/final_stage.png'
+local letsGoLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/lets_go.png'
+local gameOverLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/game_over.png'
+local singleQuoteImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/single_quote.png'
+local doubleQuoteImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/double_quote.png'
+local pbImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/pb.png'
+local totalTimeMetalLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/total_time_metal.png'
+local finalScoreMetalLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/final_score_metal.png'
+local newHighScoreLabel = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/new_high_score_metal.png'
+local drift10xImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/drift_10x.png'
+local drift100xImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/drift_100x.png'
+local drift1000xImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/drift_1000x.png'
 
 
 local musicTimer = 0
@@ -1737,7 +1737,7 @@ function script.drawUI()
         local player = ac.getCarState(1)
         -- ac.debug('screen ratio', screen_ratio)
         -- ui.beginTransparentWindow('cruisinAcWindow', vec2(uiState.windowSize.x * 0.25, uiState.windowSize.y * 0.1), vec2(400, 400), false)
-        ui.drawImage('http://127.0.0.1:8001/cruisin-ac-logo.png', vec2(-0.05, font_sizey*2), vec2(uiState.windowSize.x * 0.15, font_sizey*5), rgbm.colors.white, vec2(0,0), vec2(1,1), ui.ImageFit.Fit)
+        ui.drawImage('https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/cruisin-ac-logo.png', vec2(-0.05, font_sizey*2), vec2(uiState.windowSize.x * 0.15, font_sizey*5), rgbm.colors.white, vec2(0,0), vec2(1,1), ui.ImageFit.Fit)
         
         -- ui.beginTransparentWindow('overtakeScore1', vec2(uiState.windowSize.x * 0.1, font_sizey*2), vec2(400, 400), false)
         -- ui.pushACFont('ddm_digital_odo')
