@@ -1,13 +1,8 @@
 
 local splashWave = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tribute to OutRun - 03 Splashwave.mp3'
-
 local magicalSoundShower = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tribute to OutRun - 01 Magical Sound Shower.mp3'
-
 local passingBreeze = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tribute to OutRun - 02 Passing Breeze.mp3'
-
 local lastWave = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tribute to OutRun - 04 Last Wave.mp3'
--- local checkpoint = 'http' .. 's://cdn.discordapp.com/attachments/1193340713123983500/1200650001995542548/checkpoint_-voice_sample.mp3'
--- local checkpoint = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/checkpoint_-voice_sample.mp3'
 local letsgo = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/cruisinAC_letsGo.mp3'
 local checkpoint = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/cruisinAC_checkpoint.mp3'
 local congrats = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/cruisinAC_congratulations.mp3'
@@ -146,14 +141,6 @@ carNames[9] = 'Nissan Silvia spec-R Aero'
 carNames[10] = 'Honda S2000 (AP1)'
 
 
--- local testarosaName = 'Ferrari 512 TR Canyon Spec'
--- local corvetteName = 'Chevrolet Corvette C4 ZR-1 Canyon Spec'
--- local countachName = 'Lamborghini Countach'
--- local diabloName = 'Lamborghini Diablo SE30 Jota'
--- local f40Name = 'Ferrari F40 Stage 3'
--- local viperName = 'Dodge Viper RT/10'
--- local gtoName = 'Ferrari GTO'
--- local porscheName = 'Porsche 911 (993) Carrera 4'
 local currentCarPB = 0
 local tflcarPBs = {}
 tflcarPBs[1] = 0.0
@@ -168,23 +155,7 @@ tflcarPBs[9] = 0.0
 tflcarPBs[10] = 0.0
 
 
--- local testarosaPB = 0.0
--- local corvettePB = 0.0
--- local countachPB = 0.0
--- local diabloPB = 0.0
--- local f40PB = 0.0
--- local viperPB = 0.0
--- local gtoPB = 0.0
--- local porschePB = 0.0
-
--- local offRoadMessages = { 'KEEP IT BETWEEN THE LINES, BUDDY!', 'GET BACK ON THE ROAD!', 'HEY, YOU ARE BREAKING THE CAR!' }
--- local CollisionMessages = { 'D\'Oh!', 'BRUTAL!!!!', 'OUCH!!!', 'WATCH IT!!!', 'WANKER!!!', 'OOF!!!', 'CAUTION! STUDENT DRIVER!','NOPE!' }
--- local CloseMessages = { 'CLOSE ONE! 5x: + 500000 pts!', 'NEAR MISS! 5x: + 500000 pts!', 'SOOO CLOSE! 5x + 500000 pts!', 'WHOA! 5x + 500000 pts!' }
-
 local uiState = ac.getUI()
--- local uiCustomPos = vec2(uiState.windowSize.x * 0.5 - 1000, 100)
--- local uiMoveMode = false
--- local lastUiMoveKeyState = false
 
 
 local muteToggle = true
@@ -254,13 +225,12 @@ local nothighScoreChatMsgSent = false
 local screen_ratio = uiState.windowSize.x / uiState.windowSize.y
 
 local lastPlayedSong = 6
--- local endReached = false
--- local raceStarted = false
+
 
 local driftMeterMax = 4.0  -- Maximum drift time in seconds
 local driftMeterAlpha = 0  -- For fade in/out effect
 
--- Flash animation variables for Extend Play images
+
 -- Flash animation variables for Extend Play images
 local extendPlay1Flashing = false
 local extendPlay1FlashTimer = 0
@@ -303,49 +273,7 @@ local bigfont_sizey = bigfontscale*uiState.windowSize.y
 local big_fontsize = vec2(bigfont_sizex, bigfont_sizey)
 
 
--- function addOvertakeMessage(messageType)
---     -- messageType: 1 = normal, 2 = close, 3 = contact
-    
---     -- Determine which image to use
---     local imgPath = overtakeNormalImg
---     if messageType == 2 then
---         imgPath = overtakeCloseImg
---     elseif messageType == 3 then
---         imgPath = overtakeContactImg
---     end
 
---     -- Define row height (message height + spacing)
---     local rowHeight = font_sizey * 2.5
-
---     -- Push all existing messages up by one row
---     -- for i = 1, #overtakeMessages do
---     --     overtakeMessages[i].yOffset = overtakeMessages[i].yOffset - rowHeight
---     -- end
-
---     -- Calculate delay based on how many messages are already sliding
---     local delay = 0
---     for i = 1, #overtakeMessages do
---         if overtakeMessages[i].state == 'slidein' then
---             delay = delay + 0.5  -- 0.5 second gap between each
---         end
---     end
-    
---     -- Remove oldest message if we're at max capacity
---     if #overtakeMessages >= maxOvertakeMessages then
---         table.remove(overtakeMessages, #overtakeMessages)
---     end
-    
---     -- Insert new message at the beginning
---     table.insert(overtakeMessages, 1, {
---         image = imgPath,
---         age = -delay,
---         state = 'slidein',  -- States: 'slidein', 'hold', 'slideout'
---         alpha = 0,          -- Current opacity (0 to 1)
---         xOffset = 0,        -- Horizontal offset from target position
---         yOffset = 0,        -- Vertical offset from target position
---         holdTimer = 0       -- Timer for hold state
---     })
--- end
 
 function addOvertakeMessage(messageType)
     local imgPath = overtakeNormalImg
@@ -432,8 +360,7 @@ local function updateOvertakeMessages(dt)
         -- Smoothly interpolate yOffset toward targetYOffset
         m.yOffset = math.applyLag(m.yOffset, m.targetYOffset, 0.7 , dt)
         
-        -- Calculate position-based alpha (fade near top of window)
-        -- Messages start at yOffset=0 (bottom), move up to negative values
+
         local fadeStartY = -(font_sizey * 4)   -- Start fading here
         local fadeEndY = -(font_sizey * 6.5)   -- Fully transparent here
         
@@ -558,8 +485,7 @@ function addMessage(text, mood)
 end
 
 local function updateMessages(dt)
-    -- comboColor = comboColor + dt * 10 * comboMeter
-    -- if comboColor > 360 then comboColor = comboColor - 360 end
+
     for i = 1, #messages do
         local m = messages[i]
         m.age = m.age + dt
@@ -579,18 +505,7 @@ local function updateMessages(dt)
         end
     end
 
-    -- if comboMeter > 10 and math.random() > 0.98 then
-    --     for i = 1, math.floor(comboMeter) do
-    --         local dir = vec2(math.random() - 0.5, math.random() - 0.5)
-    --         glitterCount = glitterCount + 1
-    --         glitter[glitterCount] = {
-    --             color = rgbm.new(hsv(math.random() * 360, 1, 1):rgb(), 1),
-    --             pos = vec2(195, 75) + dir * vec2(40, 20),
-    --             velocity = dir:normalize():scale(0.2 + math.random()),
-    --             life = 0.5 + 0.5 * math.random()
-    --         }
-    --     end
-    -- end
+
 end
 
 
@@ -681,31 +596,9 @@ elseif carName == carNames[10] then
     tflstored.s2000Score = ac.storage('s2000Score', tflcarPBs[10])
     tflcarPBs[10] = tflstored.s2000Score:get()
     currentCarPB = tflcarPBs[10]
-end    -- corvetteName = stored.corvetteName:get()
--- elseif carName == corvette then
--- stored.carName = ac.storage('corvette', corvette)
+end    
 
--- end
 
--- stored.playerscore = ac.storage('playerscore', personalBest) --default value
--- stored.carName = ac.storage('carName', pbcarName)
--- -- personalBest = stored.playerscore:set(0.0)
--- personalBest = stored.playerscore:get()
--- pbcarName = stored.carName:get()
-
--- local function sendhighscore(connectedCarIndex, connectedSessionID)
---     ac.sendChatMessage("has a current highscore of " .. personalBest .. " pts in the " .. pbcarName)
--- end
-
--- if not connectedHighScoreMsgSent then
---     ac.onClientConnected(sendhighscore)
---     connectedHighScoreMsgSent = true
--- end
-
--- ac.debug("connected car index", connectedCarIndex)
--- ac.debug("connected session id", connectedSessionID)
--- ac.debug("hi score msg sent", highScoreChatMsgSent)
--- ac.debug("connected msg sent", connectedHighScoreMsgSent)
 local DriftTracking = ac.getCarState(1)
 function script.update(dt)
 
@@ -714,14 +607,7 @@ function script.update(dt)
     ac.debug("Drift tracking status", DriftTracking.isDriftValid)
     ac.debug("OffRoad Timer", offRoadTimer)
     ac.debug("Collision Timer", collisionTimer)
-    -- ac.debug("ae86 high score", tflcarPBs[1])
-    -- ac.debug("supra high score", tflcarPBs[2])
-    -- ac.debug("supra3.0 high score", tflcarPBs[3])
-    -- ac.debug("skyline high score", tflcarPBs[4])
-    -- ac.debug("rx7 high score", tflcarPBs[5])
-    -- ac.debug("m3 high score", tflcarPBs[6])
-    -- ac.debug("sti high score", tflcarPBs[7])
-    -- ac.debug("evo high score", tflcarPBs[8])
+
 
 
     local player = ac.getCarState(1)
@@ -740,11 +626,6 @@ function script.update(dt)
         physics.setCarPosition(0, playerPos, playerDir)
     end
 
-    
-    -- if timePassed == 0 then
-    --     addMessage('Let’s go!', 0)
-    -- end
-
 
 
     mediaPlayer1:setSource(letsgo):setAutoPlay(false)
@@ -752,70 +633,16 @@ function script.update(dt)
 
     mediaPlayer3:setSource(congrats):setAutoPlay(false)
     mediaPlayer3:setVolume(1)
-    -- if player.splinePosition > gameStartPos then
-    --     if not raceBegin and gameOverMessage == 0 then
-    --         if muteToggle then
-    --             mediaPlayer1:play()
-    --         end
-    --         raceBegin = true
-    --     end
-    -- end
+
 
 
     mediaPlayer2:setSource(checkpoint):setAutoPlay(false)
     mediaPlayer2:setVolume(1)
+
     -- functionalize this part and add checks for all previous checkpoints to prevent teleporting to checkpoints before previous ones have been crossed
-    -- if player.splinePosition > checkpt1pos then
-    --     timeBonus = 250000 * math.ceil(countDown)
-    --     if not checkpoint1 and gameOverMessage == 0 then
-    --         countDown = countDownTime
-    --         totalScore = totalScore + timeBonus
-    --         lap1time = totalTimer
-    --         prevLaptimes = lap1time
-    --         addMessage("250000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
-    --         addMessage("STAGE 1 CLEAR! 3 to go!", 1)
-    --         if muteToggle then
-    --             mediaPlayer2:play()
-    --         end
-    --         checkpoint1 = true
-    --     end
-    -- end
-
-    -- if player.splinePosition > checkpt2pos then
-    --     timeBonus = 500000 * math.ceil(countDown)
-    --     if not checkpoint2 and gameOverMessage == 0 then
-    --         countDown = countDownTime
-    --         totalScore = totalScore + timeBonus
-    --         lap2time = totalTimer - prevLaptimes
-    --         prevLaptimes = prevLaptimes + lap2time
-    --         addMessage("500000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
-    --         addMessage("STAGE 2 CLEAR! 2 to Go!", 1)
-    --         if muteToggle then
-    --             mediaPlayer2:play() 
-    --         end
-    --         checkpoint2 = true
-    --     end
-    -- end
-
-    -- if player.splinePosition > checkpt3pos then
-    --     timeBonus = 750000 * math.ceil(countDown)
-    --     if not checkpoint3 and gameOverMessage == 0 then
-    --         countDown = countDownTime
-    --         totalScore = totalScore + timeBonus
-    --         lap3time = totalTimer - prevLaptimes
-    --         prevLaptimes = prevLaptimes + lap3time
-    --         addMessage("750000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
-    --         addMessage("STAGE 3 CLEAR! 1 to Go!", 1)
-    --         if muteToggle then
-    --             mediaPlayer2:play()
-    --         end
-    --         checkpoint3 = true
-    --     end
-    -- end
-
 
     if player.splinePosition > checkpt1pos then
-    -- if player.splinePosition < gameStartPos then
+
         local timeBonus = 250000 * math.ceil(countDown)
         if not checkpoint1 and gameOverMessage == 0 then
             countDown = countDownTime
@@ -823,18 +650,17 @@ function script.update(dt)
             lap1time = totalTimer
             prevLaptimes = lap1time
             addStageBonusMessage(timeBonus)
-            -- addMessage("250000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
-            -- addMessage("STAGE 1 CLEAR! 3 to go!", 1)
+
             if muteToggle then
                 mediaPlayer2:play()
             end
             checkpoint1 = true
-            -- START FLASHING ANIMATION
+
             extendPlay1Flashing = true
             extendPlay1FlashTimer = 0
             extendPlay1Alpha = 1
             extendPlay1FlashPhase = 0
-            lap1Alpha = 1  -- ADD THIS
+            lap1Alpha = 1
         end
     end
 
@@ -846,8 +672,7 @@ function script.update(dt)
             lap2time = totalTimer - prevLaptimes
             prevLaptimes = prevLaptimes + lap2time
             addStageBonusMessage(timeBonus)
-            -- addMessage("500000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
-            -- addMessage("STAGE 2 CLEAR! 2 to Go!", 1)
+
             if muteToggle then
                 mediaPlayer2:play() 
             end
@@ -857,7 +682,7 @@ function script.update(dt)
             extendPlay2FlashTimer = 0
             extendPlay2Alpha = 1
             extendPlay2FlashPhase = 0
-            lap2Alpha = 1  -- ADD THIS
+            lap2Alpha = 1  
         end
     end
 
@@ -869,8 +694,7 @@ function script.update(dt)
             lap3time = totalTimer - prevLaptimes
             prevLaptimes = prevLaptimes + lap3time
             addStageBonusMessage(timeBonus)
-            -- addMessage("750000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
-            -- addMessage("STAGE 3 CLEAR! 1 to Go!", 1)
+
             if muteToggle then
                 mediaPlayer2:play()
             end
@@ -880,7 +704,7 @@ function script.update(dt)
             extendPlay3FlashTimer = 0
             extendPlay3Alpha = 1
             extendPlay3FlashPhase = 0
-            lap3Alpha = 1  -- ADD THIS
+            lap3Alpha = 1  
         end
     end
 
@@ -939,9 +763,7 @@ function script.update(dt)
             end
         end
     end
-    -- if player.splinePosition > finishpos then
-    --     if not checkpoint10
-    -- end
+
 
 
 
@@ -949,103 +771,20 @@ function script.update(dt)
     local sim = ac.getSim()
     
     if player.splinePosition > gameStartPos then
-        -- addStageBonusMessage(6942069)
-        -- if sentmessages == false then
-        --     addOvertakeMessage(1)
-        --     addOvertakeMessage(2)
-        --     addStageBonusMessage(43597698)
-        --     addOvertakeMessage(3)
-        --     addOvertakeMessage(1)
-            
-        --     sentmessages = true
-        -- end
+
         if not raceBegin and gameOverMessage == 0 then
             if muteToggle then
                 mediaPlayer1:play()
             end
             raceBegin = true
         end
-        -- if player.splinePosition < finishpos then
-            -- if countDown > -0.001 then
+
         if countDown > 0 then
             if player.splinePosition < finishpos then
-                -- if not checkpoint10 then
                 countDown = countDown - dt
                 totalTimer = totalTimer + dt
                 startTimer = 1
-                -- if player.wheelsOutside < 3 then
-                --     if DriftTracking.isDriftValid and collisionTimer < -3 and offRoadTimer < 0 then
-                --         -- addMessage("We're Drifting!", 1)
-                --         driftTimer = driftTimer + dt
-                --         totalScore = totalScore + dt * scoreRisingRate * 10
-                --         if driftTimer > 0 and not driftMessage1sent then
-                --             addMessage('DRIFT IT! 10x Drift Bonus!', 1)
-                --             driftMessage1sent = true
-                --         end
-                --         if driftTimer > 2 and not driftMessage2sent then
-                --             totalScore = totalScore + dt * scoreRisingRate * 100
-                --             addMessage('KEEP IT GOING! 100x Drift Bonus!!', 1)
-                --             driftMessage2sent = true
-                --         end
-                --         if driftTimer > 4 and not driftMessage3sent then
-                --             totalScore = totalScore + dt * scoreRisingRate * 1000
-                --             addMessage('MAXIMUM DRIFT!!! 1000x Drift Bonus!!!', 1)
-                --             driftMessage3sent = true
-                --         end                            
-                --     else
-                --         driftTimer = 0
-                --         driftMessage1sent = false
-                --         driftMessage2sent = false
-                --         driftMessage3sent = false
-                --         totalScore = totalScore + dt * scoreRisingRate
-                --     end
-                --     -- totalScore = totalScore + dt * scoreRisingRate
-                -- end
 
-
-                -- if player.wheelsOutside < 3 then
-                --     if DriftTracking.isDriftValid and collisionTimer < 0 and offRoadTimer < 0 then
-                --         driftTimer = driftTimer + dt
-                        
-                --         -- Progressive multiplier based on drift duration
-                --         local driftMultiplier = 10
-                --         local driftMessage = ''
-                        
-                --         if driftTimer > 4.0 then
-                --             driftMultiplier = 1000
-                --             if not driftMessage3sent then
-                --                 -- addMessage('MAXIMUM DRIFT! 1000x!', 1)
-                --                 driftMessage3sent = true
-                --             end
-                --         elseif driftTimer > 2.0 then
-                --             driftMultiplier = 100
-                --             if not driftMessage2sent then
-                --                 -- addMessage('100x!', 1)
-                --                 driftMessage2sent = true
-                --             end
-                --         else
-                --             driftMultiplier = 10
-                --             if not driftMessage1sent then
-                --                 -- addMessage('10x!', 1)
-                --                 driftMessage1sent = true
-                --             end
-                --         end
-                        
-                --         totalScore = totalScore + dt * scoreRisingRate * driftMultiplier
-                --         driftMeterAlpha = math.min(driftMeterAlpha + dt * 3, 1.0)  -- Fade in
-                --     else
-                --         driftTimer = 0
-                --         driftMessage1sent = false
-                --         driftMessage2sent = false
-                --         driftMessage3sent = false
-                --         driftMeterAlpha = math.max(driftMeterAlpha - dt * 2, 0)  -- Fade out
-                --         totalScore = totalScore + dt * scoreRisingRate
-                --     end
-                -- end
-
-
-                -- Check if drifting conditions are met
-                -- local isDrifting = false
                 if player.wheelsOutside < 3 then
                     if DriftTracking.isDriftValid and collisionTimer < 0 and offRoadTimer < 0 then
                         isDrifting = true
@@ -1087,9 +826,7 @@ function script.update(dt)
                 if wheelsWarningTimeout > 0 then
                     wheelsWarningTimeout = wheelsWarningTimeout - dt
                 elseif player.wheelsOutside > 3 then
-                    -- if wheelsWarningTimeout == 0 then
-                    -- end
-                    -- addMessage(offRoadMessages[math.random(1, #offRoadMessages)], -1)
+
                     wheelsWarningTimeout = 15
                     offRoadTimer = 3
                 end
@@ -1097,8 +834,7 @@ function script.update(dt)
                 for i = 1, ac.getSim().carsCount do
                     local car = ac.getCarState(i) --or error()
                     local state = carsState[i]
-                    -- ac.debug(" player ", player.collidedWith)
-                    -- ac.debug(" collision timer ", collisionTimer)
+
             
                     if car.position:closerToThan(player.position, 10) then
                         local drivingAlong = math.dot(car.look, player.look) > 0.2
@@ -1112,8 +848,7 @@ function script.update(dt)
             
                         if player.collidedWith == 0 then
                             if collisionMessageTimer > 5 then
-                                -- comboMeter = comboMeter / 2.0
-                                -- addMessage(CollisionMessages[math.random(1, #CollisionMessages)], -1)
+
                                 collisionMessageTimer = 0
                                 collisionTimer = 4
                             end
@@ -1124,36 +859,17 @@ function script.update(dt)
                             local posDot = math.dot(posDir, car.look)
                             state.maxPosDot = math.max(state.maxPosDot, posDot)
                             if posDot < -0.5 and state.maxPosDot > 0.5 then
-                                -- add_amt = math.ceil(10 * comboMeter)
-                                -- if player.collidedWith == 0 then
                                 if collisionTimer > 0 then
                                     totalScore = totalScore + collisionOvertakePts
-                                    -- addMessage('OVERTAKE 0.25x: + ' .. collisionOvertakePts .. ' pts', 2)
-                                    addOvertakeMessage(3)
-                                    -- collisionTimer = 0
-                                -- end  
+                                    addOvertakeMessage(3) 
                                 elseif car.position:closerToThan(player.position, 3) then
                                     totalScore = totalScore + closeOvertakePts
-                                    -- addMessage(CloseMessages[math.random(#CloseMessages)], 1)
                                     addOvertakeMessage(2)
                                 else
                                     totalScore = totalScore + overtakePts
-                                    -- addMessage('OVERTAKE 1x: + ' .. overtakePts .. ' pts', 0)
                                     addOvertakeMessage(1)
                                 end
-                                -- totalScore = totalScore + overtakePts
-                                -- comboMeter = comboMeter + 1
-                                -- comboColor = comboColor + 90
-
-                                -- if muteToggle then
-                                --     mediaPlayer3:setSource(noti)
-                                --     mediaPlayer3:setVolume(1)
-                                --     mediaPlayer3:play()
-                                -- else
-                                --     mediaPlayer3:setSource(noti)
-                                --     mediaPlayer3:setVolume(0)
-                                --     mediaPlayer3:pause()
-                                -- end
+  
             
                                 state.overtaken = true
                             end
@@ -1166,11 +882,7 @@ function script.update(dt)
                         state.nearMiss = false
                     end
                 end
-                -- else
-                --     countDown = countDown
-                --     totalTimer = totalTimer
-                --     totalScore = totalScore
-                -- end
+
             else
                 if not checkpoint10 then
                     lap10time = totalTimer - prevLaptimes
@@ -1182,8 +894,7 @@ function script.update(dt)
                     totalScore = totalScore + timeBonus
                     finalScore = totalScore
                     addStageBonusMessage(timeBonus)
-                    -- addMessage("1000000 x TIME BONUS! + " .. timeBonus .. " pts", 1)
-                    -- addMessage("FINAL STAGE CLEAR!", 1)
+    
                     if carName == carNames[1] then
                         if finalScore > tflcarPBs[1] then
                             tflcarPBs[1] = math.ceil(finalScore)
@@ -1335,10 +1046,7 @@ function script.update(dt)
                             end
                         end
                     end
-                    -- if finalScore > personalBest then
-                    --     personalBest = math.ceil(finalScore)
-                    --     tflstored.playerscore:set(personalBest)
-                    --     tflstored.carName:set(carName)
+
                     if muteToggle then
                         mediaPlayer3:play()
                     end
@@ -1347,20 +1055,12 @@ function script.update(dt)
             end
             
         else
-            -- raceStarted = false
-            -- endReached = false
-            -- mediaPlayer8:setSource(wilhelmScream):setAutoPlay(false)
-            -- mediaPlayer8:setVolume(1.0)
+
             gameOverMessage = 1
             checkpoint1 = true
             checkpoint2 = true
             checkpoint3 = true
-            -- checkpoint4 = true
-            -- checkpoint5 = true
-            -- checkpoint6 = true
-            -- checkpoint7 = true
-            -- checkpoint8 = true
-            -- checkpoint9 = true
+
             checkpoint10 = true
             countDown = countDown
             totalTimer = totalTimer
@@ -1508,34 +1208,21 @@ function script.update(dt)
                     end
                 end
             end
-            -- if finalScore > personalBest then
-            --     personalBest = math.ceil(finalScore)
-            --     stored.playerscore:set(personalBest)
-            --     stored.carName:set(carName)
-            -- if not highScoreChatMsgSent then
-            --     ac.sendChatMessage('has a NEW Highscore of ' .. math.ceil(personalBest) .. ' pts in the ' .. carName)
-            --     highScoreChatMsgSent = true
-            -- end
+ 
         end
     else
         countDown = countDownTime
         totalScore = 0
         totalTimer = 0
         startTimer = 0
-        -- raceStarted = false
-        -- endReached = false
+
         raceBegin = false
         checkpoint1 = false
         checkpoint2 = false
         checkpoint3 = false
-        -- checkpoint4 = false
-        -- checkpoint5 = false
-        -- checkpoint6 = false
-        -- checkpoint7 = false
-        -- checkpoint8 = false
-        -- checkpoint9 = false
+
         checkpoint10 = false
-        -- raceEnd = false
+
         highScoreChatMsgSent = false
         nothighScoreChatMsgSent = false
         gameOverMessage = 0
@@ -1544,17 +1231,17 @@ function script.update(dt)
         extendPlay1Flashing = false
         extendPlay1Alpha = 0
         extendPlay1FlashPhase = 0
-        lap1Alpha = 0  -- ADD THIS
+        lap1Alpha = 0  
 
         extendPlay2Flashing = false
         extendPlay2Alpha = 0
         extendPlay2FlashPhase = 0
-        lap2Alpha = 0  -- ADD THIS
+        lap2Alpha = 0  
 
         extendPlay3Flashing = false
         extendPlay3Alpha = 0
         extendPlay3FlashPhase = 0
-        lap3Alpha = 0  -- ADD THIS
+        lap3Alpha = 0  
 
         sentmessages = false
         warningLightAlpha = 0
@@ -1645,9 +1332,6 @@ function script.update(dt)
     end
 
 
-    -- ac.debug("total timer", totalTimer)
-    -- ac.debug("rounded timer", math.round(totalTimer, 3))
-    -- ac.debug("subseconds", string.sub(string.format("%.2f", subSeconds), -2, -1))
 
     secondsTime = totalTimer/60
     if secondsTime > 1 then
@@ -1900,30 +1584,6 @@ function script.update(dt)
 
 
 
-
-    -- local uiMoveKeyState = ac.isKeyDown(ac.KeyIndex.B)
-    -- if uiMoveKeyState and lastUiMoveKeyState ~= uiMoveKeyState then
-    --     uiMoveMode = not uiMoveMode
-    --     lastUiMoveKeyState = uiMoveKeyState
-    --     if messageState then
-    --         addMessage('UI Move mode Disabled', -1)
-    --         messageState = false
-    --     else
-    --         addMessage('UI Move mode Enabled', -1)
-    --         messageState = true
-    --     end
-
-
-    -- elseif not uiMoveKeyState then
-    --     lastUiMoveKeyState = false
-    -- end
-
-    -- if ui.mouseClicked(ui.MouseButton.Left) then
-    --     if uiMoveMode then
-    --         uiCustomPos = ui.mousePos()
-    --     end
-    -- end
-
     local muteKeyState = ac.isKeyDown(ac.KeyIndex.M)
     if muteKeyState and lastMuteKeyState ~= muteKeyState then
         muteToggle = not muteToggle
@@ -1961,19 +1621,7 @@ function script.update(dt)
     collisionTimer = collisionTimer - dt
     offRoadTimer = offRoadTimer - dt
 
-    -- ac.debug("lap1 timer", lap1time)
-    -- ac.debug("lap2 timer", lap2time)
-    -- ac.debug("lap3 timer", lap3time)
-    -- ac.debug("lap4 timer", lap4time)
-    -- ac.debug("lap5 timer", lap5time)
-    -- ac.debug("lap6 timer", lap6time)
-    -- ac.debug("lap7 timer", lap7time)
-    -- ac.debug("lap8 timer", lap8time)
-    -- ac.debug("lap9 timer", lap9time)
-    -- ac.debug("lap10timer", lap10time)
 
-    -- local comboFadingRate = 0.1 * math.lerp(1, 0.1, math.lerpInvSat(player.speedKmh, 45, 160)) + player.wheelsOutside / 4
-    -- comboMeter = math.max(1, comboMeter - dt * comboFadingRate) 
 end
 
 
@@ -2134,21 +1782,7 @@ function script.drawUI()
         local colorGrey = rgbm(0.7, 0.7, 0.7, 1)
         -- local colorAccent = rgbm(1.0, 0.0, 1.0, 1)   -- rgbm.new(hsv(speedRelative * 120, 1, 1):rgb(), 1)
         local colorAccent = rgbm.new(hsv(speedRelative * 120, 1, 1):rgb(), 1)
-        -- local colorCombo = rgbm.new(hsv(comboColor, math.saturate(comboMeter / 10), 1):rgb(),
-        --     math.saturate(comboMeter / 4))
 
-        -- local function progressMeter(ref, prevCheckptPos, checkptPos)
-
-        --     local player = ac.getCarState(1)
-        --     local currPos = math.lerp(0, 200, math.lerpInvSat(player.splinePosition, prevCheckptPos, checkptPos))
-
-        --     ui.drawRectFilled(ref + vec2(0, -8), ref + vec2(200, 10), colorDark, 1)
-        --     ui.drawLine(ref + vec2(0, -8), ref + vec2(0, 8), colorGrey, 1)
-        --     ui.drawLine(ref + vec2(200, -8), ref + vec2(200, 8), colorGrey, 1)
-
-        --     ui.drawLine(ref + vec2(0, 0), ref + vec2(currPos, 0), colorAccent, 13)
-
-        -- end
 
         local function progressMeter(ref, prevCheckptPos, checkptPos, meterWidth, meterHeight)
             local player = ac.getCarState(1)
@@ -2265,93 +1899,16 @@ function script.drawUI()
 
 
         local player = ac.getCarState(1)
-        -- ac.debug('screen ratio', screen_ratio)
-        -- ui.beginTransparentWindow('cruisinAcWindow', vec2(uiState.windowSize.x * 0.25, uiState.windowSize.y * 0.1), vec2(400, 400), false)
+
         ui.drawImage('https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/cruisin-ac-logo.png', vec2(-0.05, font_sizey*2), vec2(uiState.windowSize.x * 0.15, font_sizey*5), rgbm.colors.white, vec2(0,0), vec2(1,1), ui.ImageFit.Fit)
         
-        -- ui.beginTransparentWindow('overtakeScore1', vec2(uiState.windowSize.x * 0.1, font_sizey*2), vec2(400, 400), false)
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.acText('SCORE', basic_fontsize, 0, rgbm(1.0, 0.0, 1.0, 1.0))
-        -- ui.popACFont()
-        -- ui.endTransparentWindow()
+
 
         headerflag = math.applyLag(headerflag, player.splinePosition < finishpos and 1 or 0, 0.1, uiState.dt)
 
         drawHeader(headerflag, totalScore, currentCarPB, font_sizex, font_sizey)
 
-        -- ui.beginTransparentWindow('overtakeScore1', vec2(uiState.windowSize.x * 0.1, font_sizey*2), vec2(400, 400), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, headerflag)
-        -- ui.drawImage(scoreLabel,
-        --     vec2(-font_sizex, 0),
-        --     vec2(font_sizex * 6, font_sizey * 1.5),
-        --     rgbm.colors.white)
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
 
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.acText("SCORE", vec2(50,50), 0, rgbm(0.5, 0.0, 1.0, 1))
-        -- ui.popACFont()
-        -- ui.beginTransparentWindow('overtakeScore2', vec2(uiState.windowSize.x * 0.1, font_sizey*3.5), vec2(2000, 2000), false)
-        -- ui.beginOutline()
-        -- ui.pushACFont('outrun2_font2')
-        -- ui.acText(math.ceil(totalScore) .. ' pts', basic_fontsize, 0, rgbm.colors.white)
-        -- ui.popACFont()
-        -- ui.endOutline()
-        -- ui.endTransparentWindow()
-        -- ui.beginTransparentWindow('overtakeScore2', vec2(uiState.windowSize.x * 0.1, font_sizey*3.5), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, headerflag)
-        -- local spacing = font_sizex * -0.45
-        -- drawNumber(totalScore, 10, 0, font_sizex * 1.2, font_sizey * 1.5, spacing)
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-        
-
-        
-        -- ui.beginTransparentWindow('overtakeScorePB', vec2(uiState.windowSize.x * 0.1, font_sizey*4.75), vec2(2000, 2000), false)
-        -- ui.beginOutline()
-        -- ui.pushACFont('650S_big')
-        -- ui.acText('PB: ' .. math.ceil(currentCarPB) .. ' pts', small_fontsize, 0, rgbm.colors.white)
-        -- ui.popACFont()
-        -- ui.endTransparentWindow()
-
-        -- ui.beginTransparentWindow('overtakeScorePB', vec2(uiState.windowSize.x * 0.1, font_sizey*4.75), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, headerflag)
-        -- local digitWidth = font_sizex * 0.7
-        -- local digitHeight = font_sizey * 1.0
-        -- -- local spacing = -10
-        -- local spacing = font_sizex * - 0.275
-
-        -- local currentX = 0
-
-        -- -- Draw "PB:" image
-        -- local pbWidth = font_sizex * 2  -- Adjust width as needed
-        -- ui.drawImage(pbImg,
-        --     vec2(currentX, -5),
-        --     vec2(currentX + pbWidth, digitHeight*1.2),
-        --     rgbm.colors.white)
-        -- currentX = currentX + pbWidth --+ 10  -- 10 pixels spacing after "PB:"
-
-        -- -- Draw the score number
-        -- local numStr = tostring(math.ceil(currentCarPB))
-        -- for i = 1, #numStr do
-        --     local digit = tonumber(numStr:sub(i, i))
-        --     local xPos = currentX + (i-1) * (digitWidth + spacing)
-        --     ui.drawImage(digitImages[digit],
-        --         vec2(xPos, 0),
-        --         vec2(xPos + digitWidth, digitHeight),
-        --         rgbm.colors.white)
-        -- end
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.acText(math.ceil(totalScore) .. ' pts', vec2(50,50), 2, rgbm(0.75, 0.5, 0.0, 1))
-        -- ui.popACFont()
-
-        -- ui.endOutline(rgbm(0, 0, 0, 0.3))
-
-        -- ui.offsetCursorY(150)
-        -- ui.offsetCursorX(-300)
         ui.beginTransparentWindow('messageWindow', vec2(uiState.windowSize.x * 0.1, font_sizey * 8), vec2(2000, 2000), false)
         ui.pushFont(ui.Font.Title)
         ui.offsetCursorY(50)
@@ -2373,16 +1930,7 @@ function script.drawUI()
         ui.popFont()
         ui.endTransparentWindow()
 
-
-
-        -- local overtakeMsgWindowPos = vec2(uiState.windowSize.x * 0.65, uiState.windowSize.y * 0.75)
-        -- local overtakeMsgWindowPos = vec2(uiState.windowSize.x * 0.1, font_sizey * 8) 
-        -- ac.debug("Number of overtake messages", #overtakeMessages)
-        -- if #overtakeMessages > 0 then
-        --     ac.debug("First message state", overtakeMessages[1].state)
-        --     ac.debug("First message alpha", overtakeMessages[1].alpha)
-        --     ac.debug("First message age", overtakeMessages[1].age)
-        -- end 
+ 
 
         ui.beginTransparentWindow('overtakeMessageWindow', vec2(uiState.windowSize.x * 0.1, font_sizey * 6), vec2(font_sizex*20, font_sizey*8), false)
 
@@ -2434,19 +1982,6 @@ function script.drawUI()
         ui.endTransparentWindow()
 
 
-        -- ui.beginTransparentWindow('overtakeMessageTest', vec2(uiState.windowSize.x * 0.1, font_sizey * 8), vec2(1400, 400), false)
-        -- ui.drawRectFilled(vec2(0, 0), vec2(1200, 160), rgbm(1, 0, 0, 0.5))  -- Red background
-
-        -- if #overtakeMessages > 0 then
-        --     local m = overtakeMessages[1]
-        --     ui.drawImage(m.image,
-        --         vec2(0, 0),
-        --         vec2(1200, 160),
-        --         rgbm(1, 1, 1, 1))  -- Full white, full opacity
-        -- end
-
-        -- ui.endTransparentWindow()
-
 
 
         local progress_loc = vec2(-270, 60)
@@ -2458,18 +1993,6 @@ function script.drawUI()
 
         ui.setCursorY(0)
 
-        -- ui.textColored('Keep speed above ' .. requiredSpeed .. ' km/h:', colorAccent)
-        -- if raceBegin and not checkpoint1 then
-        --     -- ui.pushACFont('ddm_digital_odo')
-        --     -- ui.acText('STAGE 1: ', basic_fontsize, 0, rgbm(1.0, 1.0, 0.0, 1.0))
-        --     ui.drawImage(stage1Label,
-        --         vec2(0, 0),
-        --         vec2(font_sizex * 6, font_sizey * 1.5),
-        --         rgbm.colors.white)
-        --     -- ui.popACFont()
-        --     progressMeter(ui.getCursor() + progress_loc, gameStartPos, checkpt1pos) -- starting line and checkpt 1 positions
-            
-        -- end
         local progMeterLength = font_sizex*6
         local progMeterHeight = font_sizey*0.75
 
@@ -2481,12 +2004,7 @@ function script.drawUI()
             progressMeter(ui.getCursor() + vec2(font_sizex * 2, font_sizey * 2), gameStartPos, checkpt1pos, progMeterLength, progMeterHeight) 
         end
 
-        -- if checkpoint1 and not checkpoint2 then
-        --     ui.pushACFont('ddm_digital_odo')
-        --     ui.acText('STAGE 2: ', basic_fontsize, 0, rgbm(1.0, 1.0, 0.0, 1.0))
-        --     ui.popACFont()
-        --     progressMeter(ui.getCursor() + progress_loc, checkpt1pos, checkpt2pos)
-        -- end
+
 
         if checkpoint1 and not checkpoint2 then
             ui.drawImage(stage2Label,
@@ -2496,12 +2014,7 @@ function script.drawUI()
             progressMeter(ui.getCursor() + vec2(font_sizex * 2, font_sizey * 2), checkpt1pos, checkpt2pos, progMeterLength, progMeterHeight)
         end
 
-        -- if checkpoint2 and not checkpoint3 then
-        --     ui.pushACFont('ddm_digital_odo')
-        --     ui.acText('STAGE 3: ', basic_fontsize, 0, rgbm(1.0, 1.0, 0.0, 1.0))
-        --     ui.popACFont()
-        --     progressMeter(ui.getCursor() + progress_loc, checkpt2pos, checkpt3pos)
-        -- end
+
 
         if checkpoint2 and not checkpoint3 then
             ui.drawImage(stage3Label,
@@ -2512,12 +2025,6 @@ function script.drawUI()
         end
 
 
-        -- if checkpoint3 and not checkpoint10 then
-        --     ui.pushACFont('ddm_digital_odo')
-        --     ui.acText('FINAL STAGE: ', basic_fontsize, 0, rgbm(1.0, 1.0, 0.0, 1.0))
-        --     ui.popACFont()
-        --     progressMeter(ui.getCursor() + final_prog_loc, checkpt3pos, finishpos)
-        -- end
 
         if checkpoint3 and not checkpoint10 then
         -- if not raceBegin then
@@ -2537,83 +2044,6 @@ function script.drawUI()
         -- drawDriftMeterAndWarning(driftMeterAlpha, warningLightAlpha, driftTimer, driftMeterMax, font_sizex, font_sizey)
         drawDriftMeterWindow() 
         
-        -- Drift Meter (appears in center when drifting)
-        -- if driftMeterAlpha > 0 then
-        --     ui.beginTransparentWindow('driftMeterWindow', 
-        --         -- vec2(uiState.windowSize.x * 0.5 - 150, uiState.windowSize.y * 0.65), 
-        --         vec2(uiState.windowSize.x * 0.6, uiState.windowSize.y * 0.5),
-        --         vec2(600, 100), false)
-            
-        --     ui.pushStyleVar(ui.StyleVar.Alpha, driftMeterAlpha)
-            
-        --     -- Draw "DRIFT" label
-        --     -- ui.pushACFont('ddm_digital_odo')
-        --     -- ui.acText('DRIFT', basic_fontsize, 0, rgbm(1.0, 1.0, 0.0, 1.0)) 
-        --     ui.drawImage(driftLabel,
-        --         vec2(0, 0),
-        --         vec2(font_sizex * 8, font_sizey * 2.5),
-        --         rgbm.colors.white)
-        --     -- ui.popACFont()
-            
-        --     -- Draw the meter
-        --     -- driftMeter(ui.getCursor() + vec2(0, 40), driftTimer, driftMeterMax)
-        --     -- local driftMeterLength = font_sizex*6
-        --     -- local driftMeterHeight = font_sizey*0.7
-        --     driftMeter(ui.getCursor() + vec2(font_sizex * 6, 40), driftTimer, driftMeterMax, font_sizex*5, font_sizey*0.75)
-
-            
-        --     local driftImg = nil
-        --     if driftTimer > 4.0 then
-        --         driftImg = drift1000xImg
-        --     elseif driftTimer > 2.0 then
-        --         driftImg = drift100xImg
-        --     elseif driftTimer > 0.0 then
-        --         driftImg = drift10xImg
-        --     end
-
-
-        --     if driftImg then
-        --         ui.drawImage(driftImg,
-        --             vec2(font_sizex*7, 0),
-        --             vec2(font_sizex*11, font_sizey*1.5),  -- Adjust size as needed
-        --             rgbm.colors.white)
-        --     end
-
-
-        --     ui.popStyleVar()
-        --     ui.endTransparentWindow()
-        -- end
-
-
-        -- -- Warning Light (appears when drift is disabled)
-        -- if warningLightAlpha > 0.01 then
-        --     ui.beginTransparentWindow('warningLightWindow', 
-        --         vec2(uiState.windowSize.x * 0.6, uiState.windowSize.y * 0.5),
-        --         vec2(600, 100), false)
-            
-        --     ui.pushStyleVar(ui.StyleVar.Alpha, warningLightAlpha)
-            
-        --     -- Center the warning light in the drift meter area
-        --     local warningSize = font_sizex * 6  -- Adjust size to your preference
-        --     ui.drawImage(warningLightImg,
-        --         vec2(0, font_sizey * 0.5),
-        --         vec2(warningSize, font_sizey * 0.5 + warningSize),
-        --         rgbm.colors.white)
-            
-        --     ui.popStyleVar()
-        --     ui.endTransparentWindow()
-        -- end
-
-
-
-
-
-        -- ui.beginTransparentWindow("countDownTimer", vec2((uiState.windowSize.x*0.5)-(3*font_sizex), font_sizey*2), vec2(400, 400), false)
-        -- -- ui.beginOutline()
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.acText("TIME", basic_fontsize, 0, rgbm(0.8, 0.5, 0.0, 1))
-        -- ui.popACFont()
-        -- ui.endTransparentWindow()
 
 
 
@@ -2626,16 +2056,6 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()        
 
-        -- ui.beginTransparentWindow('countDownTime', vec2((uiState.windowSize.x*0.5) - (2*font_sizex), font_sizey*3), vec2(400, 400), false)
-        -- -- ui.beginOutline()
-        -- ui.pushACFont('giulia_2x')
-        -- -- local textsize = vec2(0,0)
-        -- -- textsize = ui.calculateACTextSize(" " .. math.abs(math.ceil(countDown)).. "", vec2(10,10*screen_ratio), 0, 0, monospace)
-        -- -- ac.debug("text size", textsize)
-        -- -- ui.pushACFont('fd2_speedo')
-        -- ui.acText("" .. math.abs(math.ceil(countDown)).. "", vec2(2.0*font_sizex, 2.75*font_sizey), 2, rgbm(1.0, 1.0, 0.0, 1))
-        -- ui.popACFont()
-        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow('countDownTime', vec2((uiState.windowSize.x*0.5) - (2*font_sizex), font_sizey*3.5), vec2(400, 400), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, headerflag)
@@ -2713,21 +2133,7 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        -- ui.beginTransparentWindow("checkpoint1Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5-checkpt_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt1flag)
-        -- ui.pushACFont("650S_big")
-        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-  
-        -- ui.beginTransparentWindow("extendPlay1Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt1flag)
-        -- ui.pushACFont("650S_big")
-        -- ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
+
 
         ui.beginTransparentWindow("extendPlay1Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt1flag)
@@ -2739,17 +2145,6 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-
-        -- ui.beginTransparentWindow("lap1Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.55-laptime_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, lap1Alpha)
-        -- ui.pushACFont("ddm_digital_odo")
-        -- -- ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
-        -- ui.acText(string.format("%02d", lap1mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.format("%02d", lap1secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.sub(string.format("%.02f", lap1subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
 
         local digitWidth = font_sizex * 1.2
         local digitHeight = font_sizey * 1.5
@@ -2798,21 +2193,6 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        -- ui.beginTransparentWindow("checkpoint2Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt2flag)
-        -- ui.pushACFont("650S_big")
-        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-        -- ui.beginTransparentWindow("extendPlay2Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt2flag)
-        -- ui.pushACFont("650S_big")
-        -- ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("extendPlay2Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt2flag)
@@ -2824,17 +2204,6 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-
-        -- ui.beginTransparentWindow("lap2Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.55-laptime_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, lap2Alpha)
-        -- ui.pushACFont("ddm_digital_odo")
-        -- -- ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
-        -- ui.acText(string.format("%02d", lap2mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.format("%02d", lap2secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.sub(string.format("%.02f", lap2subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("lap2Window", vec2(uiState.windowSize.x * 0.5 - 0.8*laptime_windowx_scale, uiState.windowSize.y * 0.55-laptime_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, lap2Alpha)
@@ -2875,22 +2244,6 @@ function script.drawUI()
         ui.endTransparentWindow()
 
 
-        -- ui.beginTransparentWindow("checkpoint3Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt3flag)
-        -- ui.pushACFont("650S_big")
-        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-        -- ui.beginTransparentWindow("extendPlay3Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt3flag)
-        -- ui.pushACFont("650S_big")
-        -- ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
         ui.beginTransparentWindow("extendPlay3Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, extendPlay3Alpha)
         ui.drawImage(extendPlayImg,
@@ -2900,17 +2253,6 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-
-        -- ui.beginTransparentWindow("lap3Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.55-laptime_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, lap3Alpha)
-        -- ui.pushACFont("ddm_digital_odo")
-        -- -- ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
-        -- ui.acText(string.format("%02d", lap3mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.format("%02d", lap3secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.sub(string.format("%.02f", lap3subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
 
 
         ui.beginTransparentWindow("lap3Window", vec2(uiState.windowSize.x * 0.5 - 0.8*laptime_windowx_scale, uiState.windowSize.y * 0.55-laptime_windowy_scale), vec2(2000, 2000), false)
@@ -2952,53 +2294,7 @@ function script.drawUI()
         ui.endTransparentWindow()
 
 
-        -- ui.beginTransparentWindow("checkpoint4Window", vec2(uiState.windowSize.x * 0.5 - checkpt_windowx_scale, uiState.windowSize.y * 0.5 - checkpt_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt4flag)
-        -- ui.pushACFont("650S_big")
-        -- ui.acText('CHECKPOINT!', big_fontsize, 0, checkpointcolor)
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
 
-        -- ui.beginTransparentWindow("extendPlay4Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt4flag)
-        -- ui.pushACFont("650S_big")
-        -- ui.acText('EXTEND PLAY!', big_fontsize, 0, extendplaycolor)
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-        -- ui.beginTransparentWindow("extendPlay4Window", vec2(uiState.windowSize.x * 0.5 - extendplay_windowx_scale, uiState.windowSize.y * 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt4flag)
-        -- ui.drawImage(extendPlayImg,
-        --     vec2(0, 0),
-        --     vec2(extendplay_windowx_scale * 2, extendplay_windowy_scale * 0.4),
-        --     rgbm.colors.white)
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-
-        -- ui.beginTransparentWindow("lap4Window", vec2(uiState.windowSize.x * 0.5 - laptime_windowx_scale, uiState.windowSize.y * 0.55-laptime_windowy_scale), vec2(2000, 2000), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, checkpt4flag)
-        -- ui.pushACFont("ddm_digital_odo")
-        -- ui.acText('LAP ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
-        -- ui.acText(string.format("%02d", lap4mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.format("%02d", lap4secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.sub(string.format("%.02f", lap4subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-
-        -- -- ui.beginTransparentWindow("finishRaceWindow", vec2(uiState.windowSize.x * 0.5 - 10*bigfont_sizex, uiState.windowSize.y * 0.5 - 4*bigfont_sizey), vec2(2000, 2000), false)
-        -- ui.beginTransparentWindow("finishRaceWindow", vec2(uiState.windowSize.x * 0.5 - 2.5*bigfont_sizex, uiState.windowSize.y * 0.5 - 0.5-extendplay_windowy_scale), vec2(2000, 2000), false)
-        -- -- ui.beginOutline()
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
-        -- ui.pushACFont("650S_big")
-        -- ui.acText('GOAL!', big_fontsize, 0, checkpointcolor)
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("finishRaceWindow", vec2(uiState.windowSize.x * 0.5 - 5*bigfont_sizex, uiState.windowSize.y * 0.45 - extendplay_windowy_scale), vec2(2000, 500), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
@@ -3009,21 +2305,6 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-
-        -- ui.beginTransparentWindow("lap1Window", vec2(uiState.windowSize.x * 0.5 - 2.25*laptime_windowx_scale, uiState.windowSize.y * 0.7-laptime_windowy_scale), vec2(2000, 500), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
-        -- ui.drawImage(stage1Label,
-        --     vec2(0, 0),
-        --     vec2(font_sizex * 8, font_sizey * 2),
-        --     rgbm.colors.white)
-        -- ui.pushACFont("ddm_digital_odo")
-        -- -- ui.acText('Stage 1 ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
-        -- ui.acText(string.format("%02d", lap1mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.format("%02d", lap1secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.sub(string.format("%.02f", lap1subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
 
         ui.beginTransparentWindow("lap1Window", vec2(uiState.windowSize.x * 0.5 - 2*laptime_windowx_scale, uiState.windowSize.y * 0.55-laptime_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
@@ -3073,21 +2354,6 @@ function script.drawUI()
         ui.endTransparentWindow()
 
 
-        -- ui.beginTransparentWindow("lap2Window", vec2(uiState.windowSize.x * 0.5 - 2.25*laptime_windowx_scale, uiState.windowSize.y * 0.8-laptime_windowy_scale), vec2(2000, 500), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
-        -- ui.drawImage(stage2Label,
-        --     vec2(0, 0),
-        --     vec2(font_sizex * 8, font_sizey * 2),
-        --     rgbm.colors.white)
-        -- ui.pushACFont("ddm_digital_odo") 
-        -- -- ui.acText('Stage 2 ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
-        -- ui.acText(string.format("%02d", lap2mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.format("%02d", lap2secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.sub(string.format("%.02f", lap2subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
         ui.beginTransparentWindow("lap2Window", vec2(uiState.windowSize.x * 0.5 - 2*laptime_windowx_scale, uiState.windowSize.y * 0.65-laptime_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
 
@@ -3136,22 +2402,6 @@ function script.drawUI()
         ui.endTransparentWindow()        
 
 
-        -- ui.beginTransparentWindow("lap3Window", vec2(uiState.windowSize.x * 0.5 - 2.25*laptime_windowx_scale, uiState.windowSize.y * 0.9-laptime_windowy_scale), vec2(2000, 500), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
-        -- ui.drawImage(stage3Label,
-        --     vec2(0, 0),
-        --     vec2(font_sizex * 8, font_sizey * 2),
-        --     rgbm.colors.white)
-        -- ui.pushACFont("ddm_digital_odo")
-        -- -- ui.acText('Stage 3 ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
-        -- ui.acText(string.format("%02d", lap3mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.format("%02d", lap3secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.sub(string.format("%.02f", lap3subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-
 
         ui.beginTransparentWindow("lap3Window", vec2(uiState.windowSize.x * 0.5 - 2*laptime_windowx_scale, uiState.windowSize.y * 0.75-laptime_windowy_scale), vec2(2000, 2000), false)
         ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
@@ -3198,23 +2448,6 @@ function script.drawUI()
 
         ui.popStyleVar()
         ui.endTransparentWindow()
-
-
-        -- ui.beginTransparentWindow("lap10Window", vec2(uiState.windowSize.x * 0.5 - 2.24*laptime_windowx_scale, uiState.windowSize.y * 1-laptime_windowy_scale), vec2(2000, 500), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
-        -- ui.drawImage(stage4Label,
-        --     vec2(0, 0),
-        --     vec2(font_sizex * 8, font_sizey * 2),
-        --     rgbm.colors.white)
-        -- ui.sameLine(font_sizex * 8 + 15)
-        -- ui.pushACFont("ddm_digital_odo")
-        -- -- ui.acText('Stage 4 ', basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
-        -- ui.acText(string.format("%02d", lap10mins).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.format("%02d", lap10secs).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.sub(string.format("%.02f", lap10subsecs), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
 
 
 
@@ -3335,9 +2568,6 @@ function script.drawUI()
         ui.popStyleVar()
         ui.endTransparentWindow()
 
-        -- ui.beginTransparentWindow("lap10Window", vec2(uiState.windowSize.x * 0.5 - 2.25*laptime_windowx_scale, uiState.windowSize.y * 1.1-laptime_windowy_scale), vec2(2000, 500), false)
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, finishflag)
-        -- ui.endTransparentWindow()
 
 
         ui.beginTransparentWindow('FinalScoreNumberWindow', vec2(uiState.windowSize.x * 0.5 - 0.08*laptime_windowx_scale, uiState.windowSize.y * 1.1-laptime_windowy_scale), vec2(2000, 2000), false)
@@ -3363,110 +2593,6 @@ function script.drawUI()
         ui.endTransparentWindow()
 
 
-
-        -- ui.beginTransparentWindow("totalTimeWindow", vec2(totaltime_xpos, font_sizey*2), vec2(800, 400), false)
-        -- ui.beginOutline()
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.acText("TOTAL TIME", basic_fontsize, 0, rgbm(0.1, 0.3, 1.0, 1))
-        -- ui.popACFont()
-        -- ui.endTransparentWindow()
-
-        -- ui.beginTransparentWindow("totalTimeWindow", vec2(totaltime_xpos, font_sizey*2), vec2(800, 400), false)
-        -- ui.drawImage(totalTimeLabel,
-        --     vec2(0, 0),
-        --     vec2(font_sizex * 6, font_sizey * 1.5),
-        --     rgbm.colors.white)
-        -- ui.endTransparentWindow()
-
-
-        -- ui.beginTransparentWindow("totalMinutesWindow1", vec2(minutes10s_xpos, font_sizey*3.5), vec2(400, 400), false)
-        -- -- ui.beginOutline()
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, 1-min10)
-        -- ui.acText("0", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-        -- ui.beginTransparentWindow("totalMinutesWindow2", vec2(minutes_xpos, font_sizey*3.5), vec2(400, 400), false)
-        -- -- ui.beginOutline()
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, 1-min1)
-        -- ui.acText("0:", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-        -- if minutesTime > 10 then
-        --     ui.beginTransparentWindow("totalMinutesWindow3", vec2(minutes10s_xpos, font_sizey*3.5), vec2(400, 400), false)
-        -- else
-        --     ui.beginTransparentWindow("totalMinutesWindow3", vec2(minutes_xpos, font_sizey*3.5), vec2(400, 400), false)
-        -- end
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, min1)
-        -- ui.pushACFont('ddm_digital_odo')
-        -- -- ui.pushACFont('fd2_speedo')
-        -- -- ui.acText("".. math.floor(countUp10sSecs).. "", vec2(50,50), 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText("".. math.floor(minutesTime).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- -- ui.acText
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-
-        -- ui.beginTransparentWindow("totalSecondsWindow1", vec2(seconds10s_xpos, font_sizey*3.5), vec2(400, 400), false)
-        -- -- ui.beginOutline()
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, 1-sec10)
-        -- ui.acText("0", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-        -- ui.beginTransparentWindow("totalSecondsWindow2", vec2(seconds_xpos, font_sizey*3.5), vec2(400, 400), false)
-        -- -- ui.beginOutline()
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, 1-startTimer)
-        -- ui.acText("0:", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-        -- if secondsTime > 10 then
-        --     ui.beginTransparentWindow("totalSecondsWindow3", vec2(seconds10s_xpos, font_sizey*3.5), vec2(400, 400), false)
-        -- else
-        --     ui.beginTransparentWindow("totalSecondsWindow3", vec2(seconds_xpos, font_sizey*3.5), vec2(400, 400), false)
-        -- end
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, startTimer)
-        -- ui.pushACFont('ddm_digital_odo')
-        -- -- ui.pushACFont('fd2_speedo')
-        -- -- ui.acText("".. math.floor(countUp10sSecs).. "", vec2(50,50), 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText("".. math.floor(secondsTime).. ":", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- -- ui.acText
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-
-
-        -- ui.beginTransparentWindow("totalSubsecondsWindow1", vec2(subseconds_xpos, font_sizey*3.5), vec2(400, 400), false)
-        -- -- ui.beginOutline()
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, 1-startTimer)
-        -- ui.acText("00", basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
-
-
-        -- ui.beginTransparentWindow("totalSubsecondsWindow2", vec2(subseconds_xpos, font_sizey*3.5), vec2(400, 400), false)
-        -- -- ui.beginOutline()
-        -- ui.pushACFont('ddm_digital_odo')
-        -- ui.pushStyleVar(ui.StyleVar.Alpha, startTimer)
-        -- -- ui.acText("".. math.floor(subSeconds).. "", vec2(50,50), 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.acText(string.sub(string.format("%.2f", subSeconds), -2, -1), basic_fontsize, 0, rgbm(0.2, 1.0, 0.2, 1))
-        -- ui.popACFont()
-        -- ui.popStyleVar()
-        -- ui.endTransparentWindow()
 
 
         ui.beginTransparentWindow("totalTimeWindow", vec2(totaltime_xpos, font_sizey*2), vec2(800, 400), false)
