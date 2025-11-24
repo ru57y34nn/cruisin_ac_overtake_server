@@ -47,22 +47,21 @@ local drift10xImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_over
 local drift100xImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/drift_100x.png'
 local drift1000xImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/drift_1000x.png'
 
-local overtakeNormalImg = 'http://127.0.0.1:8001/overtake_normal.png'
-local overtakeCloseImg = 'http://127.0.0.1:8001/overtake_close.png'
-local overtakeContactImg = 'http://127.0.0.1:8001/overtake_contact2.png'
+local overtakeNormalImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/overtake_normal.png'
+local overtakeCloseImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/overtake_close.png'
+local overtakeContactImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/overtake_contact2.png'
 
 -- Stage bonus text
-local stageBonusTextImg = 'http://127.0.0.1:8001/stage_bonus_text.png'
+local stageBonusTextImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/stage_bonus_text.png'
 
 -- Stage bonus digits (0-9)
 local stageBonusDigits = {}
 for i = 0, 9 do
-    stageBonusDigits[i] = 'http://127.0.0.1:8001/stage_bonus_' .. i .. '.png'
+    stageBonusDigits[i] = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/stage_bonus_' .. i .. '.png'
 end
 
-local warningLightImg = 'http://127.0.0.1:8001/WarningLight.png'
+local warningLightImg = 'https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/WarningLight.png'
 local warningLightAlpha = 0
-
 
 local musicTimer = 0
 
@@ -92,7 +91,6 @@ local mediaPlayer11 = ui.MediaPlayer()
 local mediaPlayer12 = ui.MediaPlayer()
 local mediaPlayer13 = ui.MediaPlayer()
 
-
 local countDown = 99
 local countDownTime = 99
 local timePassed = 0
@@ -104,29 +102,19 @@ local secondsTime = 0
 local minutesTime = 0
 local subSeconds = 0
 
--- local speedMessageTimer = 0
 local collisionMessageTimer = 0
 local collisionTimer = 0
 local offRoadTimer = 0
 
 local driftTimer = 0
--- local driftMessageTimer = 0
-local driftMessage1sent = false
-local driftMessage2sent = false
-local driftMessage3sent = false
 
 local totalScore = 0
 local finalScore = 0
--- local comboMeter = 1
--- local comboColor = 0
-
-
 
 local carsState = {}
 local wheelsWarningTimeout = 0
--- local personalBest = 0
+
 local carName = ac.getCarName(0)
--- local pbcarName = ac.getCarName(0)
 
 local carNames = {}
 carNames[1] = 'Toyota AE86 Tuned'
@@ -139,7 +127,6 @@ carNames[7] = 'Subaru Impreza 22B STi-Version'
 carNames[8] = 'Mitsubishi Lancer Evolution VIII MR'
 carNames[9] = 'Nissan Silvia spec-R Aero'
 carNames[10] = 'Honda S2000 (AP1)'
-
 
 local currentCarPB = 0
 local tflcarPBs = {}
@@ -154,13 +141,10 @@ tflcarPBs[8] = 0.0
 tflcarPBs[9] = 0.0
 tflcarPBs[10] = 0.0
 
-
 local uiState = ac.getUI()
-
 
 local muteToggle = true
 local lastMuteKeyState = true
-local messageState = false
 
 local musicVol = 0.35
 local tflstored = {}
@@ -169,7 +153,7 @@ local startTimer = 0
 local gameOverMessage = 0
 
 local raceBegin = false
--- local raceEnd = false
+
 local checkpoint1 = false
 local checkpoint2 = false
 local checkpoint3 = false
@@ -208,11 +192,6 @@ local lap10subsecs = 0
 
 local prevLaptimes = 0
 
-local messages = {}
-local glitter = {}
-local glitterCount = 0
-local numMssgs = 6
-
 local timeBonus = 0
 local overtakePts = 100000
 local closeOvertakePts = 500000
@@ -220,41 +199,36 @@ local collisionOvertakePts = 25000
 
 local highScoreChatMsgSent = false
 local nothighScoreChatMsgSent = false
--- local connectedHighScoreMsgSent = false
 
 local screen_ratio = uiState.windowSize.x / uiState.windowSize.y
 
 local lastPlayedSong = 6
 
-
 local driftMeterMax = 4.0  -- Maximum drift time in seconds
 local driftMeterAlpha = 0  -- For fade in/out effect
-
 
 -- Flash animation variables for Extend Play images
 local extendPlay1Flashing = false
 local extendPlay1FlashTimer = 0
 local extendPlay1Alpha = 0
 local extendPlay1FlashPhase = 0
-local lap1Alpha = 0  -- ADD THIS
+local lap1Alpha = 0  
 
 local extendPlay2Flashing = false
 local extendPlay2FlashTimer = 0
 local extendPlay2Alpha = 0
 local extendPlay2FlashPhase = 0
-local lap2Alpha = 0  -- ADD THIS
+local lap2Alpha = 0  
 
 local extendPlay3Flashing = false
 local extendPlay3FlashTimer = 0
 local extendPlay3Alpha = 0
 local extendPlay3FlashPhase = 0
-local lap3Alpha = 0  -- ADD THIS
+local lap3Alpha = 0  
 
 local flashDuration = 0.75  -- Duration of each on/off state (adjust to taste)
 
 local overtakeMessages = {}
-local maxOvertakeMessages = 5  -- Maximum number of overtake messages visible at once
--- local sentmessages = false
 
 
 local smallfontscale = 0.015
@@ -464,49 +438,6 @@ end
 
 
 
-function addMessage(text, mood)
-    for i = math.min(#messages + 1, numMssgs), 2, -1 do
-        messages[i] = messages[i - 1]
-        messages[i].targetPos = i
-    end
-    messages[1] = { text = text, age = 0, targetPos = 1, currentPos = 1, mood = mood }
-    if mood == 1 then
-        for i = 1, 60 do
-            local dir = vec2(math.random() - 0.5, math.random() - 0.5)
-            glitterCount = glitterCount + 1
-            glitter[glitterCount] = {
-                color = rgbm.new(hsv(math.random() * 360, 1, 1):rgb(), 1),
-                pos = vec2(50, 50) + dir * vec2(40, 20),
-                velocity = dir:normalize():scale(0.2 + math.random()),
-                life = 0.5 + 0.5 * math.random()
-            }
-        end
-    end
-end
-
-local function updateMessages(dt)
-
-    for i = 1, #messages do
-        local m = messages[i]
-        m.age = m.age + dt
-        m.currentPos = math.applyLag(m.currentPos, m.targetPos, 0.8, dt)
-    end
-    for i = glitterCount, 1, -1 do
-        local g = glitter[i]
-        g.pos:add(g.velocity)
-        g.velocity.y = g.velocity.y + 0.02
-        g.life = g.life - dt
-        g.color.mult = math.saturate(g.life * 4)
-        if g.life < 0 then
-            if i < glitterCount then
-                glitter[i] = glitter[glitterCount]
-            end
-            glitterCount = glitterCount - 1
-        end
-    end
-
-
-end
 
 
     -- Function to draw a number using digit images
@@ -547,56 +478,399 @@ end
 
 
 
-if carName == carNames[1] then
-    tflstored.ae86Score = ac.storage('ae86Score', tflcarPBs[1])
-    tflcarPBs[1] = tflstored.ae86Score:get()
-    currentCarPB = tflcarPBs[1]
 
-elseif carName == carNames[2] then
-    tflstored.supraScore = ac.storage('supraScore', tflcarPBs[2])
-    tflcarPBs[2] = tflstored.supraScore:get()
-    currentCarPB = tflcarPBs[2]
 
-elseif carName == carNames[3] then
-    tflstored.supra2Score = ac.storage('supra2Score', tflcarPBs[3])
-    tflcarPBs[3] = tflstored.supra2Score:get()
-    currentCarPB = tflcarPBs[3]
+-- Storage keys for each car
+local storageKeys = {
+    'ae86Score', 'supraScore', 'supra2Score', 'skylineScore', 'rx7Score',
+    'm3Score', 'stiScore', 'evoScore', 'silviaScore', 's2000Score'
+}
 
-elseif carName == carNames[4] then
-    tflstored.skylineScore = ac.storage('skylineScore', tflcarPBs[4])
-    tflcarPBs[4] = tflstored.skylineScore:get()
-    currentCarPB = tflcarPBs[4]
+-- Initialize storage and load current car's PB
+tflstored = {}  -- Move this here
+for i = 1, 10 do
+    tflstored[storageKeys[i]] = ac.storage(storageKeys[i], tflcarPBs[i])
+    tflcarPBs[i] = tflstored[storageKeys[i]]:get()
+    
+    if carName == carNames[i] then
+        currentCarPB = tflcarPBs[i]
+    end
+end
 
-elseif carName == carNames[5] then
-    tflstored.rx7Score = ac.storage('rx7Score', tflcarPBs[5])
-    tflcarPBs[5] = tflstored.rx7Score:get()
-    currentCarPB = tflcarPBs[5]
 
-elseif carName == carNames[6] then
-    tflstored.m3Score = ac.storage('m3Score', tflcarPBs[6])
-    tflcarPBs[6] = tflstored.m3Score:get()
-    currentCarPB = tflcarPBs[6]
 
-elseif carName == carNames[7] then
-    tflstored.stiScore = ac.storage('stiScore', tflcarPBs[7])
-    tflcarPBs[7] = tflstored.stiScore:get()
-    currentCarPB = tflcarPBs[7]
+-- Helper function to handle score updates and chat messages
+local function updateCarScore(carIndex, finalScore, isFinish)
+    local storageKeys = {
+        'ae86Score', 'supraScore', 'supra2Score', 'skylineScore', 'rx7Score',
+        'm3Score', 'stiScore', 'evoScore', 'silviaScore', 's2000Score'
+    }
+    
+    local isNewHighScore = finalScore > tflcarPBs[carIndex]
+    
+    if isNewHighScore then
+        tflcarPBs[carIndex] = math.ceil(finalScore)
+        tflstored[storageKeys[carIndex]]:set(tflcarPBs[carIndex])
+        currentCarPB = finalScore
+        
+        if not highScoreChatMsgSent then
+            local message
+            if isFinish then
+                message = string.format('Reached the Goal in %d:%02d:%s and has a new Highscore of %d pts in the %s',
+                    math.floor(minutesTime),
+                    math.floor(secondsTime),
+                    string.sub(string.format("%.2f", subSeconds), -2, -1),
+                    math.ceil(finalScore),
+                    carName)
+            else
+                message = string.format('Ran out of time, but has a new Highscore of %d pts in the %s',
+                    math.ceil(finalScore),
+                    carName)
+            end
+            ac.sendChatMessage(message)
+            highScoreChatMsgSent = true
+        end
+    else
+        if not nothighScoreChatMsgSent then
+            local message
+            if isFinish then
+                message = string.format('Reached the Goal in %d:%02d:%s with a score of %d pts in the %s',
+                    math.floor(minutesTime),
+                    math.floor(secondsTime),
+                    string.sub(string.format("%.2f", subSeconds), -2, -1),
+                    math.ceil(finalScore),
+                    carName)
+            else
+                message = string.format('Ran out of time with a score of %d pts in the %s',
+                    math.ceil(finalScore),
+                    carName)
+            end
+            ac.sendChatMessage(message)
+            nothighScoreChatMsgSent = true
+        end
+    end
+end
 
-elseif carName == carNames[8] then
-    tflstored.evoScore = ac.storage('evoScore', tflcarPBs[8])
-    tflcarPBs[8] = tflstored.evoScore:get()
-    currentCarPB = tflcarPBs[8]
+-- Helper function to get car index from current car name
+local function getCurrentCarIndex()
+    for i = 1, 10 do
+        if carName == carNames[i] then
+            return i
+        end
+    end
+    return nil
+end
 
-elseif carName == carNames[9] then
-    tflstored.silviaScore = ac.storage('silviaScore', tflcarPBs[9])
-    tflcarPBs[9] = tflstored.silviaScore:get()
-    currentCarPB = tflcarPBs[9]
 
-elseif carName == carNames[10] then
-    tflstored.s2000Score = ac.storage('s2000Score', tflcarPBs[10])
-    tflcarPBs[10] = tflstored.s2000Score:get()
-    currentCarPB = tflcarPBs[10]
-end    
+
+-- Helper function to update flash animations
+local function updateFlashAnimations(dt)
+    if extendPlay1Flashing then
+        extendPlay1FlashTimer = extendPlay1FlashTimer + dt
+        if extendPlay1FlashTimer >= flashDuration then
+            extendPlay1FlashTimer = 0
+            extendPlay1FlashPhase = extendPlay1FlashPhase + 1
+            if extendPlay1FlashPhase >= 6 then
+                extendPlay1Flashing = false
+                extendPlay1Alpha = 0
+                lap1Alpha = 0
+            else
+                extendPlay1Alpha = 1 - extendPlay1Alpha
+            end
+        end
+    end
+
+    if extendPlay2Flashing then
+        extendPlay2FlashTimer = extendPlay2FlashTimer + dt
+        if extendPlay2FlashTimer >= flashDuration then
+            extendPlay2FlashTimer = 0
+            extendPlay2FlashPhase = extendPlay2FlashPhase + 1
+            if extendPlay2FlashPhase >= 6 then
+                extendPlay2Flashing = false
+                extendPlay2Alpha = 0
+                lap2Alpha = 0
+            else
+                extendPlay2Alpha = 1 - extendPlay2Alpha
+            end
+        end
+    end
+
+    if extendPlay3Flashing then
+        extendPlay3FlashTimer = extendPlay3FlashTimer + dt
+        if extendPlay3FlashTimer >= flashDuration then
+            extendPlay3FlashTimer = 0
+            extendPlay3FlashPhase = extendPlay3FlashPhase + 1
+            if extendPlay3FlashPhase >= 6 then
+                extendPlay3Flashing = false
+                extendPlay3Alpha = 0
+                lap3Alpha = 0
+            else
+                extendPlay3Alpha = 1 - extendPlay3Alpha
+            end
+        end
+    end
+end
+
+-- Helper function to update lap time calculations
+local function updateLapTimes()
+    if lap1time > 60 then
+        lap1mins = 1
+        lap1secs = math.floor(lap1time - 60)
+        lap1subsecs = lap1time - math.floor(lap1time)
+    else
+        lap1mins = 0
+        lap1secs = math.floor(lap1time)
+        lap1subsecs = lap1time - lap1secs
+    end
+
+    if lap2time > 60 then
+        lap2mins = 1
+        lap2secs = math.floor(lap2time - 60)
+        lap2subsecs = lap2time - math.floor(lap2time)
+    else
+        lap2mins = 0
+        lap2secs = math.floor(lap2time)
+        lap2subsecs = lap2time - lap2secs
+    end
+
+    if lap3time > 60 then
+        lap3mins = 1
+        lap3secs = math.floor(lap3time - 60)
+        lap3subsecs = lap3time - math.floor(lap3time)
+    else
+        lap3mins = 0
+        lap3secs = math.floor(lap3time)
+        lap3subsecs = lap3time - lap3secs
+    end
+
+    if lap4time > 60 then
+        lap4mins = 1
+        lap4secs = math.floor(lap4time - 60)
+        lap4subsecs = lap4time - math.floor(lap4time)
+    else
+        lap4mins = 0
+        lap4secs = math.floor(lap4time)
+        lap4subsecs = lap2time - lap4secs
+    end
+
+    if lap10time > 60 then
+        lap10mins = 1
+        lap10secs = math.floor(lap10time - 60)
+        lap10subsecs = lap10time - math.floor(lap10time)
+    else
+        lap10mins = 0
+        lap10secs = math.floor(lap10time)
+        lap10subsecs = lap10time - lap10secs
+    end
+end
+
+
+
+-- Helper function to handle all music player logic
+local function updateMusicPlayers(dt)
+    if ac.isKeyDown(ac.KeyIndex.Up) and musicVol < 1 then
+        musicVol = musicVol + 0.01
+    end
+
+    if ac.isKeyDown(ac.KeyIndex.Down) and musicVol > 0 then
+        musicVol = musicVol - 0.01
+    end
+
+    mediaPlayer4:setSource(magicalSoundShower):setAutoPlay(false):setVolume(musicVol)
+    mediaPlayer5:setSource(passingBreeze):setAutoPlay(false):setVolume(musicVol)
+    mediaPlayer6:setSource(splashWave):setAutoPlay(false):setVolume(musicVol)
+    mediaPlayer7:setSource(lastWave):setAutoPlay(false):setVolume(musicVol)
+    mediaPlayer8:setSource(tokyoTurbo):setAutoPlay(false):setVolume(musicVol)
+    mediaPlayer9:setSource(wanganLegends):setAutoPlay(false):setVolume(musicVol)
+    mediaPlayer10:setSource(theMidNightClub):setAutoPlay(false):setVolume(musicVol)
+    mediaPlayer11:setSource(nightRain):setAutoPlay(false):setVolume(musicVol)
+    mediaPlayer12:setSource(cloudscapeDriver):setAutoPlay(false):setVolume(musicVol)
+    mediaPlayer13:setSource(tougeDriver):setAutoPlay(false):setVolume(musicVol)
+
+    if timePassed > 5 and timePassed < 6 then
+        mediaPlayer9:play()
+    end
+
+    musicTimer = musicTimer + dt
+
+    -- Track switching logic
+    if mediaPlayer4:currentTime() > math.round(mediaPlayer4:duration(), 2) or (mediaPlayer4:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
+        if musicTimer > 0.2 then
+            mediaPlayer4:pause():setCurrentTime(0.00)
+            mediaPlayer5:play()
+            lastPlayedSong = 2
+            musicTimer = 0
+        end
+    end
+
+    if mediaPlayer5:currentTime() > math.round(mediaPlayer5:duration(), 2) or (mediaPlayer5:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
+        if musicTimer > 0.2 then
+            mediaPlayer5:pause():setCurrentTime(0.00)
+            mediaPlayer6:play()
+            lastPlayedSong = 3
+            musicTimer = 0
+        end
+    end
+
+    if mediaPlayer6:currentTime() > math.round(mediaPlayer6:duration(), 2) or (mediaPlayer6:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
+        if musicTimer > 0.2 then
+            mediaPlayer6:pause():setCurrentTime(0.00)
+            mediaPlayer7:play()
+            lastPlayedSong = 4
+            musicTimer = 0
+        end
+    end
+
+    if mediaPlayer7:currentTime() > math.round(mediaPlayer7:duration(),2) or (mediaPlayer7:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
+        if musicTimer > 0.2 then
+            mediaPlayer7:pause():setCurrentTime(0.00)
+            mediaPlayer8:play()
+            lastPlayedSong = 5
+            musicTimer = 0
+        end
+    end
+
+    if mediaPlayer8:currentTime() > math.round(mediaPlayer8:duration(),2) or (mediaPlayer8:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
+        if musicTimer > 0.2 then
+            mediaPlayer8:pause():setCurrentTime(0.00)
+            mediaPlayer9:play()
+            lastPlayedSong = 6
+            musicTimer = 0
+        end
+    end
+
+    if mediaPlayer9:currentTime() > math.round(mediaPlayer9:duration(),2) or (mediaPlayer9:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
+        if musicTimer > 0.2 then
+            mediaPlayer9:pause():setCurrentTime(0.00)
+            mediaPlayer10:play()
+            lastPlayedSong = 7
+            musicTimer = 0
+        end
+    end
+
+    if mediaPlayer10:currentTime() > math.round(mediaPlayer10:duration(),2) or (mediaPlayer10:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
+        if musicTimer > 0.2 then
+            mediaPlayer10:pause():setCurrentTime(0.00)
+            mediaPlayer11:play()
+            lastPlayedSong = 8
+            musicTimer = 0
+        end
+    end
+
+    if mediaPlayer11:currentTime() > math.round(mediaPlayer11:duration(),2) or (mediaPlayer11:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
+        if musicTimer > 0.2 then
+            mediaPlayer11:pause():setCurrentTime(0.00)
+            mediaPlayer12:play()
+            lastPlayedSong = 9
+            musicTimer = 0
+        end
+    end
+
+    if mediaPlayer12:currentTime() > math.round(mediaPlayer12:duration(),2) or (mediaPlayer12:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
+        if musicTimer > 0.2 then
+            mediaPlayer12:pause():setCurrentTime(0.00)
+            mediaPlayer13:play()
+            lastPlayedSong = 10
+            musicTimer = 0
+        end
+    end
+
+    if mediaPlayer13:currentTime() > math.round(mediaPlayer13:duration(),2) or (mediaPlayer13:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
+        if musicTimer > 0.2 then
+            mediaPlayer13:pause():setCurrentTime(0.00)
+            mediaPlayer4:play()
+            lastPlayedSong = 1
+            musicTimer = 0
+        end
+    end
+
+    -- Play/pause logic
+    if mediaPlayer4:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer4:pause()
+        musicTimer = 0
+    elseif mediaPlayer4:playing() == false and lastPlayedSong == 1 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer4:play()
+        musicTimer = 0
+    end
+
+    if mediaPlayer5:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer5:pause()
+        musicTimer = 0
+    elseif mediaPlayer5:playing() == false and lastPlayedSong == 2 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer5:play()
+        musicTimer = 0
+    end
+
+    if mediaPlayer6:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer6:pause()
+        musicTimer = 0
+    elseif mediaPlayer6:playing() == false and lastPlayedSong == 3 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer6:play()
+        musicTimer = 0
+    end
+
+    if mediaPlayer7:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer7:pause()
+        musicTimer = 0
+    elseif mediaPlayer7:playing() == false and lastPlayedSong == 4 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer7:play()
+        musicTimer = 0
+    end
+
+    if mediaPlayer8:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer8:pause()
+        musicTimer = 0
+    elseif mediaPlayer8:playing() == false and lastPlayedSong == 5 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer8:play()
+        musicTimer = 0
+    end
+
+    if mediaPlayer9:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer9:pause()
+        musicTimer = 0
+    elseif mediaPlayer9:playing() == false and lastPlayedSong == 6 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer9:play()
+        musicTimer = 0
+    end
+
+    if mediaPlayer10:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer10:pause()
+        musicTimer = 0
+    elseif mediaPlayer10:playing() == false and lastPlayedSong == 7 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer10:play()
+        musicTimer = 0
+    end
+
+    if mediaPlayer11:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer11:pause()
+        musicTimer = 0
+    elseif mediaPlayer11:playing() == false and lastPlayedSong == 8 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer11:play()
+        musicTimer = 0
+    end
+
+    if mediaPlayer12:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer12:pause()
+        musicTimer = 0
+    elseif mediaPlayer12:playing() == false and lastPlayedSong == 9 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer12:play()
+        musicTimer = 0
+    end
+    
+    if mediaPlayer13:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer13:pause()
+        musicTimer = 0
+    elseif mediaPlayer13:playing() == false and lastPlayedSong == 10 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
+        mediaPlayer13:play()
+        musicTimer = 0
+    end
+end
+
+
+
+
+
+
 
 
 local DriftTracking = ac.getCarState(1)
@@ -709,61 +983,8 @@ function script.update(dt)
     end
 
 
-    -- Update Extend Play flash animations
-    if extendPlay1Flashing then
-        extendPlay1FlashTimer = extendPlay1FlashTimer + dt
-        
-        if extendPlay1FlashTimer >= flashDuration then
-            extendPlay1FlashTimer = 0
-            extendPlay1FlashPhase = extendPlay1FlashPhase + 1
-            
-            if extendPlay1FlashPhase >= 6 then  -- 6 phases = 3 complete flashes
-                extendPlay1Flashing = false
-                extendPlay1Alpha = 0
-                lap1Alpha = 0  -- ADD THIS - hide lap time when flashing ends
-            else
-                extendPlay1Alpha = 1 - extendPlay1Alpha  -- Toggle between 1 and 0
-                -- lap1Alpha stays at 1 - it doesn't flash
-            end
-        end
-    end
 
-    if extendPlay2Flashing then
-        extendPlay2FlashTimer = extendPlay2FlashTimer + dt
-        
-        if extendPlay2FlashTimer >= flashDuration then
-            extendPlay2FlashTimer = 0
-            extendPlay2FlashPhase = extendPlay2FlashPhase + 1
-            
-            if extendPlay2FlashPhase >= 6 then
-                extendPlay2Flashing = false
-                extendPlay2Alpha = 0
-                lap2Alpha = 0  -- ADD THIS
-            else
-                extendPlay2Alpha = 1 - extendPlay2Alpha
-                -- lap2Alpha stays at 1
-            end
-        end
-    end
-
-    if extendPlay3Flashing then
-        extendPlay3FlashTimer = extendPlay3FlashTimer + dt
-        
-        if extendPlay3FlashTimer >= flashDuration then
-            extendPlay3FlashTimer = 0
-            extendPlay3FlashPhase = extendPlay3FlashPhase + 1
-            
-            if extendPlay3FlashPhase >= 6 then
-                extendPlay3Flashing = false
-                extendPlay3Alpha = 0
-                lap3Alpha = 0  -- ADD THIS
-            else
-                extendPlay3Alpha = 1 - extendPlay3Alpha
-                -- lap3Alpha stays at 1
-            end
-        end
-    end
-
+    updateFlashAnimations(dt)
 
 
 
@@ -795,19 +1016,13 @@ function script.update(dt)
                         
                         if driftTimer > 4.0 then
                             driftMultiplier = 1000
-                            if not driftMessage3sent then
-                                driftMessage3sent = true
-                            end
+                        
                         elseif driftTimer > 2.0 then
                             driftMultiplier = 100
-                            if not driftMessage2sent then
-                                driftMessage2sent = true
-                            end
+                        
                         else
                             driftMultiplier = 10
-                            if not driftMessage1sent then
-                                driftMessage1sent = true
-                            end
+                        
                         end
                         
                         totalScore = totalScore + dt * scoreRisingRate * driftMultiplier
@@ -847,11 +1062,11 @@ function script.update(dt)
                         end
             
                         if player.collidedWith == 0 then
-                            if collisionMessageTimer > 5 then
+                            -- if collisionMessageTimer > 5 then
 
-                                collisionMessageTimer = 0
-                                collisionTimer = 4
-                            end
+                            --     collisionMessageTimer = 0
+                            collisionTimer = 4
+                            -- end
                         end
             
                         if not state.overtaken and not state.collided and state.drivingAlong then
@@ -886,7 +1101,6 @@ function script.update(dt)
             else
                 if not checkpoint10 then
                     lap10time = totalTimer - prevLaptimes
-                    -- raceEnd = true
                     local timeBonus = 1000000 * math.ceil(countDown)
                     countDown = countDown
                     totalTimer = totalTimer
@@ -894,321 +1108,35 @@ function script.update(dt)
                     totalScore = totalScore + timeBonus
                     finalScore = totalScore
                     addStageBonusMessage(timeBonus)
-    
-                    if carName == carNames[1] then
-                        if finalScore > tflcarPBs[1] then
-                            tflcarPBs[1] = math.ceil(finalScore)
-                            tflstored.ae86Score:set(tflcarPBs[1])
-                            currentCarPB = finalScore
-                            if not highScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                highScoreChatMsgSent = true
-                            end
-                        else
-                            if not nothighScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' with a score of ' ..math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                nothighScoreChatMsgSent = true
-                            end
-                        end
-                    elseif carName == carNames[2] then
-                        if finalScore > tflcarPBs[2] then
-                            tflcarPBs[2] = math.ceil(finalScore)
-                            tflstored.supraScore:set(tflcarPBs[2])
-                            currentCarPB = finalScore
-                            if not highScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                highScoreChatMsgSent = true
-                            end
-                        else
-                            if not nothighScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' with a score of ' ..math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                nothighScoreChatMsgSent = true
-                            end
-                        end
-                    elseif carName == carNames[3] then
-                        if finalScore > tflcarPBs[3] then
-                            tflcarPBs[3] = math.ceil(finalScore)
-                            tflstored.supra2Score:set(tflcarPBs[3])
-                            currentCarPB = finalScore
-                            if not highScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                highScoreChatMsgSent = true
-                            end
-                        else
-                            if not nothighScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' with a score of ' ..math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                nothighScoreChatMsgSent = true
-                            end
-                        end
-                    elseif carName == carNames[4] then
-                        if finalScore > tflcarPBs[4] then
-                            tflcarPBs[4] = math.ceil(finalScore)
-                            tflstored.skylineScore:set(tflcarPBs[4])
-                            currentCarPB = finalScore
-                            if not highScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                highScoreChatMsgSent = true
-                            end
-                        else
-                            if not nothighScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' with a score of ' ..math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                nothighScoreChatMsgSent = true
-                            end
-                        end
-                    elseif carName == carNames[5] then
-                        if finalScore > tflcarPBs[5] then
-                            tflcarPBs[5] = math.ceil(finalScore)
-                            tflstored.rx7Score:set(tflcarPBs[5])
-                            currentCarPB = finalScore
-                            if not highScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                highScoreChatMsgSent = true
-                            end
-                        else
-                            if not nothighScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' with a score of ' ..math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                nothighScoreChatMsgSent = true
-                            end
-                        end
-                    elseif carName == carNames[6] then
-                        if finalScore > tflcarPBs[6] then
-                            tflcarPBs[6] = math.ceil(finalScore)
-                            tflstored.m3Score:set(tflcarPBs[6])
-                            currentCarPB = finalScore
-                            if not highScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                highScoreChatMsgSent = true
-                            end
-                        else
-                            if not nothighScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' with a score of ' ..math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                nothighScoreChatMsgSent = true
-                            end
-                        end
-                    elseif carName == carNames[7] then
-                        if finalScore > tflcarPBs[7] then
-                            tflcarPBs[7] = math.ceil(finalScore)
-                            tflstored.stiScore:set(tflcarPBs[7])
-                            currentCarPB = finalScore
-                            if not highScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                highScoreChatMsgSent = true
-                            end
-                        else
-                            if not nothighScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' with a score of ' ..math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                nothighScoreChatMsgSent = true
-                            end
-                        end
-                    elseif carName == carNames[8] then
-                        if finalScore > tflcarPBs[8] then
-                            tflcarPBs[8] = math.ceil(finalScore)
-                            tflstored.evoScore:set(tflcarPBs[8])
-                            currentCarPB = finalScore
-                            if not highScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                highScoreChatMsgSent = true
-                            end
-                        else
-                            if not nothighScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' with a score of ' ..math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                nothighScoreChatMsgSent = true
-                            end
-                        end
-                    elseif carName == carNames[9] then
-                        if finalScore > tflcarPBs[9] then
-                            tflcarPBs[9] = math.ceil(finalScore)
-                            tflstored.silviaScore:set(tflcarPBs[9])
-                            currentCarPB = finalScore
-                            if not highScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                highScoreChatMsgSent = true
-                            end
-                        else
-                            if not nothighScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' with a score of ' ..math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                nothighScoreChatMsgSent = true
-                            end
-                        end
-                    elseif carName == carNames[10] then
-                        if finalScore > tflcarPBs[10] then
-                            tflcarPBs[10] = math.ceil(finalScore)
-                            tflstored.s2000Score:set(tflcarPBs[10])
-                            currentCarPB = finalScore
-                            if not highScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' and has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                highScoreChatMsgSent = true
-                            end
-                        else
-                            if not nothighScoreChatMsgSent then
-                                ac.sendChatMessage('Reached the Goal' .. ' in ' .. math.floor(minutesTime).. ":" .. string.format("%02d", math.floor(secondsTime)).. ":" .. string.sub(string.format("%.2f", subSeconds), -2, -1) .. ' with a score of ' ..math.ceil(finalScore) .. ' pts in the ' ..carName)
-                                nothighScoreChatMsgSent = true
-                            end
-                        end
+
+                    local carIndex = getCurrentCarIndex()
+                    if carIndex then
+                        updateCarScore(carIndex, finalScore, true)  -- true = finished race
                     end
 
                     if muteToggle then
                         mediaPlayer3:play()
                     end
                     checkpoint10 = true
+                    
                 end
             end
             
         else
-
             gameOverMessage = 1
             checkpoint1 = true
             checkpoint2 = true
             checkpoint3 = true
-
             checkpoint10 = true
             countDown = countDown
             totalTimer = totalTimer
             totalScore = totalScore
             finalScore = totalScore
 
-            if carName == carNames[1] then
-                if finalScore > tflcarPBs[1] then
-                    tflcarPBs[1] = math.ceil(finalScore)
-                    tflstored.ae86Score:set(tflcarPBs[1])
-                    if not highScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        highScoreChatMsgSent = true
-                    end
-                else
-                    if not nothighScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time with a score of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        nothighScoreChatMsgSent = true
-                    end
-                end
-            elseif carName == carNames[2] then
-                if finalScore > tflcarPBs[2] then
-                    tflcarPBs[2] = math.ceil(finalScore)
-                    tflstored.supraScore:set(tflcarPBs[2])
-                    if not highScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        highScoreChatMsgSent = true
-                    end
-                else
-                    if not nothighScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time with a score of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        nothighScoreChatMsgSent = true
-                    end
-                end
-            elseif carName == carNames[3] then
-                if finalScore > tflcarPBs[3] then
-                    tflcarPBs[3] = math.ceil(finalScore)
-                    tflstored.supra2Score:set(tflcarPBs[3])
-                    if not highScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        highScoreChatMsgSent = true
-                    end
-                else
-                    if not nothighScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time with a score of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        nothighScoreChatMsgSent = true
-                    end
-                end
-            elseif carName == carNames[4] then
-                if finalScore > tflcarPBs[4] then
-                    tflcarPBs[4] = math.ceil(finalScore)
-                    tflstored.skylineScore:set(tflcarPBs[4])
-                    if not highScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        highScoreChatMsgSent = true
-                    end
-                else
-                    if not nothighScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time with a score of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        nothighScoreChatMsgSent = true
-                    end
-                end
-            elseif carName == carNames[5] then
-                if finalScore > tflcarPBs[5] then
-                    tflcarPBs[5] = math.ceil(finalScore)
-                    tflstored.rx7Score:set(tflcarPBs[5])
-                    if not highScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        highScoreChatMsgSent = true
-                    end
-                else
-                    if not nothighScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time with a score of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        nothighScoreChatMsgSent = true
-                    end
-                end
-            elseif carName == carNames[6] then
-                if finalScore > tflcarPBs[6] then
-                    tflcarPBs[6] = math.ceil(finalScore)
-                    tflstored.m3Score:set(tflcarPBs[6])
-                    if not highScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        highScoreChatMsgSent = true
-                    end
-                else
-                    if not nothighScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time with a score of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        nothighScoreChatMsgSent = true
-                    end
-                end
-            elseif carName == carNames[7] then
-                if finalScore > tflcarPBs[7] then
-                    tflcarPBs[7] = math.ceil(finalScore)
-                    tflstored.stiScore:set(tflcarPBs[7])
-                    if not highScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        highScoreChatMsgSent = true
-                    end
-                else
-                    if not nothighScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time with a score of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        nothighScoreChatMsgSent = true
-                    end
-                end
-            elseif carName == carNames[8] then
-                if finalScore > tflcarPBs[8] then
-                    tflcarPBs[8] = math.ceil(finalScore)
-                    tflstored.evoScore:set(tflcarPBs[8])
-                    if not highScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        highScoreChatMsgSent = true
-                    end
-                else
-                    if not nothighScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time with a score of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        nothighScoreChatMsgSent = true
-                    end
-                end
-            elseif carName == carNames[9] then
-                if finalScore > tflcarPBs[9] then
-                    tflcarPBs[9] = math.ceil(finalScore)
-                    tflstored.silviaScore:set(tflcarPBs[9])
-                    if not highScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        highScoreChatMsgSent = true
-                    end
-                else
-                    if not nothighScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time with a score of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        nothighScoreChatMsgSent = true
-                    end
-                end
-            elseif carName == carNames[10] then
-                if finalScore > tflcarPBs[10] then
-                    tflcarPBs[10] = math.ceil(finalScore)
-                    tflstored.s2000:set(tflcarPBs[10])
-                    if not highScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time, but has a new Highscore of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        highScoreChatMsgSent = true
-                    end
-                else
-                    if not nothighScoreChatMsgSent then
-                        ac.sendChatMessage('Ran out of time with a score of ' .. math.ceil(finalScore) .. ' pts in the ' .. carName)
-                        nothighScoreChatMsgSent = true
-                    end
-                end
+            local carIndex = getCurrentCarIndex()
+            if carIndex then
+                updateCarScore(carIndex, finalScore, false)  -- false = game over
             end
- 
         end
     else
         countDown = countDownTime
@@ -1262,9 +1190,7 @@ function script.update(dt)
         -- Outside racing zone OR not drifting - fade out and reset
         if driftTimer > 0 then
             driftTimer = 0
-            driftMessage1sent = false
-            driftMessage2sent = false
-            driftMessage3sent = false
+
         end
         driftMeterAlpha = math.max(driftMeterAlpha - dt * 2, 0)
     end
@@ -1281,55 +1207,7 @@ function script.update(dt)
 
 
 
-    if lap1time > 60 then
-        lap1mins = 1
-        lap1secs = math.floor(lap1time - 60)
-        lap1subsecs =  lap1time - math.floor(lap1time)
-    else
-        lap1mins = 0
-        lap1secs = math.floor(lap1time)
-        lap1subsecs = lap1time - lap1secs
-    end
-
-    if lap2time > 60 then
-        lap2mins = 1
-        lap2secs = math.floor(lap2time - 60)
-        lap2subsecs =  lap2time - math.floor(lap2time)
-    else
-        lap2mins = 0
-        lap2secs = math.floor(lap2time)
-        lap2subsecs = lap2time - lap2secs
-    end
-
-    if lap3time > 60 then
-        lap3mins = 1
-        lap3secs = math.floor(lap3time - 60)
-        lap3subsecs =  lap3time - math.floor(lap3time)
-    else
-        lap3mins = 0
-        lap3secs = math.floor(lap3time)
-        lap3subsecs = lap3time - lap3secs
-    end
-
-    if lap4time > 60 then
-        lap4mins = 1
-        lap4secs = math.floor(lap4time - 60)
-        lap4subsecs =  lap4time - math.floor(lap4time)
-    else
-        lap4mins = 0
-        lap4secs = math.floor(lap4time)
-        lap4subsecs = lap2time - lap4secs
-    end
-
-    if lap10time > 60 then
-        lap10mins = 1
-        lap10secs = math.floor(lap10time - 60)
-        lap10subsecs =  lap10time - math.floor(lap10time)
-    else
-        lap10mins = 0
-        lap10secs = math.floor(lap10time)
-        lap10subsecs = lap10time - lap10secs
-    end
+    updateLapTimes()
 
 
 
@@ -1362,238 +1240,12 @@ function script.update(dt)
 
 
 
-    if ac.isKeyDown(ac.KeyIndex.Up) and musicVol < 1 then
-        musicVol = musicVol + 0.01
-    end
-
-    if ac.isKeyDown(ac.KeyIndex.Down) and musicVol > 0 then
-        musicVol = musicVol - 0.01
-    end
-
-    mediaPlayer4:setSource(magicalSoundShower):setAutoPlay(false)
-    mediaPlayer4:setVolume(musicVol)
-
-    mediaPlayer5:setSource(passingBreeze):setAutoPlay(false)
-    mediaPlayer5:setVolume(musicVol)
-
-    mediaPlayer6:setSource(splashWave):setAutoPlay(false)
-    mediaPlayer6:setVolume(musicVol)
-
-    mediaPlayer7:setSource(lastWave):setAutoPlay(false)
-    mediaPlayer7:setVolume(musicVol)
-
-    mediaPlayer8:setSource(tokyoTurbo):setAutoPlay(false)
-    mediaPlayer8:setVolume(musicVol)
-
-    mediaPlayer9:setSource(wanganLegends):setAutoPlay(false)
-    mediaPlayer9:setVolume(musicVol)
-
-    mediaPlayer10:setSource(theMidNightClub):setAutoPlay(false)
-    mediaPlayer10:setVolume(musicVol)
-
-    mediaPlayer11:setSource(nightRain):setAutoPlay(false)
-    mediaPlayer11:setVolume(musicVol)
-
-    mediaPlayer12:setSource(cloudscapeDriver):setAutoPlay(false)
-    mediaPlayer12:setVolume(musicVol)
-
-    mediaPlayer13:setSource(tougeDriver):setAutoPlay(false)
-    mediaPlayer13:setVolume(musicVol)
-
-
-    if timePassed > 5 and timePassed < 6 then
-        mediaPlayer9:play()
-    end
-
-    musicTimer = musicTimer + dt
-
-    if mediaPlayer4:currentTime() > math.round(mediaPlayer4:duration(), 2) or (mediaPlayer4:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
-        if musicTimer > 0.2 then
-            mediaPlayer4:pause():setCurrentTime(0.00)
-            mediaPlayer5:play()
-            lastPlayedSong = 2
-            musicTimer = 0
-        end
-    end
-
-    if mediaPlayer5:currentTime() > math.round(mediaPlayer5:duration(), 2) or (mediaPlayer5:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
-        if musicTimer > 0.2 then
-            mediaPlayer5:pause():setCurrentTime(0.00)
-            mediaPlayer6:play()
-            lastPlayedSong = 3
-            musicTimer = 0
-        end
-    end
-
-    if mediaPlayer6:currentTime() > math.round(mediaPlayer6:duration(), 2) or (mediaPlayer6:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
-        if musicTimer > 0.2 then
-            mediaPlayer6:pause():setCurrentTime(0.00)
-            mediaPlayer7:play()
-            lastPlayedSong = 4
-            musicTimer = 0
-        end
-    end
-
-    if mediaPlayer7:currentTime() > math.round(mediaPlayer7:duration(),2) or (mediaPlayer7:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
-        if musicTimer > 0.2 then
-            mediaPlayer7:pause():setCurrentTime(0.00)
-            mediaPlayer8:play()
-            lastPlayedSong = 5
-            musicTimer = 0
-        end
-    end
-
-    if mediaPlayer8:currentTime() > math.round(mediaPlayer8:duration(),2) or (mediaPlayer8:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
-        if musicTimer > 0.2 then
-            mediaPlayer8:pause():setCurrentTime(0.00)
-            mediaPlayer9:play()
-            lastPlayedSong = 6
-            musicTimer = 0
-        end
-    end
-
-    if mediaPlayer9:currentTime() > math.round(mediaPlayer9:duration(),2) or (mediaPlayer9:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
-        if musicTimer > 0.2 then
-            mediaPlayer9:pause():setCurrentTime(0.00)
-            mediaPlayer10:play()
-            lastPlayedSong = 7
-            musicTimer = 0
-        end
-    end
-
-    if mediaPlayer10:currentTime() > math.round(mediaPlayer10:duration(),2) or (mediaPlayer10:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
-        if musicTimer > 0.2 then
-            mediaPlayer10:pause():setCurrentTime(0.00)
-            mediaPlayer11:play()
-            lastPlayedSong = 8
-            musicTimer = 0
-        end
-    end
-
-    if mediaPlayer11:currentTime() > math.round(mediaPlayer11:duration(),2) or (mediaPlayer11:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
-        if musicTimer > 0.2 then
-            mediaPlayer11:pause():setCurrentTime(0.00)
-            mediaPlayer12:play()
-            lastPlayedSong = 9
-            musicTimer = 0
-        end
-    end
-
-    if mediaPlayer12:currentTime() > math.round(mediaPlayer12:duration(),2) or (mediaPlayer12:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
-        if musicTimer > 0.2 then
-            mediaPlayer12:pause():setCurrentTime(0.00)
-            mediaPlayer13:play()
-            lastPlayedSong = 10
-            musicTimer = 0
-        end
-    end
-
-    if mediaPlayer13:currentTime() > math.round(mediaPlayer13:duration(),2) or (mediaPlayer13:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
-        if musicTimer > 0.2 then
-            mediaPlayer13:pause():setCurrentTime(0.00)
-            mediaPlayer4:play()
-            lastPlayedSong = 1
-            musicTimer = 0
-        end
-    end
-
-
-
-
-    if mediaPlayer4:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer4:pause()
-        musicTimer = 0
-    elseif mediaPlayer4:playing() == false and lastPlayedSong == 1 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer4:play()
-        musicTimer = 0
-    end
-
-    if mediaPlayer5:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer5:pause()
-        musicTimer = 0
-    elseif mediaPlayer5:playing() == false and lastPlayedSong == 2 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer5:play()
-        musicTimer = 0
-    end
-
-    if mediaPlayer6:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer6:pause()
-        musicTimer = 0
-    elseif mediaPlayer6:playing() == false and lastPlayedSong == 3 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer6:play()
-        musicTimer = 0
-    end
-
-    if mediaPlayer7:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer7:pause()
-        musicTimer = 0
-    elseif mediaPlayer7:playing() == false and lastPlayedSong == 4 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer7:play()
-        musicTimer = 0
-    end
-
-
-    if mediaPlayer8:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer8:pause()
-        musicTimer = 0
-    elseif mediaPlayer8:playing() == false and lastPlayedSong == 5 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer8:play()
-        musicTimer = 0
-    end
-
-    if mediaPlayer9:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer9:pause()
-        musicTimer = 0
-    elseif mediaPlayer9:playing() == false and lastPlayedSong == 6 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer9:play()
-        musicTimer = 0
-    end
-
-    if mediaPlayer10:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer10:pause()
-        musicTimer = 0
-    elseif mediaPlayer10:playing() == false and lastPlayedSong == 7 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer10:play()
-        musicTimer = 0
-    end
-
-    if mediaPlayer11:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer11:pause()
-        musicTimer = 0
-    elseif mediaPlayer11:playing() == false and lastPlayedSong == 8 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer11:play()
-        musicTimer = 0
-    end
-
-    if mediaPlayer12:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer12:pause()
-        musicTimer = 0
-    elseif mediaPlayer12:playing() == false and lastPlayedSong == 9 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer12:play()
-        musicTimer = 0
-    end
-
-    
-    if mediaPlayer13:playing() == true and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer13:pause()
-        musicTimer = 0
-    elseif mediaPlayer13:playing() == false and lastPlayedSong == 10 and ac.isKeyDown(ac.KeyIndex.Right) and musicTimer > 0.2 then
-        mediaPlayer13:play()
-        musicTimer = 0
-    end
-
+    updateMusicPlayers(dt)
 
 
     local muteKeyState = ac.isKeyDown(ac.KeyIndex.M)
     if muteKeyState and lastMuteKeyState ~= muteKeyState then
         muteToggle = not muteToggle
-        if messageState then
-            addMessage('Sounds on', -1)
-            messageState = false
-        else
-            addMessage('Sounds off', -1)
-            messageState = true
-        end
 
         lastMuteKeyState = muteKeyState
     elseif not muteKeyState then
@@ -1602,22 +1254,11 @@ function script.update(dt)
     end
     
 
-    if timePassed == 0 then
-        addMessage(ac.getCarName(0), 0)
-        addMessage('CTRL + D to toggle UI.', -1)
-        addMessage('M to toggle sound FX', -1)
-        -- addMessage('B to toggle UI move mode', -1)
-        addMessage('Up arrow/Down arrow to increase/decrease music volume', -1)
-        addMessage('Right arrow to play/pause music, Left arrow to skip track', -1)
-        addMessage('Delete to re-orient car 180 degrees', -1)
-        -- addMessage('Based on Overtake by Ilja, Modded by Boon and Rusty', 2)
-    end
+
 
 
     timePassed = timePassed + dt
     ac.debug('time passed', timePassed)
-    -- speedMessageTimer = speedMessageTimer + dt
-    collisionMessageTimer = collisionMessageTimer + dt
     collisionTimer = collisionTimer - dt
     offRoadTimer = offRoadTimer - dt
 
@@ -1651,10 +1292,6 @@ local seconds_xpos = seconds10s_xpos + font_sizex
 
 local subseconds_xpos = seconds_xpos + 2*font_sizex
 
-
--- ac.debug("font size", basic_fontsize)
--- ac.debug("x_dim", uiState.windowSize.x)
--- ac.debug("font size x_dim", font_sizex)
 
 
 
@@ -1773,7 +1410,7 @@ function script.drawUI()
 
     if UIToggle then
         local uiState = ac.getUI()
-        updateMessages(uiState.dt)
+        -- updateMessages(uiState.dt)
         updateOvertakeMessages(uiState.dt)
 
         local requiredSpeed = 100 
@@ -1908,27 +1545,6 @@ function script.drawUI()
 
         drawHeader(headerflag, totalScore, currentCarPB, font_sizex, font_sizey)
 
-
-        ui.beginTransparentWindow('messageWindow', vec2(uiState.windowSize.x * 0.1, font_sizey * 8), vec2(2000, 2000), false)
-        ui.pushFont(ui.Font.Title)
-        ui.offsetCursorY(50)
-        ui.offsetCursorX(50)
-        local startPos = ui.getCursor()
-        for i = 1, #messages do
-            local m = messages[i]
-            local f = math.saturate(numMssgs - m.currentPos) * math.saturate(8 - m.age)
-            ui.setCursor(startPos + vec2(20 + math.saturate(1 - m.age * 10) ^ 2 * 100, (m.currentPos - 1) * 30))
-            ui.textColored(m.text, m.mood == 1 and rgbm(0, 1, 0, f)
-                or m.mood == -1 and rgbm(1, 0, 0, f) or m.mood == 2 and rgbm(100, 84, 0, f) or rgbm(1, 1, 1, f))
-        end
-        for i = 1, glitterCount do
-            local g = glitter[i]
-            if g ~= nil then
-                ui.drawLine(g.pos, g.pos + g.velocity * 4, g.color, 2)
-            end
-        end
-        ui.popFont()
-        ui.endTransparentWindow()
 
  
 
