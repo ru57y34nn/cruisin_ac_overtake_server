@@ -12,7 +12,7 @@ local wanganLegends = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_mu
 local theMidNightClub = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tokyo Turbo - 03 The Mid Night Club.mp3'
 local nightRain = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tokyo Turbo - 04 Night Rain.mp3'
 local cloudscapeDriver = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tokyo Turbo - 05 Cloudscape Driver.mp3'
-local tougeDriver = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tokyo Turbo - 06 Touge Warrior.mp3'
+local tougeWarrior = 'http' .. 's://www.codyblackburn.com/storage/cruisin_ac_music/Wolf and Raven - Tokyo Turbo - 06 Touge Warrior.mp3'
 
 local countdownNumbers = {}
 for i = 0, 9 do
@@ -487,7 +487,7 @@ local storageKeys = {
 }
 
 -- Initialize storage and load current car's PB
-tflstored = {}  -- Move this here
+tflstored = {}  
 for i = 1, 10 do
     tflstored[storageKeys[i]] = ac.storage(storageKeys[i], tflcarPBs[i])
     tflcarPBs[i] = tflstored[storageKeys[i]]:get()
@@ -685,7 +685,7 @@ local function updateMusicPlayers(dt)
     mediaPlayer10:setSource(theMidNightClub):setAutoPlay(false):setVolume(musicVol)
     mediaPlayer11:setSource(nightRain):setAutoPlay(false):setVolume(musicVol)
     mediaPlayer12:setSource(cloudscapeDriver):setAutoPlay(false):setVolume(musicVol)
-    mediaPlayer13:setSource(tougeDriver):setAutoPlay(false):setVolume(musicVol)
+    mediaPlayer13:setSource(tougeWarrior):setAutoPlay(false):setVolume(musicVol)
 
     if timePassed > 5 and timePassed < 6 then
         mediaPlayer9:play()
@@ -868,6 +868,176 @@ end
 
 
 
+-- Helper function to handle checkpoint crossings
+local function handleCheckpoints(player, dt)
+    if player.splinePosition > checkpt1pos then
+        local timeBonus = 250000 * math.ceil(countDown)
+        if not checkpoint1 and gameOverMessage == 0 then
+            countDown = countDownTime
+            totalScore = totalScore + timeBonus
+            lap1time = totalTimer
+            prevLaptimes = lap1time
+            addStageBonusMessage(timeBonus)
+
+            if muteToggle then
+                mediaPlayer2:play()
+            end
+            checkpoint1 = true
+
+            extendPlay1Flashing = true
+            extendPlay1FlashTimer = 0
+            extendPlay1Alpha = 1
+            extendPlay1FlashPhase = 0
+            lap1Alpha = 1
+        end
+    end
+
+    if player.splinePosition > checkpt2pos then
+        local timeBonus = 500000 * math.ceil(countDown)
+        if not checkpoint2 and gameOverMessage == 0 then
+            countDown = countDownTime
+            totalScore = totalScore + timeBonus
+            lap2time = totalTimer - prevLaptimes
+            prevLaptimes = prevLaptimes + lap2time
+            addStageBonusMessage(timeBonus)
+
+            if muteToggle then
+                mediaPlayer2:play() 
+            end
+            checkpoint2 = true
+            extendPlay2Flashing = true
+            extendPlay2FlashTimer = 0
+            extendPlay2Alpha = 1
+            extendPlay2FlashPhase = 0
+            lap2Alpha = 1  
+        end
+    end
+
+    if player.splinePosition > checkpt3pos then
+        local timeBonus = 750000 * math.ceil(countDown)
+        if not checkpoint3 and gameOverMessage == 0 then
+            countDown = countDownTime
+            totalScore = totalScore + timeBonus
+            lap3time = totalTimer - prevLaptimes
+            prevLaptimes = prevLaptimes + lap3time
+            addStageBonusMessage(timeBonus)
+
+            if muteToggle then
+                mediaPlayer2:play()
+            end
+            checkpoint3 = true
+            extendPlay3Flashing = true
+            extendPlay3FlashTimer = 0
+            extendPlay3Alpha = 1
+            extendPlay3FlashPhase = 0
+            lap3Alpha = 1  
+        end
+    end
+end
+
+
+
+-- Helper function to handle car tracking and overtakes
+local function handleCarTracking(player, sim, dt, scoreRisingRate)
+    while sim.carsCount > #carsState do
+        carsState[#carsState + 1] = {}
+    end
+
+    if wheelsWarningTimeout > 0 then
+        wheelsWarningTimeout = wheelsWarningTimeout - dt
+    elseif player.wheelsOutside > 3 then
+        wheelsWarningTimeout = 15
+        offRoadTimer = 3
+    end
+
+    for i = 1, sim.carsCount do
+        local car = ac.getCarState(i)
+        local state = carsState[i]
+
+        if car.position:closerToThan(player.position, 10) then
+            local drivingAlong = math.dot(car.look, player.look) > 0.2
+            if not drivingAlong then
+                state.drivingAlong = false
+
+                if not state.nearMiss and car.position:closerToThan(player.position, 3) then
+                    state.nearMiss = true
+                end
+            end
+
+            if player.collidedWith == 0 then
+                collisionTimer = 4
+            end
+
+            if not state.overtaken and not state.collided and state.drivingAlong then
+                local posDir = (car.position - player.position):normalize()
+                local posDot = math.dot(posDir, car.look)
+                state.maxPosDot = math.max(state.maxPosDot, posDot)
+                if posDot < -0.5 and state.maxPosDot > 0.5 then
+                    if collisionTimer > 0 then
+                        totalScore = totalScore + collisionOvertakePts
+                        addOvertakeMessage(3) 
+                    elseif car.position:closerToThan(player.position, 3) then
+                        totalScore = totalScore + closeOvertakePts
+                        addOvertakeMessage(2)
+                    else
+                        totalScore = totalScore + overtakePts
+                        addOvertakeMessage(1)
+                    end
+
+                    state.overtaken = true
+                end
+            end
+        else
+            state.maxPosDot = -1
+            state.overtaken = false
+            state.collided = false
+            state.drivingAlong = true
+            state.nearMiss = false
+        end
+    end
+end
+
+
+
+-- Helper function to handle finish line crossing
+local function handleFinishLine(player)
+    if not checkpoint10 then
+        lap10time = totalTimer - prevLaptimes
+        local timeBonus = 1000000 * math.ceil(countDown)
+        totalScore = totalScore + timeBonus
+        finalScore = totalScore
+        addStageBonusMessage(timeBonus)
+
+        local carIndex = getCurrentCarIndex()
+        if carIndex then
+            updateCarScore(carIndex, finalScore, true)
+        end
+
+        if muteToggle then
+            mediaPlayer3:play()
+        end
+        checkpoint10 = true
+    end
+end
+
+
+
+-- Helper function to calculate time display values
+local function calculateTimeDisplays()
+    secondsTime = totalTimer/60
+    if secondsTime > 1 then
+        secondsTime = secondsTime - math.floor(secondsTime)
+    end
+    secondsTime = secondsTime * 60
+
+    sec10 = (secondsTime > 10) and 1 or 0
+    minutesTime = totalTimer/60
+    min10 = (minutesTime > 10) and 1 or 0
+    min1 = (minutesTime > 1) and 1 or 0
+    subSeconds = totalTimer
+end
+
+
 
 
 
@@ -908,83 +1078,8 @@ function script.update(dt)
     mediaPlayer3:setSource(congrats):setAutoPlay(false)
     mediaPlayer3:setVolume(1)
 
-
-
     mediaPlayer2:setSource(checkpoint):setAutoPlay(false)
     mediaPlayer2:setVolume(1)
-
-    -- functionalize this part and add checks for all previous checkpoints to prevent teleporting to checkpoints before previous ones have been crossed
-
-    if player.splinePosition > checkpt1pos then
-
-        local timeBonus = 250000 * math.ceil(countDown)
-        if not checkpoint1 and gameOverMessage == 0 then
-            countDown = countDownTime
-            totalScore = totalScore + timeBonus
-            lap1time = totalTimer
-            prevLaptimes = lap1time
-            addStageBonusMessage(timeBonus)
-
-            if muteToggle then
-                mediaPlayer2:play()
-            end
-            checkpoint1 = true
-
-            extendPlay1Flashing = true
-            extendPlay1FlashTimer = 0
-            extendPlay1Alpha = 1
-            extendPlay1FlashPhase = 0
-            lap1Alpha = 1
-        end
-    end
-
-    if player.splinePosition > checkpt2pos then
-        local timeBonus = 500000 * math.ceil(countDown)
-        if not checkpoint2 and gameOverMessage == 0 then
-            countDown = countDownTime
-            totalScore = totalScore + timeBonus
-            lap2time = totalTimer - prevLaptimes
-            prevLaptimes = prevLaptimes + lap2time
-            addStageBonusMessage(timeBonus)
-
-            if muteToggle then
-                mediaPlayer2:play() 
-            end
-            checkpoint2 = true
-            -- START FLASHING ANIMATION
-            extendPlay2Flashing = true
-            extendPlay2FlashTimer = 0
-            extendPlay2Alpha = 1
-            extendPlay2FlashPhase = 0
-            lap2Alpha = 1  
-        end
-    end
-
-    if player.splinePosition > checkpt3pos then
-        local timeBonus = 750000 * math.ceil(countDown)
-        if not checkpoint3 and gameOverMessage == 0 then
-            countDown = countDownTime
-            totalScore = totalScore + timeBonus
-            lap3time = totalTimer - prevLaptimes
-            prevLaptimes = prevLaptimes + lap3time
-            addStageBonusMessage(timeBonus)
-
-            if muteToggle then
-                mediaPlayer2:play()
-            end
-            checkpoint3 = true
-            -- START FLASHING ANIMATION
-            extendPlay3Flashing = true
-            extendPlay3FlashTimer = 0
-            extendPlay3Alpha = 1
-            extendPlay3FlashPhase = 0
-            lap3Alpha = 1  
-        end
-    end
-
-
-
-    updateFlashAnimations(dt)
 
 
 
@@ -1031,95 +1126,14 @@ function script.update(dt)
                     end
                 end
 
-                
+                handleCheckpoints(player, dt)
+
+                handleCarTracking(player, sim, dt, scoreRisingRate)
 
 
-                while sim.carsCount > #carsState do
-                    carsState[#carsState + 1] = {}
-                end
-            
-                if wheelsWarningTimeout > 0 then
-                    wheelsWarningTimeout = wheelsWarningTimeout - dt
-                elseif player.wheelsOutside > 3 then
-
-                    wheelsWarningTimeout = 15
-                    offRoadTimer = 3
-                end
-                -- ac.debug(" player", player.collidedWith)
-                for i = 1, ac.getSim().carsCount do
-                    local car = ac.getCarState(i) --or error()
-                    local state = carsState[i]
-
-            
-                    if car.position:closerToThan(player.position, 10) then
-                        local drivingAlong = math.dot(car.look, player.look) > 0.2
-                        if not drivingAlong then
-                            state.drivingAlong = false
-            
-                            if not state.nearMiss and car.position:closerToThan(player.position, 3) then
-                                state.nearMiss = true
-                            end
-                        end
-            
-                        if player.collidedWith == 0 then
-                            -- if collisionMessageTimer > 5 then
-
-                            --     collisionMessageTimer = 0
-                            collisionTimer = 4
-                            -- end
-                        end
-            
-                        if not state.overtaken and not state.collided and state.drivingAlong then
-                            local posDir = (car.position - player.position):normalize()
-                            local posDot = math.dot(posDir, car.look)
-                            state.maxPosDot = math.max(state.maxPosDot, posDot)
-                            if posDot < -0.5 and state.maxPosDot > 0.5 then
-                                if collisionTimer > 0 then
-                                    totalScore = totalScore + collisionOvertakePts
-                                    addOvertakeMessage(3) 
-                                elseif car.position:closerToThan(player.position, 3) then
-                                    totalScore = totalScore + closeOvertakePts
-                                    addOvertakeMessage(2)
-                                else
-                                    totalScore = totalScore + overtakePts
-                                    addOvertakeMessage(1)
-                                end
-  
-            
-                                state.overtaken = true
-                            end
-                        end
-                    else
-                        state.maxPosDot = -1
-                        state.overtaken = false
-                        state.collided = false
-                        state.drivingAlong = true
-                        state.nearMiss = false
-                    end
-                end
 
             else
-                if not checkpoint10 then
-                    lap10time = totalTimer - prevLaptimes
-                    local timeBonus = 1000000 * math.ceil(countDown)
-                    countDown = countDown
-                    totalTimer = totalTimer
-                    totalScore = totalScore
-                    totalScore = totalScore + timeBonus
-                    finalScore = totalScore
-                    addStageBonusMessage(timeBonus)
-
-                    local carIndex = getCurrentCarIndex()
-                    if carIndex then
-                        updateCarScore(carIndex, finalScore, true)  -- true = finished race
-                    end
-
-                    if muteToggle then
-                        mediaPlayer3:play()
-                    end
-                    checkpoint10 = true
-                    
-                end
+                handleFinishLine(player)
             end
             
         else
@@ -1208,6 +1222,9 @@ function script.update(dt)
 
 
     updateLapTimes()
+    updateFlashAnimations(dt)
+    calculateTimeDisplays()
+    updateMusicPlayers(dt)
 
 
 
@@ -1240,9 +1257,6 @@ function script.update(dt)
 
 
 
-    updateMusicPlayers(dt)
-
-
     local muteKeyState = ac.isKeyDown(ac.KeyIndex.M)
     if muteKeyState and lastMuteKeyState ~= muteKeyState then
         muteToggle = not muteToggle
@@ -1253,8 +1267,6 @@ function script.update(dt)
 
     end
     
-
-
 
 
     timePassed = timePassed + dt
