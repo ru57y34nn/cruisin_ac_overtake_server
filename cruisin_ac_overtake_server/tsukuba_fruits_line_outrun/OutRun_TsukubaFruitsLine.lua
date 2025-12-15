@@ -124,10 +124,10 @@ local gameState = {
     LastKeyState = false,
     
     -- Music
-    musicVol = 0.45,
+    musicVol = 0.55,
     lastPlayedSong = 6
 }
-
+ac.debug('Music volume set to: ', gameState.musicVol)
 -- ============================================================================
 -- LAP TIMES STATE
 -- ============================================================================
