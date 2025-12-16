@@ -125,7 +125,7 @@ local gameState = {
     
     -- Music
     musicVol = 0.55,
-    lastPlayedSong = 6
+    lastPlayedSong = 6 -- this also needs to move to csp_extra_optons.ini
 }
 ac.debug('Music volume set to: ', gameState.musicVol)
 -- ============================================================================
@@ -270,24 +270,32 @@ local displayTime = {
 -- ============================================================================
 local carName = ac.getCarName(0)
 
+local carConfig = ac.INIConfig.onlineExtras():mapSection('INITIAL_OUTRUN_CAR_CONFIG', {
+    -- Default values
+    CAR_NAMES = 'Toyota AE86 Tuned,Toyota Supra MKIV,Toyota Supra 3.0GT Turbo A,Nissan Skyline GT-R V•Spec II (R32),Mazda RX-7 Infini,BMW M3 E30 Step1,Subaru Impreza 22B STi-Version,Mitsubishi Lancer Evolution VIII MR,Nissan Silvia spec-R Aero,Honda S2000 (AP1)',
+    STORAGE_KEYS = 'ae86Score,supraScore,supra2Score,skylineScore,rx7Score,m3Score,stiScore,evoScore,silviaScore,s2000Score'
+})
+
+-- Parse comma-separated strings into tables
+local function parseCSV(str)
+    local result = {}
+    for item in string.gmatch(str, '([^,]+)') do
+        table.insert(result, item)
+    end
+    return result
+end
+
+
+-- Convert config strings to tables
+local carNames = parseCSV(carConfig.CAR_NAMES)
+local storageKeys = parseCSV(carConfig.STORAGE_KEYS)
+ac.debug('Car names ', carNames)
+ac.debug('Storage keys ', storageKeys)
+
 local carData = {
-    names = {
-        'Toyota AE86 Tuned',
-        'Toyota Supra MKIV',
-        'Toyota Supra 3.0GT Turbo A',
-        'Nissan Skyline GT-R V•Spec II (R32)',
-        'Mazda RX-7 Infini',
-        'BMW M3 E30 Step1',
-        'Subaru Impreza 22B STi-Version',
-        'Mitsubishi Lancer Evolution VIII MR',
-        'Nissan Silvia spec-R Aero',
-        'Honda S2000 (AP1)'
-    },
-    
-    storageKeys = {
-        'ae86Score_1', 'supraScore_1', 'supra2Score_1', 'skylineScore_1', 'rx7Score_1',
-        'm3Score_1', 'stiScore_1', 'evoScore_1', 'silviaScore_1', 's2000Score_1'
-    },
+    names = carNames,
+
+    storageKeys = storageKeys,
     
     personalBests = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     
@@ -712,7 +720,7 @@ local function updateMusicPlayers(dt)
     gameState.musicTimer = gameState.musicTimer + dt
 
     -- Track switching logic (simplified with loop)
-    local trackConfig = {
+    local musicTrackConfig = {
         {4, 5, 2},   -- player 4 -> 5, set lastPlayed to 2
         {5, 6, 3},
         {6, 7, 4},
@@ -725,7 +733,7 @@ local function updateMusicPlayers(dt)
         {13, 4, 1}   -- wrap back to start
     }
 
-    for _, config in ipairs(trackConfig) do
+    for _, config in ipairs(musicTrackConfig) do
         local current, next, songNum = config[1], config[2], config[3]
         if mediaPlayers[current]:currentTime() > math.round(mediaPlayers[current]:duration(), 1) or 
            (mediaPlayers[current]:playing() == true and ac.isKeyDown(ac.KeyIndex.Left)) then
