@@ -1246,8 +1246,8 @@ function script.drawUI()
 
     -- Update and draw header
     uiAnimations.headerflag = math.applyLag(uiAnimations.headerflag, 
-        player.splinePosition < trackPositions.finish and gameState.gameOverMessage == 0 and not gameState.checkpoint10 and 1 or 0, 0.1, uiState.dt)
-
+        gameState.gameOverMessage == 0 and not gameState.checkpoint10 and 1 or 0, 0.1, uiState.dt)
+        -- player.splinePosition < trackPositions.finish and 
     -- Score header
     ui.beginTransparentWindow('overtakeScore1', vec2(uiState.windowSize.x * 0.1, fonts.basic.sizey*2), vec2(400, 400), false)
     ui.pushStyleVar(ui.StyleVar.Alpha, uiAnimations.headerflag)
@@ -1500,14 +1500,15 @@ function script.drawUI()
         player.splinePosition < trackPositions.checkpoint3 + checkptflagdist and 1 or 0, 0.1, uiState.dt)
             
     uiAnimations.finishflag = math.applyLag(uiAnimations.finishflag, 
-        ((player.splinePosition >= trackPositions.finish and gameState.gameOverMessage == 0 and gameState.checkpoint10) or gameState.debugMode) and 1 or 0, 0.1, uiState.dt)
+        ((gameState.gameOverMessage == 0 and gameState.checkpoint10) or gameState.debugMode) and 1 or 0, 0.1, uiState.dt)
+        -- player.splinePosition >= trackPositions.finish and 
 
     uiAnimations.finishflagnothighscore = math.applyLag(uiAnimations.finishflagnothighscore, 
-        player.splinePosition >= trackPositions.finish and 
+        -- player.splinePosition >= trackPositions.finish and 
         gameState.nothighScoreChatMsgSent == true and gameState.gameOverMessage == 0 and gameState.checkpoint10 and 1 or 0, 0.1, uiState.dt)
 
     uiAnimations.finishflaghighscore = math.applyLag(uiAnimations.finishflaghighscore, 
-        player.splinePosition >= trackPositions.finish and 
+        -- player.splinePosition >= trackPositions.finish and 
         gameState.highScoreChatMsgSent == true and gameState.gameOverMessage == 0 and gameState.checkpoint10 and 1 or 0, 0.1, uiState.dt) 
     local extendplay_windowx_scale = 6.5*fonts.big.sizex
     local extendplay_windowy_scale = 6.5*fonts.big.sizey
