@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=schemas\plugin_discord_cfg.schema.json
+
+# Avatar picture URL
+PictureUrl: https://cdn.discordapp.com/attachments/1193340713123983500/1193341217560338522/CruisinAC-logo_5.png?ex=677dbe1d&is=677c6c9d&hm=77561e6a276a24cea2b0ed0cdeeb6cb4fd97e66ad45600ae1c081d4f19bef916&
+# Discord webhook URL for kick/ban events
+AuditUrl: 
+# Discord webhook URL for chat messages
+ChatUrl: https://discord.com/api/webhooks/1326050034420158570/uxuFKgtkq2w52zMnYwNyisg_HbZ0OQ9_ydOE26mIXfjFxvhzmpSCZS018Vb8s9F79_Rj
+# Set this to true if the Discord username of the bot should be the AC server name
+ChatMessageIncludeServerName: true
+# Set this to true if the audit message should include the Steam ID
+ChatMessageIncludeSteamID: false
+# Optional list of SteamIDs whose chat messages should not be forwarded to Discord
+ChatIgnoreGuids: []

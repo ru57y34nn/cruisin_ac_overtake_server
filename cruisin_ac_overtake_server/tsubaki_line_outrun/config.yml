@@ -1,0 +1,36 @@
+# Restrict AI spline to a certain track so it cannot be loaded on other tracks
+Track: ek_tsubaki_line
+# Free field, enter whatever you want
+Author: Your Mom
+# Version of the spline, useful if you are going to publish updates to your spline. Increment it if you made any changes
+Version: 1
+Splines:
+# Filename of the AI spline
+- Name: fast_lane_uphill.ai
+  # List of junctions for this spline
+  Junctions:
+  # Name of the junction, enter whatever you want
+  - Name: Main -> Side road
+    # ID of starting point
+    Start: 5
+    # End point of junction. Format: <filename>@<id of point>
+    End: fast_lane_downhill.ai@4965
+    # Probability of an AI car taking the junction. 0.2 = 20%
+    Probability: 0.2
+    # Indicate when the junction is taken. Possible values None/Left/Right (optional)
+    IndicateWhenTaken: None
+    # Indicate when the junction is NOT taken. Possible values None/Left/Right (optional)
+    IndicateWhenNotTaken: None
+    # Start indicating x meters before the junction point. (optional, 75m default)
+    IndicateDistancePre: 75
+    # Stop indicating x meters after the junction point. (optional, 50m default)
+    IndicateDistancePost: 50
+- Name: fast_lane_downhill.ai
+  # Connect the last point of this spline to another spline. Use this instead of a junction to connect spline ends
+  ConnectEnd: fast_lane_uphill.ai@1
+  # Indicate at the spline end. Possible values None/Left/Right (optional)
+  IndicateEnd: None
+  # Start indicating x meters before the spline end (optional, 150m default)
+  IndicateEndDistancePre: 150
+  # End indicating x meters after spline end (optional, 10m default)
+  IndicateEndDistancePost: 10

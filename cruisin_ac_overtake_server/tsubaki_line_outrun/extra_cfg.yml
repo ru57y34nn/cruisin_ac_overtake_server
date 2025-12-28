@@ -10,14 +10,6 @@ ValidateDlcOwnership: []
 MandatoryClientSecurityLevel: 0
 # Force headlights on for all cars
 ForceLights: false
-# Enable usage of /resetcar to teleport the player to the closest spline point. Requires CSP v0.2.3-preview47 or later
-EnableCarReset: true
-# Enable vanilla server voting for: Session skip; Session restart
-EnableSessionVote: false
-# Enable vanilla server voting to kick a player
-EnableKickPlayerVote: false
-# Minimum number of connected players for session and kick voting to work. Default is 5
-VoteKickMinimumConnectedPlayers: 3
 # Enable unlimited usage of Push-to-Pass
 EnableUnlimitedP2P: true
 # Distance for network optimizations. Players outside of this range will send less updates to reduce network traffic
@@ -28,18 +20,18 @@ OutsideNetworkBubbleRefreshRateHz: 4
 EnableServerDetails: true
 # Server description shown in Content Manager. EnableServerDetails must be on
 ServerDescription: '    
-                        [size=32][b]Beat Level 2 Tsukuba Fruits Line to Unlock Password![/b][/size]
+                        [size=32][b]Beat Level 3 Mt Akina to Unlock Password![/b][/size]
 
                         [img=https://raw.githubusercontent.com/ru57y34nn/cruisin_ac_overtake_server/refs/heads/main/ingame_images/cruisin-ac-logo.png]Cruisin AC Logo[/img]
   		                  
-  		                  [size=24][b]Initial DriftRun [/b][/size]
+                        [size=24][b]Initial DriftRun [/b][/size]
                           
                         [size=18][b]  By Cruisin AC [/b][/size] 
 
 
-                        [size=24][b]LEVEL 3[/b][/size]
+                        [size=24][b]LEVEL 2[/b][/size]
 
-                        [size=18][b]  Mt Akina, Japan[/b][/size]
+                        [size=18][b]  Tsubaki Line, Japan[/b][/size]
 
 
                         [size=24][b]Join us on Discord![/b][/size]
@@ -58,7 +50,7 @@ RainTrackGripReductionPercent: 0
 # Enable AI traffic
 EnableAi: true
 # List of plugins to enable
-EnablePlugins: [DiscordAuditPlugin]
+EnablePlugins: []
 # Ignore some common configuration errors. More info: https://assettoserver.org/docs/common-configuration-errors
 IgnoreConfigurationErrors:
   MissingCarChecksums: true
@@ -99,7 +91,7 @@ AdminUserGroup: default_admins
 UserGroupCommandPermissions: 
 AiParams:
   # Automatically assign traffic cars based on the car folder name
-  AutoAssignTrafficCars: true
+  AutoAssignTrafficCars: false
   # Radius around a player in which AI cars won't despawn
   PlayerRadiusMeters: 200
   # Offset the player radius in direction of the velocity of the player so AI cars will despawn earlier behind a player
@@ -111,15 +103,15 @@ AiParams:
   # Minimum amount of spline points in front of a player where AI cars will spawn
   MinSpawnDistancePoints: 100
   # Maximum amount of spline points in front of a player where AI cars will spawn
-  MaxSpawnDistancePoints: 500
+  MaxSpawnDistancePoints: 400
   # Minimum distance between AI cars
-  MinAiSafetyDistanceMeters: 20
+  MinAiSafetyDistanceMeters: 30
   # Maximum distance between AI cars
-  MaxAiSafetyDistanceMeters: 70
+  MaxAiSafetyDistanceMeters: 100
   # Minimum spawn distance for AI states of the same car slot. If you set this too low you risk AI states despawning or AI states becoming invisible for some players when multiple states are close together
   StateSpawnDistanceMeters: 1000
   # Minimum distance between AI states of the same car slot. If states get closer than this one of them will be forced to despawn
-  MinStateDistanceMeters: 500
+  MinStateDistanceMeters: 200
   # Minimum spawn distance to players
   SpawnSafetyDistanceToPlayerMeters: 160
   # Minimum time in which a newly spawned AI car cannot despawn
@@ -129,19 +121,19 @@ AiParams:
   # Minimum time an AI car will stop/slow down after a collision
   MinCollisionStopTimeSeconds: 1
   # Maximum time an AI car will stop/slow down after a collision
-  MaxCollisionStopTimeSeconds: 3
+  MaxCollisionStopTimeSeconds: 2
   # Default maximum AI speed. This is not an absolute maximum and can be overridden with RightLaneOffsetKph and MaxSpeedVariationPercent
-  MaxSpeedKph: 50
+  MaxSpeedKph: 45
   # Speed offset for right lanes. Will be added to MaxSpeedKph
-  RightLaneOffsetKph: 10
+  RightLaneOffsetKph: 01
   # Maximum speed variation
   MaxSpeedVariationPercent: 0.1
   # Soft player limit, the server will stop accepting new players when this many players are reached. Use this to ensure a minimum amount of AI cars. 0 to disable.
   MaxPlayerCount: 0
   # Hide AI car nametags and make them invisible on the minimap. Broken on CSP versions < 0.1.78
-  HideAiCars: true
+  HideAiCars: false
   # Lane width for adjacent lane detection
-  LaneWidthMeters: 3
+  LaneWidthMeters: 2.2
   # Enable two way traffic. This will allow AI cars to spawn in lanes with the opposite direction of travel to the player.
   TwoWayTraffic: true
   # Enable traffic spawning if the player is driving the wrong way. Only takes effect when TwoWayTraffic is set to false.
@@ -168,8 +160,10 @@ AiParams:
   DefaultDeceleration: 8.5
   # Default AI car acceleration for obstacle/collision detection (m/s^2)
   DefaultAcceleration: 2.5
+  # Number of AI cars per player the server will try to keep
+  AiPerPlayerTargetCount: 10
   # AI spline height offset. Use this if the AI spline is too close to the ground
-  SplineHeightOffsetMeters: 0
+  SplineHeightOffsetMeters: 0.0
   # AI cornering speed factor. Lower = AI cars will drive slower around corners.
   CorneringSpeedFactor: 0.3
   # AI cornering brake distance factor. Lower = AI cars will brake later for corners.
@@ -189,7 +183,7 @@ PictureUrl: https://cdn.discordapp.com/attachments/1193340713123983500/119334121
 # Discord webhook URL for kick/ban events
 AuditUrl: 
 # Discord webhook URL for chat messages (THIS IS THE IMPORTANT ONE)
-ChatUrl: https://discord.com/api/webhooks/1238695349791621140/DoGUp6hcs1tshZyu1OuGrOVqDmYlSu6d0jj2hfJeXJWeBRgboBxyepmYXW7ZimDyy6ra
+ChatUrl: https://discord.com/api/webhooks/1233994738995040337/sjioUI3CAzJEwouJn7_8YrElCFTEOLwo4RBDxbK_4ZfJzR5BEOhL2i1bRUwkFLxinutY
 # Set this to true if the Discord username of the bot should be the AC server name
 ChatMessageIncludeServerName: true
 # Optional list of SteamIDs whose chat messages should not be forwarded to Discord
