@@ -998,7 +998,7 @@ function script.update(dt)
     ac.debug("Collision Timer", gameState.collisionTimer)
 
     local player = ac.getCarState(1)
-    local scoreRisingRate = 100 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 160))) * 
+    local scoreRisingRate = 60 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 160))) * 
                             math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 160))
     
     ac.debug("player pos", player.position)
