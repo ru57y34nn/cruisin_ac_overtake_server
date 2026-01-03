@@ -53,7 +53,7 @@ local assets = {
         -- Drift multipliers
         drift10x = 'drift_10x.png',
         drift100x = 'drift_100x.png',
-        drift1000x = 'drift_500x.png',
+        drift1000x = 'drift_1000x.png',
         -- Overtake
         overtakeNormal = 'overtake_normal.png',
         overtakeClose = 'overtake_close.png',
