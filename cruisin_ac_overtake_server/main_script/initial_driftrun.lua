@@ -1,4 +1,4 @@
--- ============================================================================
+ -- ============================================================================
 -- CONSOLIDATED ASSET URLS
 -- ============================================================================
 local assets = {
@@ -998,8 +998,8 @@ function script.update(dt)
     ac.debug("Collision Timer", gameState.collisionTimer)
 
     local player = ac.getCarState(1)
-    local scoreRisingRate = 100 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 260))) * 
-                            math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 260))
+    local scoreRisingRate = 100 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 160))) * 
+                            math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 160))
     
     ac.debug("player pos", player.position)
     ac.debug("spline pos", player.splinePosition)
@@ -1500,7 +1500,7 @@ function script.drawUI()
         player.splinePosition < trackPositions.checkpoint3 + checkptflagdist and 1 or 0, 0.1, uiState.dt)
             
     uiAnimations.finishflag = math.applyLag(uiAnimations.finishflag, 
-        ((gameState.gameOverMessage == 0 and gameState.checkpoint10) or gameState.debugMode) and 1 or 0, 0.1, uiState.dt)
+        ((gameState.gameOverMessage == 0 and gameState.checkpoint1 and gameState.checkpoint2 and gameState.checkpoint3 and gameState.checkpoint10) or gameState.debugMode) and 1 or 0, 0.1, uiState.dt)
         -- player.splinePosition >= trackPositions.finish and 
 
     uiAnimations.finishflagnothighscore = math.applyLag(uiAnimations.finishflagnothighscore, 
