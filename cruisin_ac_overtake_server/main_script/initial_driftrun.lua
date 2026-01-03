@@ -53,7 +53,7 @@ local assets = {
         -- Drift multipliers
         drift10x = 'drift_10x.png',
         drift100x = 'drift_100x.png',
-        drift1000x = 'drift_1000x.png',
+        drift1000x = 'drift_500x.png',
         -- Overtake
         overtakeNormal = 'overtake_normal.png',
         overtakeClose = 'overtake_close.png',
@@ -998,7 +998,7 @@ function script.update(dt)
     ac.debug("Collision Timer", gameState.collisionTimer)
 
     local player = ac.getCarState(1)
-    local scoreRisingRate = 45 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 120))) * 
+    local scoreRisingRate = 20 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 120))) * 
                             math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 120))
     
     ac.debug("player pos", player.position)
