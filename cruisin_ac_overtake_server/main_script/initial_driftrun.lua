@@ -992,10 +992,10 @@ end
 -- ============================================================================
 function script.update(dt)
     ac.debug("car name", carName)
-    ac.debug("Drift timer = ", gameState.driftTimer)
-    ac.debug("Drift tracking status", DriftTracking.isDriftValid)
-    ac.debug("OffRoad Timer", gameState.offRoadTimer)
-    ac.debug("Collision Timer", gameState.collisionTimer)
+    -- ac.debug("Drift timer = ", gameState.driftTimer)
+    -- ac.debug("Drift tracking status", DriftTracking.isDriftValid)
+    -- ac.debug("OffRoad Timer", gameState.offRoadTimer)
+    -- ac.debug("Collision Timer", gameState.collisionTimer)
 
     local player = ac.getCarState(1)
     local scoreRisingRate = 20 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 120))) * 
@@ -1003,7 +1003,15 @@ function script.update(dt)
     
     ac.debug("player pos", player.position)
     ac.debug("spline pos", player.splinePosition)
-    ac.debug("collided with", player.collidedWith)
+    -- ac.debug("collided with", player.collidedWith)
+    ac.debug("race begin status: ", gameState.raceBegin)
+    ac.debug("checkpoint 1 status: ", gameState.checkpoint1)
+    ac.debug("checkpoint 2 status: ", gameState.checkpoint2)
+    ac.debug("checkpoint 3 status: ", gameState.checkpoint3)
+    ac.debug("final checkpoint status: ", gameState.checkpoint10)
+    ac.debug("countdown timer: ", gameState.countDown)
+    ac.debug("total timer: ", gameState.totalTimer)
+    ac.debug("total score: ", gameState.totalScore)
 
     -- Flip car if stuck
     local playerPos = player.position
@@ -1156,22 +1164,22 @@ function script.update(dt)
     end
 
     -- DEBUG: Test password display with Ctrl+P (press once)
-    local debugKeyState = ac.isKeyDown(ac.KeyIndex.Control) and ac.isKeyDown(ac.KeyIndex.P)
-    if debugKeyState and not (gameState.lastDebugKeyState or false) then
-        gameState.debugMode = not gameState.debugMode
-        gameState.showPassword = gameState.debugMode
-        gameState.checkpoint10 = true
-        gameState.raceBegin = true
-        uiAnimations.finishflag = gameState.debugMode and 1 or 0
-        ac.log("DEBUG: Password display toggled - " .. (gameState.debugMode and "ON" or "OFF"))
-    end
-    gameState.lastDebugKeyState = debugKeyState
+--     local debugKeyState = ac.isKeyDown(ac.KeyIndex.Control) and ac.isKeyDown(ac.KeyIndex.P)
+--     if debugKeyState and not (gameState.lastDebugKeyState or false) then
+--         gameState.debugMode = not gameState.debugMode
+--         gameState.showPassword = gameState.debugMode
+--         gameState.checkpoint10 = true
+--         gameState.raceBegin = true
+--         uiAnimations.finishflag = gameState.debugMode and 1 or 0
+--         ac.log("DEBUG: Password display toggled - " .. (gameState.debugMode and "ON" or "OFF"))
+--     end
+--     gameState.lastDebugKeyState = debugKeyState
 
-    gameState.timePassed = gameState.timePassed + dt
-    ac.debug('time passed', gameState.timePassed)
-    ac.debug('total score', gameState.totalScore)
-    gameState.collisionTimer = gameState.collisionTimer - dt
-    gameState.offRoadTimer = gameState.offRoadTimer - dt
+--     gameState.timePassed = gameState.timePassed + dt
+--     ac.debug('time passed', gameState.timePassed)
+--     ac.debug('total score', gameState.totalScore)
+--     gameState.collisionTimer = gameState.collisionTimer - dt
+--     gameState.offRoadTimer = gameState.offRoadTimer - dt
 end
 
 
