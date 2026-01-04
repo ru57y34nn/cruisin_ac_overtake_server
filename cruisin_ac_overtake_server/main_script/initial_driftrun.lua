@@ -1165,19 +1165,19 @@ function script.update(dt)
     end
 
     -- DEBUG: Test password display with Ctrl+P (press once)
---     local debugKeyState = ac.isKeyDown(ac.KeyIndex.Control) and ac.isKeyDown(ac.KeyIndex.P)
---     if debugKeyState and not (gameState.lastDebugKeyState or false) then
---         gameState.debugMode = not gameState.debugMode
---         gameState.showPassword = gameState.debugMode
---         gameState.checkpoint10 = true
---         gameState.raceBegin = true
---         uiAnimations.finishflag = gameState.debugMode and 1 or 0
---         ac.log("DEBUG: Password display toggled - " .. (gameState.debugMode and "ON" or "OFF"))
---     end
---     gameState.lastDebugKeyState = debugKeyState
+    -- local debugKeyState = ac.isKeyDown(ac.KeyIndex.Control) and ac.isKeyDown(ac.KeyIndex.P)
+    -- if debugKeyState and not (gameState.lastDebugKeyState or false) then
+    --     gameState.debugMode = not gameState.debugMode
+    --     gameState.showPassword = gameState.debugMode
+    --     gameState.checkpoint10 = true
+    --     gameState.raceBegin = true
+    --     uiAnimations.finishflag = gameState.debugMode and 1 or 0
+    --     ac.log("DEBUG: Password display toggled - " .. (gameState.debugMode and "ON" or "OFF"))
+    -- end
+    -- gameState.lastDebugKeyState = debugKeyState
 
     gameState.timePassed = gameState.timePassed + dt
-    ac.debug('time passed', gameState.timePassed)
+    -- ac.debug('time passed', gameState.timePassed)
     ac.debug('total score', gameState.totalScore)
     gameState.collisionTimer = gameState.collisionTimer - dt
     gameState.offRoadTimer = gameState.offRoadTimer - dt
