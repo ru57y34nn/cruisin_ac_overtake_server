@@ -1176,11 +1176,11 @@ function script.update(dt)
 --     end
 --     gameState.lastDebugKeyState = debugKeyState
 
---     gameState.timePassed = gameState.timePassed + dt
---     ac.debug('time passed', gameState.timePassed)
---     ac.debug('total score', gameState.totalScore)
---     gameState.collisionTimer = gameState.collisionTimer - dt
---     gameState.offRoadTimer = gameState.offRoadTimer - dt
+    gameState.timePassed = gameState.timePassed + dt
+    ac.debug('time passed', gameState.timePassed)
+    ac.debug('total score', gameState.totalScore)
+    gameState.collisionTimer = gameState.collisionTimer - dt
+    gameState.offRoadTimer = gameState.offRoadTimer - dt
 end
 
 
