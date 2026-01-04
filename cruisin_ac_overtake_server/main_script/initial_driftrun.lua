@@ -1012,6 +1012,7 @@ function script.update(dt)
     ac.debug("countdown timer: ", gameState.countDown)
     ac.debug("total timer: ", gameState.totalTimer)
     ac.debug("total score: ", gameState.totalScore)
+    ac.debug("time passed: ", gameState.timePassed)
 
     -- Flip car if stuck
     local playerPos = player.position
