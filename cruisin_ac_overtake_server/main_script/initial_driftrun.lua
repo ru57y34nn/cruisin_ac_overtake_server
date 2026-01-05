@@ -137,7 +137,7 @@ local gameState = {
     musicVol = 0.55,
     lastPlayedSong = 10
 }
-ac.debug('Music volume set to: ', gameState.musicVol)
+
 
 -- ============================================================================
 -- LAP TIMES STATE
@@ -230,7 +230,7 @@ local levelConfig = ac.INIConfig.onlineExtras():mapSection('INITIAL_OUTRUN_LEVEL
 })
 ac.debug('Current Level: ', levelConfig.CURRENT_LEVEL)
 ac.debug('Next Level: ', levelConfig.NEXT_LEVEL)
-ac.debug('Next Level Password: ', levelConfig.NEXT_LEVEL_PASSWORD)
+-- ac.debug('Next Level Password: ', levelConfig.NEXT_LEVEL_PASSWORD)
 ac.debug('Next Level Server Name: ', levelConfig.NEXT_LEVEL_SERVER_NAME)
 ac.debug('Password Unlock Image: ', levelConfig.PASSWORD_UNLOCK_IMAGE)
 ac.debug('First Song Index: ', levelConfig.FIRST_SONG_INDEX)
@@ -328,8 +328,8 @@ end
 -- Convert config strings to tables
 local carNames = parseCSV(carConfig.CAR_NAMES)
 local storageKeys = parseCSV(carConfig.STORAGE_KEYS)
-ac.debug('Car names ', carNames)
-ac.debug('Storage keys ', storageKeys)
+-- ac.debug('Car names ', carNames)
+-- ac.debug('Storage keys ', storageKeys)
 
 local carData = {
     names = carNames,
@@ -1013,6 +1013,7 @@ function script.update(dt)
     ac.debug("total timer: ", gameState.totalTimer)
     ac.debug("total score: ", gameState.totalScore)
     ac.debug("time passed: ", gameState.timePassed)
+    ac.debug('Music volume set to: ', gameState.musicVol)
 
     -- Flip car if stuck
     local playerPos = player.position
@@ -1178,7 +1179,7 @@ function script.update(dt)
 
     gameState.timePassed = gameState.timePassed + dt
     -- ac.debug('time passed', gameState.timePassed)
-    ac.debug('total score', gameState.totalScore)
+    -- ac.debug('total score', gameState.totalScore)
     gameState.collisionTimer = gameState.collisionTimer - dt
     gameState.offRoadTimer = gameState.offRoadTimer - dt
 end
