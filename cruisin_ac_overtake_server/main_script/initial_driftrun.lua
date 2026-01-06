@@ -987,6 +987,58 @@ local function calculateTimeDisplays()
 end
 
 
+
+-- ============================================================================
+-- RESET TO TRACK FUNCTION
+-- ============================================================================
+
+local resetCooldown = 0
+local RESET_COOLDOWN_TIME = 2.0
+
+local function resetCarToTrack(car)
+    if resetCooldown > 0 then
+        ac.setSystemMessage('Reset', string.format('Wait %.1fs', resetCooldown))
+        return
+    end
+    
+    local playerPos = car.position
+    
+    -- Find nearest point on AI spline
+    local nearestProgress = ac.worldCoordinateToTrackProgress(playerPos)
+    
+    if nearestProgress < 0 then
+        ac.setSystemMessage('Reset', 'No AI spline found!')
+        return
+    end
+    
+    -- Get world position of that track point
+    local trackPos = ac.trackProgressToWorldCoordinate(nearestProgress)
+    
+    -- Calculate track direction - ALWAYS face this way
+    local prevPos = ac.trackProgressToWorldCoordinate(nearestProgress - 0.005)
+    local nextPos = ac.trackProgressToWorldCoordinate(nearestProgress + 0.005)
+    local trackDir = (prevPos - nextPos):normalize()  -- Correct direction
+    
+    -- Raycast down to find track surface height
+    local rayStart = trackPos + vec3(0, 10, 0)
+    local rayDir = vec3(0, -1, 0)
+    local hitDist = physics.raycastTrack(rayStart, rayDir, 50)
+    
+    if hitDist > 0 then
+        local finalPos = rayStart + rayDir * hitDist + vec3(0, 0.5, 0)
+        
+        -- Clear velocity FIRST, then set position
+        physics.setCarVelocity(0, vec3(0, 0, 0))
+        physics.setCarPosition(0, finalPos, trackDir)
+        
+        ac.setSystemMessage('Reset', 'Car reset to track!')
+        resetCooldown = RESET_COOLDOWN_TIME
+    else
+        ac.setSystemMessage('Reset', 'Could not find track surface!')
+    end
+end
+
+
 -- ============================================================================
 -- MAIN UPDATE FUNCTION
 -- ============================================================================
@@ -998,6 +1050,17 @@ function script.update(dt)
     -- ac.debug("Collision Timer", gameState.collisionTimer)
 
     local player = ac.getCarState(1)
+
+    -- Update cooldown timer
+    if resetCooldown > 0 then
+        resetCooldown = resetCooldown - dt
+    end
+    
+    -- Check for reset key (R key)
+    if ac.isKeyPressed(ac.KeyIndex.R) then
+        resetCarToTrack(player)
+    end
+
     local scoreRisingRate = 20 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 120))) * 
                             math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 120))
     
