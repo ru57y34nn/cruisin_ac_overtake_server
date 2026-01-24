@@ -428,6 +428,25 @@ local DriftTracking = ac.getCarState(1)
 -- HELPER FUNCTIONS
 -- ============================================================================
 
+
+local function getDistanceFromSpline(car)
+    if not car then return math.huge end
+    
+    -- Get current track progress
+    local progress = ac.worldCoordinateToTrackProgress(car.position)
+    if progress < 0 then return math.huge end
+    
+    -- Get world position on the spline at this progress
+    local splinePos = ac.trackProgressToWorldCoordinate(progress)
+    
+    -- Calculate distance between car position and spline position
+    return (car.position - splinePos):length()
+end
+
+
+
+
+
 function addOvertakeMessage(messageType)
     local imgPath = assets.images.overtakeNormal
     if messageType == 2 then
@@ -1051,15 +1070,18 @@ function script.update(dt)
 
     local player = ac.getCarState(1)
 
-    -- Update cooldown timer
-    if resetCooldown > 0 then
-        resetCooldown = resetCooldown - dt
-    end
-    
-    -- Check for reset key (R key)
-    if ac.isKeyPressed(ac.KeyIndex.R) then
-        resetCarToTrack(player)
-    end
+        -- Track position and auto-reset if needed (IMPORTANT: pass dt!)
+        trackOnTrackPosition(player, dt)
+        
+        -- Handle manual reset cooldown
+        if resetCooldown > 0 then
+            resetCooldown = resetCooldown - dt
+        end
+        
+        -- Manual reset button (Delete key or whatever you use)
+        if ac.isKeyDown(ac.KeyIndex.R) then --and player.speedKmh < 15 then
+            resetCarToTrack(player, false)  -- Manual reset
+        end
 
     local scoreRisingRate = 20 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 120))) * 
                             math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 120))
@@ -1092,8 +1114,12 @@ function script.update(dt)
 
     local isDrifting = false
     local sim = ac.getSim()
+  
     
-    if player.splinePosition > trackPositions.gameStart then
+    local distanceFromSpline = getDistanceFromSpline(player)
+    ac.debug("Distance from spline", distanceFromSpline)
+
+    if player.splinePosition > trackPositions.gameStart and distanceFromSpline < MAX_DISTANCE_FROM_SPLINE_TO_START then
         if not gameState.raceBegin and gameState.gameOverMessage == 0 then
             -- Check if this is a new car completion (first time with this car)
             if not gameState.checkedCarCompletion then
@@ -1556,9 +1582,12 @@ function script.drawUI()
     -- Checkpoint flags
     local checkptflagdist = 0.005
     
+    local distanceFromSpline = getDistanceFromSpline(player)
+
     uiAnimations.beginraceflag = math.applyLag(uiAnimations.beginraceflag, 
         player.splinePosition > trackPositions.gameStart and 
-        player.splinePosition < trackPositions.gameStart + checkptflagdist and 1 or 0, 0.1, uiState.dt)
+        player.splinePosition < trackPositions.gameStart + checkptflagdist and
+        distanceFromSpline < MAX_DISTANCE_FROM_SPLINE_TO_START and 1 or 0, 0.1, uiState.dt)
     
     uiAnimations.checkpt1flag = math.applyLag(uiAnimations.checkpt1flag, 
         player.splinePosition > trackPositions.checkpoint1 and 
