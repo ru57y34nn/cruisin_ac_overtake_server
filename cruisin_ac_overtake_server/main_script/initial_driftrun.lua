@@ -1007,9 +1007,129 @@ end
 
 
 
+
 -- ============================================================================
 -- RESET TO TRACK FUNCTION
 -- ============================================================================
+
+
+local lastOnTrackProgress = -1
+local lastOnTrackPosition = nil  -- Store actual world position too
+local offTrackTimer = 0
+local resetCooldown = 0
+
+-- Thresholds (tune these for your tracks)
+local MAX_OFF_TRACK_TIME = 3.0      -- 3 seconds fully off-track = auto reset
+local MAX_OFF_TRACK_DISTANCE = 50   -- 50 meters from last on-track = auto reset
+local RESET_COOLDOWN_TIME = 2.0
+-- Race start threshold - player must be this close to AI spline to start
+local MAX_DISTANCE_FROM_SPLINE_TO_START = 5  -- meters (tune this value for your track)
+
+-- -- Track on-track position and auto-reset if needed
+-- local function trackOnTrackPosition(car, dt)
+--     if not car then return end
+    
+--     local isFullyOffTrack = (car.wheelsOutside == 4)
+    
+--     if not isFullyOffTrack then
+--         -- At least one wheel on track - update last valid position
+--         local currentProgress = ac.worldCoordinateToTrackProgress(car.position)
+--         if currentProgress >= 0 then
+--             lastOnTrackProgress = currentProgress
+--             lastOnTrackPosition = vec3(car.position)  -- Store world position
+--         end
+--         offTrackTimer = 0  -- Reset timer when back on track
+        
+--     else
+--         -- Fully off track - increment timer and check thresholds
+--         offTrackTimer = offTrackTimer + dt
+        
+--         if lastOnTrackProgress >= 0 and lastOnTrackPosition then
+--             -- Calculate distance from last on-track position
+--             local currentPos = car.position
+--             local distanceFromTrack = (currentPos - lastOnTrackPosition):length()
+            
+--             -- Check if either threshold exceeded
+--             local timeExceeded = offTrackTimer > MAX_OFF_TRACK_TIME
+--             local distanceExceeded = distanceFromTrack > MAX_OFF_TRACK_DISTANCE
+            
+--             if timeExceeded or distanceExceeded then
+--                 -- AUTO RESET!
+--                 local reason = timeExceeded and "off-track too long" or "left track boundaries"
+--                 ac.log(string.format('Auto-reset triggered: %s (time: %.1fs, distance: %.1fm)', 
+--                     reason, offTrackTimer, distanceFromTrack))
+                
+--                 resetCarToTrack(car, true)  -- Pass true = auto-reset
+--                 offTrackTimer = 0  -- Reset timer after auto-reset
+--             end
+--         end
+--     end
+-- end
+
+-- -- Modified reset function with auto-reset support
+-- local function resetCarToTrack(car, isAutoReset)
+--     isAutoReset = isAutoReset or false  -- Default to manual reset
+    
+--     -- Skip cooldown check for auto-resets
+--     if not isAutoReset and resetCooldown > 0 then
+--         ac.setSystemMessage('Reset', string.format('Wait %.1fs', resetCooldown))
+--         return
+--     end
+    
+--     local isFullyOffTrack = (car.wheelsOutside == 4)
+--     local resetProgress
+--     local resetMessage
+    
+--     if isFullyOffTrack and lastOnTrackProgress >= 0 then
+--         -- Fully off track AND we have a valid last position
+--         resetProgress = lastOnTrackProgress
+        
+--         if isAutoReset then
+--             resetMessage = 'Track limits exceeded - auto reset!'
+--         else
+--             resetMessage = 'Returned to last on-track position'
+--         end
+        
+--         ac.log('Reset to last on-track position: ' .. tostring(resetProgress))
+--     else
+--         -- On track OR no previous position - use current nearest
+--         resetProgress = ac.worldCoordinateToTrackProgress(car.position)
+--         resetMessage = 'Car reset to track!'
+--     end
+    
+--     if resetProgress < 0 then
+--         ac.setSystemMessage('Reset', 'No AI spline found!')
+--         return
+--     end
+    
+--     -- Get world position of the reset point
+--     local trackPos = ac.trackProgressToWorldCoordinate(resetProgress)
+    
+--     -- Calculate track direction
+--     local prevPos = ac.trackProgressToWorldCoordinate(resetProgress - 0.005)
+--     local nextPos = ac.trackProgressToWorldCoordinate(resetProgress + 0.005)
+--     local trackDir = (prevPos - nextPos):normalize()
+    
+--     -- Raycast down to find track surface height
+--     local rayStart = trackPos + vec3(0, 10, 0)
+--     local rayDir = vec3(0, -1, 0)
+--     local hitDist = physics.raycastTrack(rayStart, rayDir, 50)
+    
+--     if hitDist > 0 then
+--         local finalPos = rayStart + rayDir * hitDist + vec3(0, 0.5, 0)
+        
+--         -- Reset car
+--         physics.setCarVelocity(0, vec3(0, 0, 0))
+--         physics.setCarPosition(0, finalPos, trackDir)
+        
+--         ac.setSystemMessage('Reset', resetMessage)
+--         resetCooldown = RESET_COOLDOWN_TIME
+--     else
+--         ac.setSystemMessage('Reset', 'Could not find track surface!')
+--     end
+-- end
+
+
 
 local resetCooldown = 0
 local RESET_COOLDOWN_TIME = 2.0
@@ -1070,18 +1190,29 @@ function script.update(dt)
 
     local player = ac.getCarState(1)
 
-        -- Track position and auto-reset if needed (IMPORTANT: pass dt!)
-        trackOnTrackPosition(player, dt)
+
+    -- Update cooldown timer
+    if resetCooldown > 0 then
+        resetCooldown = resetCooldown - dt
+    end
+    
+    -- Check for reset key (R key)
+    if ac.isKeyPressed(ac.KeyIndex.R) then
+        resetCarToTrack(player)
+    end
+
+        -- -- Track position and auto-reset if needed (IMPORTANT: pass dt!)
+        -- trackOnTrackPosition(player, dt)
         
-        -- Handle manual reset cooldown
-        if resetCooldown > 0 then
-            resetCooldown = resetCooldown - dt
-        end
+        -- -- Handle manual reset cooldown
+        -- if resetCooldown > 0 then
+        --     resetCooldown = resetCooldown - dt
+        -- end
         
-        -- Manual reset button (Delete key or whatever you use)
-        if ac.isKeyDown(ac.KeyIndex.R) then --and player.speedKmh < 15 then
-            resetCarToTrack(player, false)  -- Manual reset
-        end
+        -- -- Manual reset button (Delete key or whatever you use)
+        -- if ac.isKeyDown(ac.KeyIndex.R) then --and player.speedKmh < 15 then
+        --     resetCarToTrack(player, false)  -- Manual reset
+        -- end
 
     local scoreRisingRate = 20 * (math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 120))) * 
                             math.lerp(0, 10, math.lerpInvSat(player.speedKmh, 0, 120))
@@ -1115,12 +1246,22 @@ function script.update(dt)
     local isDrifting = false
     local sim = ac.getSim()
   
-    
+        
     local distanceFromSpline = getDistanceFromSpline(player)
     ac.debug("Distance from spline", distanceFromSpline)
 
-    if player.splinePosition > trackPositions.gameStart and distanceFromSpline < MAX_DISTANCE_FROM_SPLINE_TO_START then
+    -- RACE START CONDITION: Must be past start AND close to spline (to prevent parking lot starts)
+    local canStartRace = player.splinePosition > trackPositions.gameStart and distanceFromSpline < MAX_DISTANCE_FROM_SPLINE_TO_START
+
+    -- RACE RESET CONDITION: Only reset if player goes BEHIND the start line (not based on distance)
+    local shouldResetRace = player.splinePosition <= trackPositions.gameStart
+
+    if canStartRace or gameState.raceBegin then
+        -- Race can start OR is already running
+        
         if not gameState.raceBegin and gameState.gameOverMessage == 0 then
+            -- First time crossing start line (close to spline)
+            
             -- Check if this is a new car completion (first time with this car)
             if not gameState.checkedCarCompletion then
                 gameState.checkedCarCompletion = true
@@ -1135,7 +1276,7 @@ function script.update(dt)
                 end
             end
             
-            if gameState.muteToggle then
+            if gameState.muteToggle then  
                 mediaPlayers[1]:play()
             end
             gameState.raceBegin = true
@@ -1185,8 +1326,44 @@ function script.update(dt)
                 updateCarScore(carIndex, gameState.finalScore, false)
             end
         end
-    else
-        -- Reset race state
+        
+        -- Check if player went backwards past start line - only then reset
+        if shouldResetRace and gameState.raceBegin then
+            ac.log("Player went backwards past start line - resetting race")
+            -- Reset race state
+            gameState.countDown = gameState.countDownTime
+            gameState.totalScore = 0
+            gameState.totalTimer = 0
+            gameState.startTimer = 0
+            gameState.raceBegin = false
+            gameState.checkpoint1 = false
+            gameState.checkpoint2 = false
+            gameState.checkpoint3 = false
+            gameState.checkpoint10 = false
+            gameState.highScoreChatMsgSent = false
+            gameState.nothighScoreChatMsgSent = false
+            gameState.gameOverMessage = 0
+            gameState.showPassword = false
+            gameState.isNewCarCompletion = false
+            gameState.checkedCarCompletion = false
+            gameState.lastDebugKeyState = false
+            gameState.debugMode = false
+            
+            -- Reset animations
+            for i = 1, 3 do
+                uiAnimations['extendPlay' .. i].flashing = false
+                uiAnimations['extendPlay' .. i].alpha = 0
+                uiAnimations['extendPlay' .. i].flashPhase = 0
+                uiAnimations['lap' .. i .. 'Alpha'] = 0
+            end
+            
+            uiAnimations.warningLightAlpha = 0
+            gameState.collisionTimer = 0
+            gameState.offRoadTimer = 0
+        end
+        
+    elseif not gameState.raceBegin then
+        -- Haven't started race yet, and not in starting zone - reset everything
         gameState.countDown = gameState.countDownTime
         gameState.totalScore = 0
         gameState.totalTimer = 0
@@ -1217,7 +1394,7 @@ function script.update(dt)
         gameState.collisionTimer = 0
         gameState.offRoadTimer = 0
     end
-
+    
     -- Drift meter handler
     local inRacingZone = player.splinePosition > trackPositions.gameStart and 
                          player.splinePosition < trackPositions.finish and 
@@ -1587,7 +1764,7 @@ function script.drawUI()
     uiAnimations.beginraceflag = math.applyLag(uiAnimations.beginraceflag, 
         player.splinePosition > trackPositions.gameStart and 
         player.splinePosition < trackPositions.gameStart + checkptflagdist and
-        distanceFromSpline < MAX_DISTANCE_FROM_SPLINE_TO_START and 1 or 0, 0.1, uiState.dt)
+        distanceFromSpline < MAX_DISTANCE_FROM_SPLINE_TO_START and not gameState.racebegin and 1 or 0, 0.1, uiState.dt)
     
     uiAnimations.checkpt1flag = math.applyLag(uiAnimations.checkpt1flag, 
         player.splinePosition > trackPositions.checkpoint1 and 
